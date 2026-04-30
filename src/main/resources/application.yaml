@@ -1,3 +1,5 @@
 spring:
   application:
     name: money-tracker
+application:
+  mode: prod
