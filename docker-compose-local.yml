@@ -1,0 +1,9 @@
+services:
+  postgres-local:
+    image: 'postgres:15'
+    environment:
+      - 'POSTGRES_DB=money-tracker-db'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5438:5432'

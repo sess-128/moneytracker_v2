@@ -1,0 +1,23 @@
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+spring:
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+  docker:
+    compose:
+      file: docker-compose-local.yml
+  datasource:
+    url: jdbc:postgresql://localhost:5438/money-tracker-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+application:
+  mode: local
