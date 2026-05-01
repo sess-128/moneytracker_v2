@@ -1,5 +1,17 @@
 spring:
   application:
     name: money-tracker
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    show-sql: ${SPRING_JPA_SHOW_SQL}
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
+    enabled: true
 application:
   mode: prod
