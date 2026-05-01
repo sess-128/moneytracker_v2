@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.dao
+package ru.rrtyui.moneytracker.entity
 
 import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
 

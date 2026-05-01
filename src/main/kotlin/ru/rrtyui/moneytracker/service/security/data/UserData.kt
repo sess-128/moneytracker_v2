@@ -1,6 +1,6 @@
 package ru.rrtyui.moneytracker.service.security.data
 
-import ru.rrtyui.moneytracker.dao.UserRole
+import ru.rrtyui.moneytracker.entity.UserRole
 import java.util.UUID
 
 data class UserData(

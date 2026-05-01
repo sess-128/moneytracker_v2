@@ -38,6 +38,7 @@ dependencies {
 
 	implementation(libs.jacksonModuleKotlin)
 	implementation(libs.kotlinReflect)
+	implementation(libs.kotlinLoggingJvm)
 	runtimeOnly(libs.kotlinxCoroutinesCore)
 
 	implementation(libs.apachePoi)

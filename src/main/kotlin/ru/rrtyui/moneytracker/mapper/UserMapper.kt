@@ -1,7 +1,7 @@
 package ru.rrtyui.moneytracker.mapper
 
 import org.jetbrains.exposed.v1.core.ResultRow
-import ru.rrtyui.moneytracker.dao.UserTable
+import ru.rrtyui.moneytracker.entity.UserTable
 import ru.rrtyui.moneytracker.service.security.data.UserData
 
 fun ResultRow.toUser() = UserData (

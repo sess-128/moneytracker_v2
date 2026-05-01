@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.dao
+package ru.rrtyui.moneytracker.entity
 
 import org.springframework.security.core.GrantedAuthority
 
