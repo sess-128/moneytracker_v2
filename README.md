@@ -1,4 +1,12 @@
 # moneytracker-v2
+```
+ █████╗ ███╗   ██╗███╗   ██╗██╗███╗   ███╗████████╗   ██████╗ 
+██╔══██╗████╗  ██║████╗  ██║██║████╗ ████║╚══██╔══╝   ╚════██╗
+███████║██╔██╗ ██║██╔██╗ ██║██║██╔████╔██║   ██║█████╗ █████╔╝
+██╔══██║██║╚██╗██║██║╚██╗██║██║██║╚██╔╝██║   ██║╚════╝██╔═══╝ 
+██║  ██║██║ ╚████║██║ ╚████║██║██║ ╚═╝ ██║   ██║      ███████╗
+╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝╚═╝     ╚═╝   ╚═╝      ╚══════╝
+```                                                          
 
 this is v2 version of money-tracker project
 
@@ -11,3 +19,6 @@ development flow:
 - push and create pr
 - merge pr into dev branch
 - merge as realese dev branc into master
+
+
+project info: https://excalidraw.com/#room=35d78aecc8204157f119,yTaxeYxHqqA6ZM9CNhYuqg
