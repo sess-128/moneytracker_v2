@@ -1,7 +1,7 @@
 package ru.rrtyui.moneytracker.dao
 
 
-import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.v1.core.dao.id.IdTable
 
 
 object TransactionTable : IdTable<Long>("transaction") {
