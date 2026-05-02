@@ -1,8 +1,8 @@
 plugins {
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
-	id("org.springframework.boot") version "3.5.15-SNAPSHOT"
-	id("io.spring.dependency-management") version "1.1.7"
+	alias { libs.plugins.kotlin.jvm }
+	alias { libs.plugins.kotlin.spring }
+	alias { libs.plugins.springBoot }
+	alias { libs.plugins.dependencyManagement }
 }
 
 group = "ru.rrtyui.moneytracker"
@@ -20,31 +20,32 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.liquibase:liquibase-core")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16")
-	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-core:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-jdbc:0.61.0")
-	implementation("org.springframework.boot:spring-boot-starter-jdbc")
-	implementation("org.postgresql:postgresql")
-	implementation("org.apache.poi:poi-ooxml:5.4.0")
-	compileOnly("org.projectlombok:lombok")
-	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-	runtimeOnly("org.postgresql:postgresql")
-	runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:postgresql")
-	testCompileOnly("org.projectlombok:lombok")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testAnnotationProcessor("org.projectlombok:lombok")
+	implementation(libs.springBootStarterValidation)
+	implementation(libs.springBootStarterWeb)
+	implementation(libs.springBootStarterJdbc)
+	implementation(libs.springBootStarterSpringdocOpenapi)
+	developmentOnly(libs.springBootDockerCompose)
+
+	implementation(libs.exposedSpringBootStarter)
+	implementation(libs.exposedCore)
+	implementation(libs.exposedJdbc)
+	implementation(libs.exposedKotlinDatetime)
+
+	implementation(libs.jacksonModuleKotlin)
+	implementation(libs.kotlinReflect)
+	runtimeOnly(libs.kotlinxCoroutinesCore)
+
+	implementation(libs.apachePoi)
+
+	implementation(libs.liquibaseCore)
+	implementation(libs.postgresql)
+
+	testImplementation(libs.springBootStarterTest)
+	testImplementation(libs.springBootTestcontainers)
+	testImplementation(libs.kotlinJUnit5)
+	testImplementation(libs.testContainersJunitJupiter)
+	testImplementation(libs.testContainersPostgres)
+	testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
 kotlin {
