@@ -15,3 +15,6 @@ spring:
     enabled: true
 application:
   mode: prod
+jwt:
+  accessTokenExpiration: 60000
+  secret: 25cf3c44c8f39313e8cbf7c23e22fe8b2ee8b288ee5206b0a6397583a1f7f0ef

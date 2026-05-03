@@ -19,5 +19,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  exposed:
+    generate-ddl: true
 application:
   mode: local
+jwt:
+  accessTokenExpiration: 600000
