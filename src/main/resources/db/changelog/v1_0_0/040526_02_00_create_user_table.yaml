@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 040526_02_00
+      author: nicholas
+      validCheckSum: ANY
+      changes:
+        - createTable:
+            tableName: users
+            schemaName: storage
+            columns:
+              - column:
+                  name: id
+                  type: java.util.UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  defaultValueComputed: "uuid_generate_v4()"
+
+              - column:
+                  name: username
+                  type: varchar(128)
+                  constraints:
+                    unique: true
+                    nullable: false
+
+              - column:
+                  name: password
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: roles
+                  type: varchar(128)
+                  constraints:
+                    nullable: false

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: 010526_00_00_create_schemas_and_UUID_extension.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 010526_01_00_create_categories.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 040526_02_00_create_user_table.yaml
+      relativeToChangelogFile: true
