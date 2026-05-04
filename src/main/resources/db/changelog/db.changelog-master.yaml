@@ -2,3 +2,6 @@ databaseChangeLog:
   - changeSet:
       id: init
       author: nicholas
+  - include:
+      file: v1_0_0/changelog.yaml
+      relativeToChangelogFile: true
