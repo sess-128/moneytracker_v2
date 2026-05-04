@@ -8,11 +8,15 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Service
 import org.springframework.web.filter.OncePerRequestFilter
+import ru.rrtyui.moneytracker.dao.repos.UserRepository
+import ru.rrtyui.moneytracker.exception.UserNotFoundException
+import ru.rrtyui.moneytracker.service.security.data.UserData
+import java.util.UUID
 
 @Service
 class JwtAccessFilter(
-    private val securityUserDetailsService: SecurityUserDetailsService,
-    private val jwtTokenService: JwtTokenService
+    private val jwtTokenService: JwtTokenService,
+    private val userRepository: UserRepository
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -20,29 +24,32 @@ class JwtAccessFilter(
         filterChain: FilterChain
     ) {
         val authorizationHeader: String? = request.getHeader("Authorization")
-        if (null != authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
-            try {
-                val token: String = authorizationHeader.substringAfter("Bearer ")
-                val username: String = jwtTokenService.extractUsername(token)
-
-                if (SecurityContextHolder.getContext().authentication == null) {
-                    val userDetails: SecurityUserDetails = securityUserDetailsService.loadUserByUsername(username)
-
-                    if (username == userDetails.username) {
-                        val authToken = UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.authorities
-                        )
-                        authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                        SecurityContextHolder.getContext().authentication = authToken
-                    }
-                }
-            } catch (ex: Exception) {
-                response.writer.write(
-                    """{"error": "Filter Authorization error: 
-                    |${ex.message ?: "unknown error"}"}""".trimMargin()
-                )
-            }
+        if (authorizationHeader.isNullOrBlank() || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response)
+            return
         }
-        filterChain.doFilter(request, response)
+        runCatching {
+            val token: String = authorizationHeader.substringAfter("Bearer ")
+            val userId: UUID = jwtTokenService.extractUserId(token)
+            if (SecurityContextHolder.getContext().authentication == null) {
+                val user: UserData = userRepository.findByUserId(userId) ?: let { throw UserNotFoundException("User not found") }
+                if (userId == user.id) {
+                    val authToken = UsernamePasswordAuthenticationToken(
+                        user, null, listOf(user.role)
+                    )
+                    authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authToken
+                }
+            }
+            filterChain.doFilter(request, response)
+        }.onFailure { ex ->
+            response.writer.write(
+                """
+            {
+              "error": "${ex.message ?: "unknown error"}"
+            }
+            """.trimIndent()
+            )
+        }
     }
 }

@@ -1,6 +1,5 @@
 package ru.rrtyui.moneytracker.api.dto.user
 
-data class UserLoginResponseDto(
-    val login: String,
+data class UserTokenResponseDto(
     val token: String
 )

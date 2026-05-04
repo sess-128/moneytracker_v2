@@ -24,6 +24,11 @@ dependencies {
 	implementation(libs.springBootStarterWeb)
 	implementation(libs.springBootStarterJdbc)
 	implementation(libs.springBootStarterSpringdocOpenapi)
+	implementation(libs.springWebSecurity)
+	implementation(libs.jwtTokenApi)
+	implementation(libs.jwtTokenImpl)
+	implementation(libs.jwtTokenJackson)
+
 	developmentOnly(libs.springBootDockerCompose)
 
 	implementation(libs.exposedSpringBootStarter)
@@ -45,6 +50,7 @@ dependencies {
 	testImplementation(libs.kotlinJUnit5)
 	testImplementation(libs.testContainersJunitJupiter)
 	testImplementation(libs.testContainersPostgres)
+	testImplementation(libs.springWebSecurityTest)
 	testRuntimeOnly(libs.junitPlatformLauncher)
 }
 

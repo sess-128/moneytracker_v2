@@ -1,46 +1,49 @@
 package ru.rrtyui.moneytracker.dao.repos
 
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Repository
-import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserRegistrationRequestDto
 import ru.rrtyui.moneytracker.dao.UserRole
-import ru.rrtyui.moneytracker.dao.Users
-import ru.rrtyui.moneytracker.dao.Users.email
-import ru.rrtyui.moneytracker.dao.Users.username
+import ru.rrtyui.moneytracker.dao.UserTable
 import ru.rrtyui.moneytracker.mapper.toUser
 import ru.rrtyui.moneytracker.service.security.data.UserData
-import java.nio.file.attribute.UserPrincipalNotFoundException
 import java.util.UUID
 
 @Repository
 class UserRepository {
 
     fun findUserByUserName(userName: String): UserData? = transaction {
-        Users
+        UserTable
             .selectAll()
-            .where { Users.username eq userName }
+            .where { UserTable.username eq userName }
             .map { it.toUser() }
-            .firstOrNull()
+            .singleOrNull()
     }
 
-    fun insertAndReturnId(requestDto: UserRegistrationRequestDto, encodePassword: String): UUID = transaction {
-        Users.insertAndGetId() {
+    fun insertNewUser(requestDto: UserRegistrationRequestDto, encodePassword: String) = transaction {
+        UserTable.insert {
             it[username] = requestDto.username
             it[password] = encodePassword
             it[email] = requestDto.email
             it[role] = UserRole.USER
-        } .value
+        }
     }
 
-    fun findByUserId(createdUserID: UUID): UserData =  transaction {
-        Users
+    fun existByUsername(username: String): Boolean = transaction {
+        !UserTable
             .selectAll()
-            .where { Users.id eq createdUserID }
+            .where { UserTable.username eq username }
+            .empty()
+    }
+
+    fun findByUserId(userId: UUID): UserData? = transaction {
+        UserTable
+            .selectAll()
+            .where { UserTable.id eq userId }
             .map { it.toUser() }
-            .firstOrNull() ?: throw UserPrincipalNotFoundException("User with id: $createdUserID not found")
+            .singleOrNull()
     }
 }
