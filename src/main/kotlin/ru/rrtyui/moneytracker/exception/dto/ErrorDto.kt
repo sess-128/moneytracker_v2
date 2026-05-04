@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.exception
+package ru.rrtyui.moneytracker.exception.dto
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
@@ -11,10 +11,4 @@ data class ErrorDto(
     val message: String,
     val path: String,
     val details: List<FieldErrorDto>? = null
-)
-
-data class FieldErrorDto(
-    val field: String,
-    val rejectedValue: Any? = null,
-    val message: String
 )
