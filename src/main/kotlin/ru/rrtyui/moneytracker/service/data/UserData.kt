@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.service.security.data
+package ru.rrtyui.moneytracker.service.data
 
 import ru.rrtyui.moneytracker.entity.UserRole
 import java.util.UUID

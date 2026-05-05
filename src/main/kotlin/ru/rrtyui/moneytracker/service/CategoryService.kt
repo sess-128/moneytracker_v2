@@ -4,10 +4,8 @@ import org.springframework.stereotype.Service
 import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
-import ru.rrtyui.moneytracker.entity.CategoryType
 import ru.rrtyui.moneytracker.repository.CategoryRepository
-import ru.rrtyui.moneytracker.service.security.data.UserData
-import java.util.*
+import ru.rrtyui.moneytracker.service.data.UserData
 
 @Service
 class CategoryService(

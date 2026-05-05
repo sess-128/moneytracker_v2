@@ -7,24 +7,24 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Repository
 import ru.rrtyui.moneytracker.api.dto.user.UserRegistrationRequestDto
 import ru.rrtyui.moneytracker.entity.UserRole
-import ru.rrtyui.moneytracker.entity.UserTable
+import ru.rrtyui.moneytracker.entity.Users
 import ru.rrtyui.moneytracker.mapper.toUser
-import ru.rrtyui.moneytracker.service.security.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserData
 import java.util.UUID
 
 @Repository
 class UserRepository {
 
     fun findUserByUserName(userName: String): UserData? = transaction {
-        UserTable
+        Users
             .selectAll()
-            .where { UserTable.username eq userName }
+            .where { Users.username eq userName }
             .map { it.toUser() }
             .singleOrNull()
     }
 
     fun insertNewUser(requestDto: UserRegistrationRequestDto, encodePassword: String) = transaction {
-        UserTable.insert {
+        Users.insert {
             it[username] = requestDto.username
             it[password] = encodePassword
             it[email] = requestDto.email
@@ -33,16 +33,16 @@ class UserRepository {
     }
 
     fun existByUsername(username: String): Boolean = transaction {
-        !UserTable
+        !Users
             .selectAll()
-            .where { UserTable.username eq username }
+            .where { Users.username eq username }
             .empty()
     }
 
     fun findByUserId(userId: UUID): UserData? = transaction {
-        UserTable
+        Users
             .selectAll()
-            .where { UserTable.id eq userId }
+            .where { Users.id eq userId }
             .map { it.toUser() }
             .singleOrNull()
     }

@@ -9,15 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
 import ru.rrtyui.moneytracker.service.CategoryService
-import ru.rrtyui.moneytracker.service.security.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserData
 
 
-@RestController("api/categories")
+@RestController
+@RequestMapping("api/categories")
 class CategoryController(
     private val logger: KLogger = KotlinLogging.logger {},
     val categoryService: CategoryService

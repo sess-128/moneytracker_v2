@@ -8,7 +8,7 @@ import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserTokenResponseDto
 import ru.rrtyui.moneytracker.repository.UserRepository
 import ru.rrtyui.moneytracker.exception.UserNotFoundException
-import ru.rrtyui.moneytracker.service.security.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserData
 import java.util.Date
 
 @Service

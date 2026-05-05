@@ -1,10 +1,10 @@
-package ru.rrtyui.moneytracker.api.dto.transaction
+package ru.rrtyui.moneytracker.service.data
 
+import kotlinx.datetime.LocalDate
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.util.UUID
 
-data class TransactionResponseDto(
+data class TransactionData(
     val id: UUID,
     val categoryName: String,
     val userName: String,
