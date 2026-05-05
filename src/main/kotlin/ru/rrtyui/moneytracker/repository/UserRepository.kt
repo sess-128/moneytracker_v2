@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.dao.repos
+package ru.rrtyui.moneytracker.repository
 
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insert
@@ -6,8 +6,8 @@ import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Repository
 import ru.rrtyui.moneytracker.api.dto.user.UserRegistrationRequestDto
-import ru.rrtyui.moneytracker.dao.UserRole
-import ru.rrtyui.moneytracker.dao.UserTable
+import ru.rrtyui.moneytracker.entity.UserRole
+import ru.rrtyui.moneytracker.entity.UserTable
 import ru.rrtyui.moneytracker.mapper.toUser
 import ru.rrtyui.moneytracker.service.security.data.UserData
 import java.util.UUID

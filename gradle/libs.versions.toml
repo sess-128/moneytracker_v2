@@ -9,6 +9,8 @@ exposed = "1.2.0"
 apache-poi = "5.5.1"
 kotlinx-coroutines = "1.10.2"
 jwt-token-api = "0.11.5"
+kotlin-logging-jvm = "3.0.5"
+
 
 [libraries]
 
@@ -27,9 +29,11 @@ exposedCore = { module = "org.jetbrains.exposed:exposed-core", version.ref = "ex
 exposedJdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 exposedKotlinDatetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 
+#Kotlin
 kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 jacksonModuleKotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+kotlinLoggingJvm = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlin-logging-jvm" }
 
 apachePoi = { module = "org.apache.poi:poi-ooxml", version.ref = "apache-poi" }
 
