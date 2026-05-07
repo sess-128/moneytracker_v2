@@ -1,13 +1,13 @@
 package ru.rrtyui.moneytracker.mapper
 
 import org.jetbrains.exposed.v1.core.ResultRow
-import ru.rrtyui.moneytracker.entity.UserTable
-import ru.rrtyui.moneytracker.service.security.data.UserData
+import ru.rrtyui.moneytracker.entity.Users
+import ru.rrtyui.moneytracker.service.data.UserData
 
 fun ResultRow.toUser() = UserData (
-    id = this[UserTable.id].value,
-    username = this[UserTable.username],
-    email = this[UserTable.email],
-    password = this[UserTable.password],
-    role = this[UserTable.role]
+    id = this[Users.id].value,
+    username = this[Users.username],
+    email = this[Users.email],
+    password = this[Users.password],
+    role = this[Users.role]
 )

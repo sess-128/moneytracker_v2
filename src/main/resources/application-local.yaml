@@ -1,7 +1,9 @@
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
+    org.jetbrains.exposed.sql: DEBUG
+    org.jetbrains.exposed.sql.statements: DEBUG
+    org.jetbrains.exposed.sql.transactions: DEBUG
+    jdbc.sqlonly: DEBUG
 spring:
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
