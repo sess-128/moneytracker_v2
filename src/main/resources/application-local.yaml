@@ -21,4 +21,4 @@ spring:
 application:
   mode: local
 jwt:
-  accessTokenExpiration: 600000
+  accessTokenExpiration: 6000000
