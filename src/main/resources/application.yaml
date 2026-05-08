@@ -1,4 +1,7 @@
 spring:
+  docker:
+    compose:
+      file: docker-compose-prod.yml
   application:
     name: money-tracker
   datasource:
@@ -7,10 +10,10 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
   liquibase:
-    change-log: db/changelog/db.changelog-master.xml
+    change-log: db/changelog/db.changelog-master.yaml
     enabled: true
 application:
   mode: prod
 jwt:
-  accessTokenExpiration: 60000
-  secret: 25cf3c44c8f39313e8cbf7c23e22fe8b2ee8b288ee5206b0a6397583a1f7f0ef
+  accessTokenExpiration: ${JWT_TOKEN_EXPIRE_TIME}
+  secret: ${JWT_TOKEN_SECRET}

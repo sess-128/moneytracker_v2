@@ -1,11 +1,9 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Gradle
+.gradle
+build/
 
-# Maven
+# Logs
 *.log
-.mvn/
 
 # IDE
 .git
@@ -19,6 +17,4 @@ target/
 .DS_Store
 Thumbs.db
 
-# Docker
-Dockerfile
-docker-compose*.yml
+out
