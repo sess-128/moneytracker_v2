@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: 090526_00_00
+      author: rrtyui
+      changes:
+        - createTable:
+            tableName: user_category_rel
+            schemaName: relation
+
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: UUID
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+
+                  defaultValueBoolean: false
+
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: user_category_rel
+            schemaName: relation
+
+            columnNames: user_id, category_id
+            constraintName: pk_user_category_rel
+
+        - addForeignKeyConstraint:
+            baseTableSchemaName: relation
+            baseTableName: user_category_rel
+            baseColumnNames: user_id
+
+            referencedTableSchemaName: storage
+            referencedTableName: users
+            referencedColumnNames: id
+
+            constraintName: fk_user_category_rel_user
+
+        - addForeignKeyConstraint:
+            baseTableSchemaName: relation
+            baseTableName: user_category_rel
+            baseColumnNames: category_id
+
+            referencedTableSchemaName: storage
+            referencedTableName: categories
+            referencedColumnNames: id
+
+            constraintName: fk_user_category_rel_category
+
+        - createIndex:
+            tableName: user_category_rel
+            schemaName: relation
+
+            indexName: idx_user_category_rel_user
+
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: user_category_rel
+            schemaName: relation
+
+            indexName: idx_user_category_rel_category
+
+            columns:
+              - column:
+                  name: category_id
