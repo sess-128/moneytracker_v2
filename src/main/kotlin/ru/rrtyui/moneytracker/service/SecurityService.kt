@@ -26,6 +26,6 @@ class SecurityService(
             ?.let { throw UserAlreadyExistsException("User already exists") }
         val encodePassword = passwordEncoder.encode(requestDto.password)
         userRepository.insertNewUser(requestDto, encodePassword)
-        return successUserRegistrationMessage.replace("{username}", requestDto.username)
+        return successUserRegistrationMessage.replace("%s", requestDto.username)
     }
 }
