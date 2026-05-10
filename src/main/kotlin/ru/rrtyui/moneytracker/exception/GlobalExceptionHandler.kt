@@ -18,44 +18,56 @@ import ru.rrtyui.moneytracker.exception.dto.FieldErrorDto
 class GlobalExceptionHandler: ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(UserAlreadyExistsException::class)
-    fun handleUserAlreadyExists(ex: UserAlreadyExistsException, request: HttpServletRequest): ResponseEntity<ErrorDto> {
-        val errorDto = buildErrorDto(
-            LocalDateTime.now(), HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.reasonPhrase,
-            request.requestURI, ex.message.toString(), null
+    fun handleUserAlreadyExists(
+        exception: UserAlreadyExistsException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorDto> {
+        val errorDto = ErrorDto(
+            status = HttpStatus.CONFLICT.value(),
+            error = HttpStatus.CONFLICT.reasonPhrase,
+            message = exception.message ?: "User already exist",
+            path = request.requestURI,
+            details = null
         )
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto)
     }
 
-    override fun handleMethodArgumentNotValid(
-        ex: MethodArgumentNotValidException, headers: HttpHeaders,
-        status: HttpStatusCode, request: WebRequest
-    ): ResponseEntity<Any> {
-        val fieldErrors = buildErrorFields(ex)
-        val errorDto = buildErrorDto(
-            LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.reasonPhrase,
-            request.contextPath, "Validation failed",  fieldErrors
+    @ExceptionHandler(UserNotFoundException::class)
+    fun handleUserNotFound(
+        exception: UserNotFoundException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorDto> {
+        val errorDto = ErrorDto(
+            status = HttpStatus.NOT_FOUND.value(),
+            error = HttpStatus.NOT_FOUND.reasonPhrase,
+            message = exception.message ?: "User not found",
+            path = request.requestURI,
+            details = null
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto)
+    }
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValid(
+        exception: MethodArgumentNotValidException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorDto> {
+        val fieldErrors = buildErrorFields(exception)
+        val errorDto = ErrorDto(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
+            message = exception.message,
+            path = request.requestURI,
+            details = fieldErrors
         )
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto)
     }
 
-    private fun buildErrorFields(ex: MethodArgumentNotValidException) =
-        ex.bindingResult.fieldErrors.map { fieldError ->
+    private fun buildErrorFields(exception: MethodArgumentNotValidException) =
+        exception.bindingResult.fieldErrors.map { fieldError ->
             FieldErrorDto(
                 field = fieldError.field,
                 rejectedValue = fieldError.rejectedValue,
                 message = fieldError.defaultMessage ?: "Field validation failed"
             )
         }
-
-    private fun buildErrorDto(
-        now: LocalDateTime, value: Int, reasonPhrase: String, requestURI: String,
-        message: String, filedErrors: List<FieldErrorDto>?
-    ) = ErrorDto(
-        timestamp = now,
-        status = value,
-        error = reasonPhrase,
-        path = requestURI,
-        message = message,
-        details = filedErrors
-    )
 }
