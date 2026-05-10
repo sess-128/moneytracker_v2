@@ -1,5 +1,6 @@
 package ru.rrtyui.moneytracker.repository
 
+import java.util.UUID
 import org.jetbrains.exposed.v1.core.JoinType
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
@@ -16,7 +17,6 @@ import ru.rrtyui.moneytracker.entity.Categories
 import ru.rrtyui.moneytracker.entity.CategoryTree
 import ru.rrtyui.moneytracker.exception.CategoryAlreadyExistsException
 import ru.rrtyui.moneytracker.mapper.toCategoryDto
-import java.util.*
 
 @Repository
 class CategoryTreeRepository {

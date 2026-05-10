@@ -12,7 +12,6 @@ import ru.rrtyui.moneytracker.api.dto.transaction.TransactionRequestDto
 import ru.rrtyui.moneytracker.api.dto.transaction.TransactionRequestFilterDto
 import ru.rrtyui.moneytracker.api.dto.transaction.TransactionUpdateRequestDto
 import ru.rrtyui.moneytracker.service.TransactionService
-import ru.rrtyui.moneytracker.service.data.UserData
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @RestController

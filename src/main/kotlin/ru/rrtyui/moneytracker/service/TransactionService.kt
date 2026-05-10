@@ -11,7 +11,6 @@ import ru.rrtyui.moneytracker.api.dto.transaction.TransactionUpdateRequestDto
 import ru.rrtyui.moneytracker.entity.Categories
 import ru.rrtyui.moneytracker.exception.CategoryNotFoundException
 import ru.rrtyui.moneytracker.repository.TransactionRepository
-import ru.rrtyui.moneytracker.service.data.UserData
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @Service

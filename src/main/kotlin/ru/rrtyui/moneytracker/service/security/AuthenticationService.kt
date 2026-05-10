@@ -1,5 +1,6 @@
 package ru.rrtyui.moneytracker.service.security
 
+import java.util.Date
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -8,7 +9,6 @@ import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserTokenResponseDto
 import ru.rrtyui.moneytracker.repository.UserRepository
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
-import java.util.*
 
 @Service
 class AuthenticationService(
