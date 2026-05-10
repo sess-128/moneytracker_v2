@@ -1,8 +1,8 @@
 package ru.rrtyui.moneytracker.repository
 
+import java.util.UUID
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.v1.core.Join
-import org.jetbrains.exposed.v1.core.JoinType
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.innerJoin
 import org.jetbrains.exposed.v1.jdbc.insertAndGetId
@@ -19,7 +19,6 @@ import ru.rrtyui.moneytracker.entity.Users
 import ru.rrtyui.moneytracker.exception.TransactionNotFoundException
 import ru.rrtyui.moneytracker.mapper.toTransactional
 import ru.rrtyui.moneytracker.service.data.UserData
-import java.util.UUID
 
 @Repository
 class TransactionRepository {

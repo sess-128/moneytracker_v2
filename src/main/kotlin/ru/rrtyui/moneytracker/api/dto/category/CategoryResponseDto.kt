@@ -1,7 +1,7 @@
 package ru.rrtyui.moneytracker.api.dto.category
 
+import java.util.UUID
 import ru.rrtyui.moneytracker.entity.CategoryType
-import java.util.*
 
 data class CategoryResponseDto(
     val id: UUID,

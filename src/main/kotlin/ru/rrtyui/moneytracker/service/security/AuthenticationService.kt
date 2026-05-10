@@ -1,15 +1,15 @@
 package ru.rrtyui.moneytracker.service.security
 
+import java.util.Date
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
 import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserTokenResponseDto
-import ru.rrtyui.moneytracker.repository.UserRepository
 import ru.rrtyui.moneytracker.exception.UserNotFoundException
+import ru.rrtyui.moneytracker.repository.UserRepository
 import ru.rrtyui.moneytracker.service.data.UserData
-import java.util.Date
 
 @Service
 class AuthenticationService(

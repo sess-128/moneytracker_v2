@@ -6,9 +6,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
-import ru.rrtyui.moneytracker.repository.UserRepository
 import ru.rrtyui.moneytracker.exception.UserNotFoundException
-import kotlin.jvm.java
+import ru.rrtyui.moneytracker.repository.UserRepository
 
 @Component
 class CustomAuthenticationProvider(

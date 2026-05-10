@@ -1,7 +1,7 @@
 package ru.rrtyui.moneytracker.api.dto.transaction
 
-import java.time.LocalDate
 import java.math.BigDecimal
+import java.time.LocalDate
 
 data class TransactionRequestDto(
     val categoryName: String,

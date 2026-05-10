@@ -1,5 +1,6 @@
 package ru.rrtyui.moneytracker.repository
 
+import java.util.UUID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -10,7 +11,6 @@ import ru.rrtyui.moneytracker.entity.UserRole
 import ru.rrtyui.moneytracker.entity.Users
 import ru.rrtyui.moneytracker.mapper.toUser
 import ru.rrtyui.moneytracker.service.data.UserData
-import java.util.UUID
 
 @Repository
 class UserRepository {

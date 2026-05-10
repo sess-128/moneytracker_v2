@@ -1,6 +1,7 @@
 package ru.rrtyui.moneytracker.exception
 
 import jakarta.servlet.http.HttpServletRequest
+import java.time.LocalDateTime
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -12,7 +13,6 @@ import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import ru.rrtyui.moneytracker.exception.dto.ErrorDto
 import ru.rrtyui.moneytracker.exception.dto.FieldErrorDto
-import java.time.LocalDateTime
 
 @RestControllerAdvice
 class GlobalExceptionHandler: ResponseEntityExceptionHandler() {

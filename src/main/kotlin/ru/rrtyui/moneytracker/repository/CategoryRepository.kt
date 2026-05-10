@@ -1,11 +1,16 @@
 package ru.rrtyui.moneytracker.repository
 
+import java.util.UUID
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.datetime.CurrentDateTime
-import org.jetbrains.exposed.v1.jdbc.*
+import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.insertAndGetId
+import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
 import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
@@ -13,7 +18,6 @@ import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
 import ru.rrtyui.moneytracker.entity.Categories
 import ru.rrtyui.moneytracker.entity.UserCategoryRel
 import ru.rrtyui.moneytracker.mapper.toCategoryDto
-import java.util.*
 
 
 @Repository

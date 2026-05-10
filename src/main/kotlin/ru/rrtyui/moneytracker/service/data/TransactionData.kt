@@ -1,8 +1,8 @@
 package ru.rrtyui.moneytracker.service.data
 
-import kotlinx.datetime.LocalDate
 import java.math.BigDecimal
 import java.util.UUID
+import kotlinx.datetime.LocalDate
 
 data class TransactionData(
     val id: UUID,

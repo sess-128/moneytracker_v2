@@ -1,13 +1,13 @@
 package ru.rrtyui.moneytracker.entity
 
+import java.math.BigDecimal
+import java.util.UUID
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
 import org.jetbrains.exposed.v1.core.java.javaUUID
 import org.jetbrains.exposed.v1.datetime.CurrentDateTime
 import org.jetbrains.exposed.v1.datetime.datetime
-import java.math.BigDecimal
-import java.util.UUID
 
 object Transactions: UUIDTable("storage.transactions") {
     val userId: Column<UUID> = javaUUID("user_id")

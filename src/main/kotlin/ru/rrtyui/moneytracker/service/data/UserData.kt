@@ -1,7 +1,7 @@
 package ru.rrtyui.moneytracker.service.data
 
-import ru.rrtyui.moneytracker.entity.UserRole
 import java.util.UUID
+import ru.rrtyui.moneytracker.entity.UserRole
 
 data class UserData(
     val id: UUID,
