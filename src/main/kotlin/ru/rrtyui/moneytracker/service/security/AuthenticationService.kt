@@ -1,15 +1,14 @@
 package ru.rrtyui.moneytracker.service.security
 
-import java.util.Date
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
 import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserTokenResponseDto
-import ru.rrtyui.moneytracker.exception.UserNotFoundException
 import ru.rrtyui.moneytracker.repository.UserRepository
-import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
+import java.util.*
 
 @Service
 class AuthenticationService(
@@ -19,20 +18,25 @@ class AuthenticationService(
     @param:Value($$"${jwt.accessTokenExpiration}") private val accessTokenExpiration: Long = 0,
 ) {
      fun authentication(requestDto: UserLoginRequestDto): UserTokenResponseDto {
-         authManager.authenticate(
+         val authenticate = authManager.authenticate(
              UsernamePasswordAuthenticationToken(
                  requestDto.username,
                  requestDto.password
              )
          )
-         val user: UserData = userRepository.findUserByUserName(requestDto.username)
-             ?: let { throw UserNotFoundException("User not found") }
-         val accessToken = createAccessToken(user)
+         val principal = authenticate.principal as UserPrincipal
+         val accessToken = createAccessToken(principal)
          return UserTokenResponseDto(token = accessToken)
     }
 
-    private fun createAccessToken(user: UserData): String = jwtTokenService.generateToken(
-        subject = user.id.toString(),
-        expiration = Date(System.currentTimeMillis() + accessTokenExpiration)
-    )
+    private fun createAccessToken(user: UserPrincipal): String =
+        jwtTokenService.generateToken(
+            subject = user.id.toString(),
+            expiration = Date(System.currentTimeMillis() + accessTokenExpiration),
+            additionalClaims = mapOf(
+                "username" to user.username,
+                "role" to user.role.name,
+                "type" to "access"
+            )
+        )
 }

@@ -1,10 +1,7 @@
 package ru.rrtyui.moneytracker.exception
 
 import jakarta.servlet.http.HttpServletRequest
-import java.time.LocalDateTime
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -15,7 +12,7 @@ import ru.rrtyui.moneytracker.exception.dto.ErrorDto
 import ru.rrtyui.moneytracker.exception.dto.FieldErrorDto
 
 @RestControllerAdvice
-class GlobalExceptionHandler: ResponseEntityExceptionHandler() {
+class GlobalControllerAdvice: ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(UserAlreadyExistsException::class)
     fun handleUserAlreadyExists(
@@ -26,6 +23,21 @@ class GlobalExceptionHandler: ResponseEntityExceptionHandler() {
             status = HttpStatus.CONFLICT.value(),
             error = HttpStatus.CONFLICT.reasonPhrase,
             message = exception.message ?: "User already exist",
+            path = request.requestURI,
+            details = null
+        )
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto)
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException::class)
+    fun handleCategoryAlreadyExists(
+        exception: CategoryAlreadyExistsException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorDto> {
+        val errorDto = ErrorDto(
+            status = HttpStatus.CONFLICT.value(),
+            error = HttpStatus.CONFLICT.reasonPhrase,
+            message = exception.message ?: "Category already exist",
             path = request.requestURI,
             details = null
         )
@@ -46,11 +58,15 @@ class GlobalExceptionHandler: ResponseEntityExceptionHandler() {
         )
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto)
     }
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValid(
+
+    override fun handleMethodArgumentNotValid(
         exception: MethodArgumentNotValidException,
-        request: HttpServletRequest
-    ): ResponseEntity<ErrorDto> {
+        headers: org.springframework.http.HttpHeaders,
+        status: org.springframework.http.HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        request as HttpServletRequest
+
         val fieldErrors = buildErrorFields(exception)
         val errorDto = ErrorDto(
             status = HttpStatus.BAD_REQUEST.value(),

@@ -12,19 +12,20 @@ import ru.rrtyui.moneytracker.entity.Categories
 import ru.rrtyui.moneytracker.exception.CategoryNotFoundException
 import ru.rrtyui.moneytracker.repository.TransactionRepository
 import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @Service
 class TransactionService(
     private val transactionRepository: TransactionRepository
 ) {
-    fun getAllTransactionsByUser(principal: UserData):
+    fun getAllTransactionsByUser(principal: UserPrincipal):
             List<TransactionResponseDto> = transactionRepository.findTransactionsByUser(principal)
 
     fun getTransactionByFilter(filterDto: TransactionRequestFilterDto) {
         TODO("Not implemented yet")
     }
 
-    fun createTransactionByUser(principal: UserData, transactionRequestDto: TransactionRequestDto): TransactionResponseDto = transaction {
+    fun createTransactionByUser(principal: UserPrincipal, transactionRequestDto: TransactionRequestDto): TransactionResponseDto = transaction {
         val category = Categories
             .select(Categories.id)
             .where { Categories.name eq transactionRequestDto.categoryName }

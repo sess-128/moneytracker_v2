@@ -1,13 +1,12 @@
 package ru.rrtyui.moneytracker.service.security
 
-import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import java.util.Base64
-import java.util.Date
-import java.util.UUID
-import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import ru.rrtyui.moneytracker.entity.UserRole
+import ru.rrtyui.moneytracker.service.data.JwtClaimsData
+import java.util.*
+import javax.crypto.spec.SecretKeySpec
 
 @Service
 class JwtTokenService(
@@ -27,15 +26,18 @@ class JwtTokenService(
         .signWith(signingKey)
         .compact()
 
-    fun extractUserId(token: String): UUID = UUID.fromString(extractAllClaims(token).subject)
+    fun extractClaims(token: String): JwtClaimsData {
+        val claims = Jwts.parserBuilder()
+            .setSigningKey(signingKey)
+            .build()
+            .parseClaimsJws(token)
+            .body
 
-    private fun extractAllClaims(token: String): Claims = Jwts.parserBuilder()
-        .setSigningKey(signingKey)
-        .build()
-        .parseClaimsJws(token)
-        .body
-
-    fun validateToken(token: String, userId: UUID): Boolean = extractUserId(token) == userId && !isExpire(token)
-
-    fun isExpire(token: String): Boolean = extractAllClaims(token).expiration.before(Date())
+        return JwtClaimsData(
+            userId = UUID.fromString(claims.subject),
+            username = claims["username"] as String,
+            role = UserRole.valueOf(claims["role"] as String),
+            type = claims["type"] as String
+        )
+    }
 }

@@ -13,13 +13,14 @@ import ru.rrtyui.moneytracker.api.dto.transaction.TransactionRequestFilterDto
 import ru.rrtyui.moneytracker.api.dto.transaction.TransactionUpdateRequestDto
 import ru.rrtyui.moneytracker.service.TransactionService
 import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @RestController
 @RequestMapping("/api/v1/transactions")
 class TransactionController(private val transactionService: TransactionService) {
 
     @GetMapping
-    fun getTransactionsByUser(@AuthenticationPrincipal principal: UserData) =
+    fun getTransactionsByUser(@AuthenticationPrincipal principal: UserPrincipal) =
         ok(transactionService.getAllTransactionsByUser(principal))
 
 
@@ -28,7 +29,10 @@ class TransactionController(private val transactionService: TransactionService) 
         ok(transactionService.getTransactionByFilter(filterDto))
 
     @PostMapping
-    fun createTransaction(@AuthenticationPrincipal principal: UserData, @RequestBody transactionRequestDto: TransactionRequestDto) =
+    fun createTransaction(
+        @AuthenticationPrincipal principal: UserPrincipal,
+        @RequestBody transactionRequestDto: TransactionRequestDto
+    ) =
         ok(transactionService.createTransactionByUser(principal, transactionRequestDto))
 
     @PutMapping
