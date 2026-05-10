@@ -5,18 +5,25 @@ import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
 import ru.rrtyui.moneytracker.repository.CategoryRepository
-import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.repository.CategoryTreeRepository
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @Service
 class CategoryService(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val categoryTreeRepository: CategoryTreeRepository
 ) {
-    fun getAllCategories(user: UserData): List<CategoryResponseDto> =
-        categoryRepository.findAllByUser(user.id)
+    fun getAllCategories(user: UserPrincipal): List<CategoryResponseDto> =
+        categoryTreeRepository.findUserTree(user.id)
 
 
-    fun createCategory(categoryCreate: CategoryCreateDto, user: UserData): CategoryResponseDto =
-        categoryRepository.createCategory(categoryCreate, user.id)
+    fun findOrCreateCategory(categoryCreateDto: CategoryCreateDto, user: UserPrincipal): CategoryResponseDto {
+
+        val categoryId = categoryRepository.findOrCreateCategory(categoryCreateDto)
+        val createCategory = categoryTreeRepository.insertCategory(categoryId, user.id, categoryCreateDto)
+
+        return createCategory
+    }
 
     /**
      * TODO: Так как категории шареные, то изменять как-либо категорию = поменять ее у всех.
@@ -29,6 +36,6 @@ class CategoryService(
         return categoryRepository.updateCategory(categoryUpdate)
     }
 
-    fun deleteCategory(categoryUpdate: CategoryUpdateDto, user: UserData) =
-        categoryRepository.deleteCategory(categoryUpdate, user.id)
+//    fun deleteCategory(categoryUpdate: CategoryUpdateDto, user: UserData) =
+//        categoryRepository.deleteCategory(categoryUpdate, user.id)
 }
