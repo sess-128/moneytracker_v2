@@ -4,7 +4,6 @@ import mu.KLogger
 import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,7 +14,7 @@ import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
 import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
 import ru.rrtyui.moneytracker.service.CategoryService
-import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 
 @RestController
@@ -27,7 +26,7 @@ class CategoryController(
 
     @GetMapping()
     fun getCategories(
-        @AuthenticationPrincipal user: UserData
+        @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<List<CategoryResponseDto>> {
         logger.info { "Пользователь  ${user.id}  список всех категорий" }
         return ResponseEntity.ok(categoryService.getAllCategories(user))
@@ -36,28 +35,28 @@ class CategoryController(
     @PostMapping
     fun createCategory(
         @RequestBody request: CategoryCreateDto,
-        @AuthenticationPrincipal user: UserData
+        @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponseDto> {
         logger.info { "Пользователь ${user.id} создает категорию $request" }
-        return ResponseEntity.ok(categoryService.createCategory(request, user))
+        return ResponseEntity.ok(categoryService.findOrCreateCategory(request, user))
     }
 
     @PatchMapping
     @Deprecated("Т.к категории шареные - пока отключено, решить позже")
     fun updateCategory(
         @RequestBody request: CategoryUpdateDto,
-        @AuthenticationPrincipal user: UserData
+        @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponseDto> {
         logger.info { "Пользователь ${user.id} обновляет наименование категории на имя = ${request.name}" }
         return ResponseEntity.ok(categoryService.updateCategory(request))
     }
 
-    @DeleteMapping
-    fun deleteCategory(
-        @RequestBody request: CategoryUpdateDto,
-        @AuthenticationPrincipal user: UserData
-    ): ResponseEntity<Int?> {
-        logger.info { "Пользователь ${user.id} удаляет свою связь с категорией $request" }
-        return ResponseEntity.ok(categoryService.deleteCategory(request, user))
-    }
+//    @DeleteMapping
+//    fun deleteCategory(
+//        @RequestBody request: CategoryUpdateDto,
+//        @AuthenticationPrincipal user: UserPrincipal
+//    ): ResponseEntity<Int?> {
+//        logger.info { "Пользователь ${user.id} удаляет свою связь с категорией $request" }
+//        return ResponseEntity.ok(categoryService.deleteCategory(request, user))
+//    }
 }

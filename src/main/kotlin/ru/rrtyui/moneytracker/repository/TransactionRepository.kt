@@ -18,12 +18,12 @@ import ru.rrtyui.moneytracker.entity.Transactions
 import ru.rrtyui.moneytracker.entity.Users
 import ru.rrtyui.moneytracker.exception.TransactionNotFoundException
 import ru.rrtyui.moneytracker.mapper.toTransactional
-import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @Repository
 class TransactionRepository {
 
-    fun findTransactionsByUser(principal: UserData): List<TransactionResponseDto> = transaction {
+    fun findTransactionsByUser(principal: UserPrincipal): List<TransactionResponseDto> = transaction {
         getJoinForSelectTransaction()
             .select(
                 Transactions.id, Categories.name, Users.username, Transactions.amount,

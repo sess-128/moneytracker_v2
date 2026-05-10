@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 090526_00_00
+      author: rrtyui
+      changes:
+        - createTable:
+            tableName: category_tree
+            schemaName: relations
+
+            columns:
+
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: parent_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+
+        - addPrimaryKey:
+            tableName: category_tree
+            schemaName: relations
+            columnNames: user_id, category_id
+            constraintName: pk_category_tree
+
+        - addForeignKeyConstraint:
+            baseTableSchemaName: relations
+            baseTableName: category_tree
+            baseColumnNames: user_id
+
+            referencedTableSchemaName: storage
+            referencedTableName: users
+            referencedColumnNames: id
+
+            constraintName: fk_category_tree_user
+
+        - addForeignKeyConstraint:
+            baseTableSchemaName: relations
+            baseTableName: category_tree
+            baseColumnNames: category_id
+
+            referencedTableSchemaName: storage
+            referencedTableName: categories
+            referencedColumnNames: id
+
+            constraintName: fk_category_tree_category
+
+        - addForeignKeyConstraint:
+            baseTableSchemaName: relations
+            baseTableName: category_tree
+            baseColumnNames: parent_id
+
+            referencedTableSchemaName: storage
+            referencedTableName: categories
+            referencedColumnNames: id
+
+            constraintName: fk_category_tree_parent
+
+        - createIndex:
+            tableName: category_tree
+            schemaName: relations
+
+            indexName: idx_category_tree_user
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: category_tree
+            schemaName: relations
+
+            indexName: idx_category_tree_parent
+            columns:
+              - column:
+                  name: category_id

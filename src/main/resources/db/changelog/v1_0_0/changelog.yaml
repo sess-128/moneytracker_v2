@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       file: 040526_03_00_create_transaction_table.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 090526_00_00-create-table-category_tree.yaml
+      relativeToChangelogFile: true

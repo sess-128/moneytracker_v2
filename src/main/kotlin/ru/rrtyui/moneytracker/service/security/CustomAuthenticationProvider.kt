@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import ru.rrtyui.moneytracker.exception.UserNotFoundException
 import ru.rrtyui.moneytracker.repository.UserRepository
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @Component
 class CustomAuthenticationProvider(
@@ -26,8 +27,14 @@ class CustomAuthenticationProvider(
             throw BadCredentialsException("Invalid password")
         }
 
+        val principal = UserPrincipal(
+            id = user.id,
+            username = user.username,
+            role = user.role
+        )
+
         return UsernamePasswordAuthenticationToken(
-            user,
+            principal,
             null,
             listOf(user.role)
         )

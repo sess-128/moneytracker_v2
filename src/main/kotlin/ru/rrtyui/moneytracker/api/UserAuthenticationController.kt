@@ -13,7 +13,7 @@ import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserRegistrationRequestDto
 import ru.rrtyui.moneytracker.api.dto.user.UserTokenResponseDto
 import ru.rrtyui.moneytracker.service.SecurityService
-import ru.rrtyui.moneytracker.service.data.UserData
+import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @RequestMapping("/api/users")
 @RestController
@@ -31,6 +31,6 @@ class UserAuthenticationController(
 
 
     @GetMapping("/me")
-    fun getMe(@AuthenticationPrincipal principal: UserData): ResponseEntity<UserInfoResponseDto> =
+    fun getMe(@AuthenticationPrincipal principal: UserPrincipal): ResponseEntity<UserInfoResponseDto> =
         ok(UserInfoResponseDto(principal.id.toString(), principal.username))
 }

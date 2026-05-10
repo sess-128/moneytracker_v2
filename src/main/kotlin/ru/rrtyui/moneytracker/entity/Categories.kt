@@ -8,7 +8,7 @@ import org.jetbrains.exposed.v1.datetime.datetime
 
 object Categories: UUIDTable("storage.categories") {
     val name: Column<String> = varchar("name", 128)
-    val type: Column<CategoryType> = enumeration("type", CategoryType::class)
+    val type: Column<CategoryType> = enumerationByName("type", 50,CategoryType::class)
     val createdAt: Column<LocalDateTime> = datetime("created_at").defaultExpression(CurrentDateTime)
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").defaultExpression(CurrentDateTime)
 }
