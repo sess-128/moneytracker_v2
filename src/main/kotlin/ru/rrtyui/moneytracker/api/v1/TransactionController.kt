@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.rrtyui.moneytracker.api.dto.transaction.TransactionRequestDto
+import ru.rrtyui.moneytracker.api.dto.transaction.CreateTransactionRequestDto
 import ru.rrtyui.moneytracker.api.dto.transaction.TransactionRequestFilterDto
 import ru.rrtyui.moneytracker.api.dto.transaction.TransactionUpdateRequestDto
 import ru.rrtyui.moneytracker.service.TransactionService
@@ -29,10 +29,10 @@ class TransactionController(private val transactionService: TransactionService) 
 
     @PostMapping
     fun createTransaction(
-        @AuthenticationPrincipal principal: UserPrincipal,
-        @RequestBody transactionRequestDto: TransactionRequestDto
+        @RequestBody createTransactionRequestDto: CreateTransactionRequestDto,
+        @AuthenticationPrincipal principal: UserPrincipal
     ) =
-        ok(transactionService.createTransactionByUser(principal, transactionRequestDto))
+        ok(transactionService.createTransactionByUser(principal, createTransactionRequestDto))
 
     @PutMapping
     fun updateTransaction(@RequestBody transactionRequestDto: TransactionUpdateRequestDto) =

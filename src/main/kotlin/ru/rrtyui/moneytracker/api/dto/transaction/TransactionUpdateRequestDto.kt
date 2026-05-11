@@ -5,5 +5,5 @@ import java.util.UUID
 
 data class TransactionUpdateRequestDto(
     val id: UUID,
-    val createdAt: LocalDateTime
+    val transactionDate: LocalDateTime
 )
