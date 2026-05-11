@@ -22,4 +22,4 @@ application:
   mode: local
 jwt:
   accessTokenExpiration: 6000000
-  secret: verySecretLocalSecret2004devLocal!!@
+  secret: ScoSHDpqKX3P9VgKC61rTdI0FrV1AvnVYugSXvqGM8X

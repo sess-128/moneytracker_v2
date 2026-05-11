@@ -28,6 +28,7 @@ exposedSpringBootStarter = { module = "org.jetbrains.exposed:exposed-spring-boot
 exposedCore = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposedJdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 exposedKotlinDatetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
+exposedJavaDatetime = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
 
 #Kotlin
 kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }

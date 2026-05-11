@@ -35,6 +35,7 @@ dependencies {
 	implementation(libs.exposedCore)
 	implementation(libs.exposedJdbc)
 	implementation(libs.exposedKotlinDatetime)
+	implementation(libs.exposedJavaDatetime)
 
 	implementation(libs.jacksonModuleKotlin)
 	implementation(libs.kotlinReflect)

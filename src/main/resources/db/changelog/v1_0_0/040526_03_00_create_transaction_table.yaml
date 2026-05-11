@@ -29,17 +29,21 @@ databaseChangeLog:
                     nullable: false
 
               - column:
+                  name: transaction_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
                   name: amount
                   type: numeric(18,4)
                   constraints:
-                    nullable: true
+                    nullable: false
 
               - column:
                   name: description
                   type: varchar(255)
-                  constraints:
-                    unique: true
-                    nullable: false
 
               - column:
                   name: created_at
