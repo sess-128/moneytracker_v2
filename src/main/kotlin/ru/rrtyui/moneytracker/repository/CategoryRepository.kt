@@ -8,16 +8,16 @@ import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
-import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
+import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
+import ru.rrtyui.moneytracker.client.response.CategoryResponse
+import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
 import ru.rrtyui.moneytracker.entity.Categories
 
 
 @Repository
 class CategoryRepository {
 
-    fun findOrCreateCategory(categoryCreate: CategoryCreateDto): UUID =
+    fun findOrCreateCategory(categoryCreate: CategoryCreateRequest): UUID =
         transaction {
 
             Categories
@@ -31,7 +31,7 @@ class CategoryRepository {
                 }.value
         }
 
-    fun updateCategory(categoryUpdate: CategoryUpdateDto): CategoryResponseDto =
+    fun updateCategory(categoryUpdate: CategoryUpdateRequest): CategoryResponse =
         transaction {
             val row = Categories
                 .selectAll()
@@ -46,7 +46,7 @@ class CategoryRepository {
                 it[updatedAt] = CurrentDateTime
             }
 
-            CategoryResponseDto(
+            CategoryResponse(
                 categoryId,
                 categoryUpdate.name,
                 row[Categories.type],

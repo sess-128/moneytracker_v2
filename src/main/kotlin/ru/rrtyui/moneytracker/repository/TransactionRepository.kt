@@ -8,9 +8,9 @@ import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
-import ru.rrtyui.moneytracker.api.dto.transaction.CreateTransactionRequestDto
-import ru.rrtyui.moneytracker.api.dto.transaction.TransactionResponseDto
-import ru.rrtyui.moneytracker.api.dto.transaction.TransactionUpdateRequestDto
+import ru.rrtyui.moneytracker.client.request.TransactionCreateRequest
+import ru.rrtyui.moneytracker.client.response.TransactionResponse
+import ru.rrtyui.moneytracker.client.request.TransactionUpdateRequest
 import ru.rrtyui.moneytracker.entity.Transactions
 import ru.rrtyui.moneytracker.mapper.toTransactionDto
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
@@ -20,7 +20,7 @@ class TransactionRepository {
 
     fun findByUser(
         principal: UserPrincipal
-    ): List<TransactionResponseDto> = transaction {
+    ): List<TransactionResponse> = transaction {
 
         Transactions
             .selectAll()
@@ -30,7 +30,7 @@ class TransactionRepository {
 
     fun findById(
         transactionId: UUID
-    ): TransactionResponseDto? = transaction {
+    ): TransactionResponse? = transaction {
 
         Transactions
             .selectAll()
@@ -39,7 +39,7 @@ class TransactionRepository {
             .singleOrNull()
     }
 
-    fun createTransaction(transactionDto: CreateTransactionRequestDto, userId: UUID): TransactionResponseDto =
+    fun createTransaction(transactionDto: TransactionCreateRequest, userId: UUID): TransactionResponse =
         transaction {
             val transactionId = Transactions.insertAndGetId {
                 it[Transactions.userId] = userId
@@ -49,7 +49,7 @@ class TransactionRepository {
                 it[Transactions.description] = transactionDto.description
             }.value
 
-            TransactionResponseDto(
+            TransactionResponse(
                 id = transactionId,
                 categoryId = transactionDto.categoryId,
                 amount = transactionDto.amount,
@@ -58,7 +58,7 @@ class TransactionRepository {
             )
         }
 
-    fun updateTransaction(transactionDto: TransactionUpdateRequestDto): Int = transaction {
+    fun updateTransaction(transactionDto: TransactionUpdateRequest): Int = transaction {
         Transactions
             .update({ Transactions.id eq transactionDto.id }) {
                 it[Transactions.transactionDate] = transactionDto.transactionDate

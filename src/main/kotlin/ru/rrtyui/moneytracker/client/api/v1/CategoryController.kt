@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.api.v1
+package ru.rrtyui.moneytracker.client.api.v1
 
 import mu.KLogger
 import mu.KotlinLogging
@@ -10,33 +10,34 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
+import ru.rrtyui.moneytracker.client.RestConstants.API_V1
+import ru.rrtyui.moneytracker.client.RestConstants.CATEGORIES_URL
+import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
+import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
+import ru.rrtyui.moneytracker.client.response.CategoryResponse
 import ru.rrtyui.moneytracker.service.CategoryService
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 
 @RestController
-@RequestMapping("api/categories")
+@RequestMapping("$API_V1/$CATEGORIES_URL")
 class CategoryController(
     private val logger: KLogger = KotlinLogging.logger {},
-    val categoryService: CategoryService
+    private val categoryService: CategoryService
 ){
-
     @GetMapping()
     fun getCategories(
         @AuthenticationPrincipal user: UserPrincipal
-    ): ResponseEntity<List<CategoryResponseDto>> {
+    ): ResponseEntity<List<CategoryResponse>> {
         logger.info { "Пользователь  ${user.id}  список всех категорий" }
         return ResponseEntity.ok(categoryService.getAllCategories(user))
     }
 
     @PostMapping
     fun createCategory(
-        @RequestBody request: CategoryCreateDto,
+        @RequestBody request: CategoryCreateRequest,
         @AuthenticationPrincipal user: UserPrincipal
-    ): ResponseEntity<CategoryResponseDto> {
+    ): ResponseEntity<CategoryResponse> {
         logger.info { "Пользователь ${user.id} создает категорию $request" }
         return ResponseEntity.ok(categoryService.findOrCreateCategory(request, user))
     }
@@ -44,9 +45,9 @@ class CategoryController(
     @PatchMapping
     @Deprecated("Т.к категории шареные - пока отключено, решить позже")
     fun updateCategory(
-        @RequestBody request: CategoryUpdateDto,
+        @RequestBody request: CategoryUpdateRequest,
         @AuthenticationPrincipal user: UserPrincipal
-    ): ResponseEntity<CategoryResponseDto> {
+    ): ResponseEntity<CategoryResponse> {
         logger.info { "Пользователь ${user.id} обновляет наименование категории на имя = ${request.name}" }
         return ResponseEntity.ok(categoryService.updateCategory(request))
     }

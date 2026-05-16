@@ -10,9 +10,9 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Repository
-import ru.rrtyui.moneytracker.api.dto.category.CategoryAttachDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
+import ru.rrtyui.moneytracker.client.request.CategoryAttachRequest
+import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
+import ru.rrtyui.moneytracker.client.response.CategoryResponse
 import ru.rrtyui.moneytracker.entity.Categories
 import ru.rrtyui.moneytracker.entity.CategoryTree
 import ru.rrtyui.moneytracker.exception.CategoryAlreadyExistsException
@@ -22,7 +22,7 @@ import ru.rrtyui.moneytracker.mapper.toCategoryDto
 class CategoryTreeRepository {
 
     fun attachChildToParent(
-        attachDto: CategoryAttachDto,
+        attachDto: CategoryAttachRequest,
         userUuid: UUID
     ) =
         transaction {
@@ -98,8 +98,8 @@ class CategoryTreeRepository {
     fun insertCategory(
         categoryId: UUID,
         userUuid: UUID,
-        categoryCreateDto: CategoryCreateDto,
-    ): CategoryResponseDto =
+        categoryCreateRequest: CategoryCreateRequest,
+    ): CategoryResponse =
         transaction {
 
             val isCategoryExist = CategoryTree
@@ -111,7 +111,7 @@ class CategoryTreeRepository {
                 .any()
 
             if (isCategoryExist) {
-                throw CategoryAlreadyExistsException("Category ${categoryCreateDto.name} already exists in user tree")
+                throw CategoryAlreadyExistsException("Category ${categoryCreateRequest.name} already exists in user tree")
             }
 
 //            if (categoryCreateDto.parentId != null) {
@@ -131,18 +131,18 @@ class CategoryTreeRepository {
             CategoryTree.insert {
                 it[CategoryTree.userId] = userUuid
                 it[CategoryTree.categoryId] = categoryId
-                it[CategoryTree.parentId] = categoryCreateDto.parentId
+                it[CategoryTree.parentId] = categoryCreateRequest.parentId
             }
 
-            CategoryResponseDto(
+            CategoryResponse(
                 id = categoryId,
-                name = categoryCreateDto.name,
-                type = categoryCreateDto.type,
-                parentId = categoryCreateDto.parentId
+                name = categoryCreateRequest.name,
+                type = categoryCreateRequest.type,
+                parentId = categoryCreateRequest.parentId
             )
         }
 
-    fun findUserTree(userUuid: UUID): List<CategoryResponseDto> = transaction {
+    fun findUserTree(userUuid: UUID): List<CategoryResponse> = transaction {
         CategoryTree.join(
             Categories,
             JoinType.INNER,
@@ -159,7 +159,7 @@ class CategoryTreeRepository {
     fun findChildren(
         parentId: UUID,
         userUuid: UUID
-    ): List<CategoryResponseDto> =
+    ): List<CategoryResponse> =
         transaction {
 
             (CategoryTree innerJoin Categories)
@@ -173,7 +173,7 @@ class CategoryTreeRepository {
 
     fun findRoots(
         userUuid: UUID
-    ): List<CategoryResponseDto> =
+    ): List<CategoryResponse> =
         transaction {
 
             (CategoryTree innerJoin Categories)

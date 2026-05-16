@@ -6,7 +6,7 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Repository
-import ru.rrtyui.moneytracker.api.dto.user.UserRegistrationRequestDto
+import ru.rrtyui.moneytracker.client.request.UserRegistrationRequest
 import ru.rrtyui.moneytracker.entity.UserRole
 import ru.rrtyui.moneytracker.entity.Users
 import ru.rrtyui.moneytracker.mapper.toUser
@@ -23,7 +23,7 @@ class UserRepository {
             .singleOrNull()
     }
 
-    fun insertNewUser(requestDto: UserRegistrationRequestDto, encodePassword: String) = transaction {
+    fun insertNewUser(requestDto: UserRegistrationRequest, encodePassword: String) = transaction {
         Users.insert {
             it[username] = requestDto.username
             it[password] = encodePassword

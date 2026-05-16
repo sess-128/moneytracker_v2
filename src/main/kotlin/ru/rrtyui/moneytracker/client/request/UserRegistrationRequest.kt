@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.api.dto.user
+package ru.rrtyui.moneytracker.client.request
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern
 import ru.rrtyui.moneytracker.utils.VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE
 import ru.rrtyui.moneytracker.utils.VALID_PASSWORD_REGEX
 
-data class UserRegistrationRequestDto(
+data class UserRegistrationRequest(
     @field:NotEmpty(message = "{validation.field.fullName.empty}")
     val username: String,
     @field:NotBlank(message = "{validation.field.password.blank}")

@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.api.v1
+package ru.rrtyui.moneytracker.client.api.v1
 
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -8,15 +8,19 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.rrtyui.moneytracker.api.dto.transaction.CreateTransactionRequestDto
-import ru.rrtyui.moneytracker.api.dto.transaction.TransactionRequestFilterDto
-import ru.rrtyui.moneytracker.api.dto.transaction.TransactionUpdateRequestDto
+import ru.rrtyui.moneytracker.client.RestConstants.API_V1
+import ru.rrtyui.moneytracker.client.RestConstants.TRANSACTIONS_URL
+import ru.rrtyui.moneytracker.client.request.TransactionCreateRequest
+import ru.rrtyui.moneytracker.client.request.TransactionFilterRequest
+import ru.rrtyui.moneytracker.client.request.TransactionUpdateRequest
 import ru.rrtyui.moneytracker.service.TransactionService
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
 @RestController
-@RequestMapping("/api/v1/transactions")
-class TransactionController(private val transactionService: TransactionService) {
+@RequestMapping("$API_V1/$TRANSACTIONS_URL")
+class TransactionController(
+    private val transactionService: TransactionService
+) {
 
     @GetMapping
     fun getTransactionsByUser(@AuthenticationPrincipal principal: UserPrincipal) =
@@ -24,17 +28,17 @@ class TransactionController(private val transactionService: TransactionService) 
 
 
     @PostMapping("/by-filter")
-    fun getTransactionByFilter(@RequestBody filterDto: TransactionRequestFilterDto) =
+    fun getTransactionByFilter(@RequestBody filterDto: TransactionFilterRequest) =
         ok(transactionService.getTransactionByFilter(filterDto))
 
     @PostMapping
     fun createTransaction(
-        @RequestBody createTransactionRequestDto: CreateTransactionRequestDto,
+        @RequestBody transactionCreateRequest: TransactionCreateRequest,
         @AuthenticationPrincipal principal: UserPrincipal
     ) =
-        ok(transactionService.createTransactionByUser(principal, createTransactionRequestDto))
+        ok(transactionService.createTransactionByUser(principal, transactionCreateRequest))
 
     @PutMapping
-    fun updateTransaction(@RequestBody transactionRequestDto: TransactionUpdateRequestDto) =
+    fun updateTransaction(@RequestBody transactionRequestDto: TransactionUpdateRequest) =
         ok(transactionService.updateTransactionByUser(transactionRequestDto))
 }

@@ -1,10 +1,9 @@
-package ru.rrtyui.moneytracker.api.dto.category
+package ru.rrtyui.moneytracker.client.request
 
 import java.util.UUID
 import ru.rrtyui.moneytracker.entity.CategoryType
 
-data class CategoryResponseDto(
-    val id: UUID,
+data class CategoryCreateRequest(
     val name: String,
     val type: CategoryType,
     val parentId: UUID?

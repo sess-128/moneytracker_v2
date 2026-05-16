@@ -1,9 +1,9 @@
 package ru.rrtyui.moneytracker.service
 
 import org.springframework.stereotype.Service
-import ru.rrtyui.moneytracker.api.dto.category.CategoryCreateDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryResponseDto
-import ru.rrtyui.moneytracker.api.dto.category.CategoryUpdateDto
+import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
+import ru.rrtyui.moneytracker.client.response.CategoryResponse
+import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
 import ru.rrtyui.moneytracker.repository.CategoryRepository
 import ru.rrtyui.moneytracker.repository.CategoryTreeRepository
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
@@ -13,14 +13,14 @@ class CategoryService(
     private val categoryRepository: CategoryRepository,
     private val categoryTreeRepository: CategoryTreeRepository
 ) {
-    fun getAllCategories(user: UserPrincipal): List<CategoryResponseDto> =
+    fun getAllCategories(user: UserPrincipal): List<CategoryResponse> =
         categoryTreeRepository.findUserTree(user.id)
 
 
-    fun findOrCreateCategory(categoryCreateDto: CategoryCreateDto, user: UserPrincipal): CategoryResponseDto {
+    fun findOrCreateCategory(categoryCreateRequest: CategoryCreateRequest, user: UserPrincipal): CategoryResponse {
 
-        val categoryId = categoryRepository.findOrCreateCategory(categoryCreateDto)
-        val createCategory = categoryTreeRepository.insertCategory(categoryId, user.id, categoryCreateDto)
+        val categoryId = categoryRepository.findOrCreateCategory(categoryCreateRequest)
+        val createCategory = categoryTreeRepository.insertCategory(categoryId, user.id, categoryCreateRequest)
 
         return createCategory
     }
@@ -32,7 +32,7 @@ class CategoryService(
      * - проверить что таблица в пользовании у 1 человека
      * - изменять
      */
-    fun updateCategory(categoryUpdate: CategoryUpdateDto): CategoryResponseDto {
+    fun updateCategory(categoryUpdate: CategoryUpdateRequest): CategoryResponse {
         return categoryRepository.updateCategory(categoryUpdate)
     }
 

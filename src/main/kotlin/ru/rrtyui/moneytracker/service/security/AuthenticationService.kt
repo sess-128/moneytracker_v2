@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
-import ru.rrtyui.moneytracker.api.dto.user.UserLoginRequestDto
-import ru.rrtyui.moneytracker.api.dto.user.UserTokenResponseDto
+import ru.rrtyui.moneytracker.client.request.UserLoginRequest
+import ru.rrtyui.moneytracker.client.response.UserTokenResponse
 import ru.rrtyui.moneytracker.repository.UserRepository
 import ru.rrtyui.moneytracker.service.data.UserPrincipal
 
@@ -17,7 +17,7 @@ class AuthenticationService(
     private val jwtTokenService : JwtTokenService,
     @param:Value($$"${jwt.accessTokenExpiration}") private val accessTokenExpiration: Long = 0,
 ) {
-     fun authentication(requestDto: UserLoginRequestDto): UserTokenResponseDto {
+     fun authentication(requestDto: UserLoginRequest): UserTokenResponse {
          val authenticate = authManager.authenticate(
              UsernamePasswordAuthenticationToken(
                  requestDto.username,
@@ -26,7 +26,7 @@ class AuthenticationService(
          )
          val principal = authenticate.principal as UserPrincipal
          val accessToken = createAccessToken(principal)
-         return UserTokenResponseDto(token = accessToken)
+         return UserTokenResponse(token = accessToken)
     }
 
     private fun createAccessToken(user: UserPrincipal): String =
