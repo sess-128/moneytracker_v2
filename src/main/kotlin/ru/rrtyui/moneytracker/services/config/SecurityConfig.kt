@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import ru.rrtyui.moneytracker.services.security.CustomAuthenticationProvider
-import ru.rrtyui.moneytracker.services.security.JwtAccessFilter
+import ru.rrtyui.moneytracker.services.jwt.filter.JwtAccessFilter
 
 
 @Configuration

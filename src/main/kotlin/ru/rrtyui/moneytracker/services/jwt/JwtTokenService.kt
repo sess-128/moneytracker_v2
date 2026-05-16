@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.services.security.service
+package ru.rrtyui.moneytracker.services.jwt
 
 import io.jsonwebtoken.Jwts
 import java.util.Base64
@@ -7,8 +7,8 @@ import java.util.UUID
 import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import ru.rrtyui.moneytracker.services.jwt.data.JwtClaimsData
 import ru.rrtyui.moneytracker.services.persistence.tables.UserRole
-import ru.rrtyui.moneytracker.services.security.data.JwtClaimsData
 
 @Service
 class JwtTokenService(

@@ -1,4 +1,4 @@
-package ru.rrtyui.moneytracker.services.security
+package ru.rrtyui.moneytracker.services.jwt.filter
 
 import io.jsonwebtoken.JwtException
 import jakarta.servlet.FilterChain
@@ -9,8 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Service
 import org.springframework.web.filter.OncePerRequestFilter
+import ru.rrtyui.moneytracker.services.jwt.JwtTokenService
 import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
-import ru.rrtyui.moneytracker.services.security.service.JwtTokenService
 
 @Service
 class JwtAccessFilter(

@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service
 import ru.rrtyui.moneytracker.client.request.UserLoginRequest
 import ru.rrtyui.moneytracker.client.response.UserTokenResponse
+import ru.rrtyui.moneytracker.services.jwt.JwtTokenService
 import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
 
 @Service
