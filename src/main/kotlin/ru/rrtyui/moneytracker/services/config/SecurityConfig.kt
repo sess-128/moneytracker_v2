@@ -11,8 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import ru.rrtyui.moneytracker.services.security.CustomAuthenticationProvider
 import ru.rrtyui.moneytracker.services.jwt.filter.JwtAccessFilter
+import ru.rrtyui.moneytracker.services.security.CustomAuthenticationProvider
 
 
 @Configuration
@@ -34,7 +34,7 @@ class SecurityConfig {
                 it
                     .requestMatchers("/api/users/me")
                     .authenticated()
-                    .requestMatchers( "/api/users/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                    .requestMatchers( "/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                     .permitAll()
                     .anyRequest()
                     .fullyAuthenticated()
