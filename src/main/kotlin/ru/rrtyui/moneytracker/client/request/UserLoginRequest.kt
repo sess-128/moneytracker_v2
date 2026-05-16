@@ -3,7 +3,7 @@ package ru.rrtyui.moneytracker.client.request
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Pattern
-import ru.rrtyui.moneytracker.utils.VALID_PASSWORD_REGEX
+import ru.rrtyui.moneytracker.client.utils.VALID_PASSWORD_REGEX
 
 data class UserLoginRequest(
     @field:NotEmpty(message = "{validation.field.fullName.empty}")

@@ -13,8 +13,8 @@ import ru.rrtyui.moneytracker.client.RestConstants.TRANSACTIONS_URL
 import ru.rrtyui.moneytracker.client.request.TransactionCreateRequest
 import ru.rrtyui.moneytracker.client.request.TransactionFilterRequest
 import ru.rrtyui.moneytracker.client.request.TransactionUpdateRequest
-import ru.rrtyui.moneytracker.service.TransactionService
-import ru.rrtyui.moneytracker.service.data.UserPrincipal
+import ru.rrtyui.moneytracker.services.service.TransactionService
+import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
 
 @RestController
 @RequestMapping("$API_V1/$TRANSACTIONS_URL")

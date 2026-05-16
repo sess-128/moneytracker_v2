@@ -15,8 +15,8 @@ import ru.rrtyui.moneytracker.client.RestConstants.CATEGORIES_URL
 import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
 import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
 import ru.rrtyui.moneytracker.client.response.CategoryResponse
-import ru.rrtyui.moneytracker.service.CategoryService
-import ru.rrtyui.moneytracker.service.data.UserPrincipal
+import ru.rrtyui.moneytracker.services.service.CategoryService
+import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
 
 
 @RestController

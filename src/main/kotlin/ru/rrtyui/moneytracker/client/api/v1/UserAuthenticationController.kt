@@ -14,8 +14,8 @@ import ru.rrtyui.moneytracker.client.request.UserLoginRequest
 import ru.rrtyui.moneytracker.client.request.UserRegistrationRequest
 import ru.rrtyui.moneytracker.client.response.UserInfoResponse
 import ru.rrtyui.moneytracker.client.response.UserTokenResponse
-import ru.rrtyui.moneytracker.service.SecurityService
-import ru.rrtyui.moneytracker.service.data.UserPrincipal
+import ru.rrtyui.moneytracker.services.service.SecurityService
+import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
 
 @RestController
 @RequestMapping("$API_V1/$CATEGORIES_URL")

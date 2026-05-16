@@ -1,7 +1,7 @@
 package ru.rrtyui.moneytracker.client.request
 
 import java.util.UUID
-import ru.rrtyui.moneytracker.entity.CategoryType
+import ru.rrtyui.moneytracker.services.persistence.tables.CategoryType
 
 data class CategoryCreateRequest(
     val name: String,

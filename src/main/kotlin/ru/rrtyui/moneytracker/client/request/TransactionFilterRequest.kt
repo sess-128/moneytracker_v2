@@ -2,7 +2,7 @@ package ru.rrtyui.moneytracker.client.request
 
 import java.math.BigDecimal
 import java.time.LocalDate
-import ru.rrtyui.moneytracker.entity.CategoryType
+import ru.rrtyui.moneytracker.services.persistence.tables.CategoryType
 
 data class TransactionFilterRequest(
     val startDate: LocalDate,
