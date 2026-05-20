@@ -11,7 +11,7 @@ spring:
     enabled: true
   docker:
     compose:
-      file: backend/docker-compose-local.yml
+      file: docker-compose-local.yml
   datasource:
     url: jdbc:postgresql://localhost:5438/money-tracker-db
     username: postgres

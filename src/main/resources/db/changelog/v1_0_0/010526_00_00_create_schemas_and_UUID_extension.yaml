@@ -1,7 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 010526_00_00
-      author: rrtyui
-      changes:
-        - sql:
-            sql: CREATE SCHEMA IF NOT EXISTS storage; CREATE SCHEMA IF NOT EXISTS relations; CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
