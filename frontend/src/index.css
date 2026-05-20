@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.4);
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* ─── Dark card ──────────────────────────────────────────────── */
+  .dark-card {
+    background: rgba(10, 6, 20, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ─── Navbar pill ────────────────────────────────────────────── */
+  .glass-nav {
+    background: rgba(8, 4, 16, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* ─── Inputs inside dark cards ───────────────────────────────── */
+  .glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    outline: none;
+  }
+  .glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+  }
+  .glass-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(147, 51, 234, 0.55);
+  }
+
+  /* ─── Auth page inputs ───────────────────────────────────────── */
+  .auth-input {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    outline: none;
+    border-radius: 73px;
+    padding: 10px 18px;
+    font-size: 14px;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+  }
+  .auth-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+  .auth-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(147, 51, 234, 0.6);
+  }
+
+  /* ─── Buttons ────────────────────────────────────────────────── */
+  .glass-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+  }
+  .glass-btn:hover {
+    background: rgba(255, 255, 255, 0.13);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .glass-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* ─── Select ─────────────────────────────────────────────────── */
+  select.glass-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+  select.glass-input option {
+    background: #0e0818;
+    color: #fff;
+  }
+}
