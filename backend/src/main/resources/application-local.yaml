@@ -1,0 +1,28 @@
+
+logging:
+  level:
+    org.jetbrains.exposed.sql: DEBUG
+    org.jetbrains.exposed.sql.statements: DEBUG
+    org.jetbrains.exposed.sql.transactions: DEBUG
+    jdbc.sqlonly: DEBUG
+spring:
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+  docker:
+    compose:
+      file: backend/docker-compose-local.yml
+  datasource:
+    url: jdbc:postgresql://localhost:5438/money-tracker-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  exposed:
+    generate-ddl: false
+application:
+  mode: local
+jwt:
+  accessTokenExpiration: 6000000
+  secret: ScoSHDpqKX3P9VgKC61rTdI0FrV1AvnVYugSXvqGM8X
+server:
+  port: 8088

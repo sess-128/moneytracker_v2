@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 040526_02_00
+      author: nicholas
+      validCheckSum: ANY
+      changes:
+        - createTable:
+            tableName: transactions
+            schemaName: storage
+            columns:
+              - column:
+                  name: id
+                  type: java.util.UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  defaultValueComputed: "uuid_generate_v4()"
+
+              - column:
+                  name: user_id
+                  type: java.util.UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: java.util.UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: amount
+                  type: numeric(18,4)
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

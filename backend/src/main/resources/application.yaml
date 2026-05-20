@@ -1,0 +1,19 @@
+spring:
+  docker:
+    compose:
+      file: backend/docker-compose-prod.yml
+  application:
+    name: money-tracker
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+application:
+  mode: prod
+jwt:
+  accessTokenExpiration: ${JWT_TOKEN_EXPIRE_TIME:6000000}
+  secret: ${JWT_TOKEN_SECRET:ScoSHDpqKX3P9VgKC61rTdI0FrV1AvnVYugSXvqGM8X}
