@@ -1,20 +1,14 @@
-# Gradle
-.gradle
+.gradle/
 build/
-
-# Logs
+out/
+target/
+*.class
+*.jar
+*.war
+.env*
 *.log
-
-# IDE
-.git
-.idea
-*.iml
-*.ipr
-*.iws
-.vscode/
-
-# OS
 .DS_Store
-Thumbs.db
-
-out
+.git/
+.idea/
+*.iml
+README.md
