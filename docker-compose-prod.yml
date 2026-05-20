@@ -14,8 +14,8 @@ services:
 
   backend-prod:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
     container_name: mt-backend-prod
     restart: unless-stopped
     env_file:
