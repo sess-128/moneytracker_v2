@@ -1,7 +1,4 @@
 spring:
-  docker:
-    compose:
-      file: docker-compose-prod.yml
   application:
     name: money-tracker
   datasource:
