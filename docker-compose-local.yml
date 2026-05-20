@@ -7,3 +7,9 @@ services:
       - 'POSTGRES_USER=postgres'
     ports:
       - '5438:5432'
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
+    driver: local
