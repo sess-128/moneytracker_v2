@@ -32,9 +32,9 @@ class SecurityConfig {
             .authenticationProvider(customAuthenticationProvider)
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/api/users/me")
-                    .authenticated()
-                    .requestMatchers( "/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                    .requestMatchers("/api/v1/users/login", "/api/v1/users/registration")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                     .permitAll()
                     .anyRequest()
                     .fullyAuthenticated()

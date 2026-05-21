@@ -7,11 +7,11 @@ import type {
 
 export const categoriesApi = {
   getAll: () =>
-    apiClient.get<CategoryResponse[]>('/api/categories').then((r) => r.data),
+    apiClient.get<CategoryResponse[]>('/api/v1/categories').then((r) => r.data),
 
   create: (data: CategoryCreateRequest) =>
-    apiClient.post<CategoryResponse>('/api/categories', data).then((r) => r.data),
+    apiClient.post<CategoryResponse>('/api/v1/categories', data).then((r) => r.data),
 
   update: (data: CategoryUpdateRequest) =>
-    apiClient.patch<CategoryResponse>('/api/categories', data).then((r) => r.data),
+    apiClient.patch<CategoryResponse>('/api/v1/categories', data).then((r) => r.data),
 }

@@ -23,6 +23,7 @@ Thumbs.db
 
 # Env
 .env
+.env.*
 
 # IntelliJ module files
 *.iml
