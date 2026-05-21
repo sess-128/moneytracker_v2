@@ -22,7 +22,9 @@ build/
 Thumbs.db
 
 # Env
+.env.prod
 .env
+.env.local
 
 # IntelliJ module files
 *.iml
@@ -32,3 +34,9 @@ Thumbs.db
 
 # Generated
 out/
+
+# Node
+package-lock.json
+**/package-lock.json
+node_modules/
+**/node_modules/

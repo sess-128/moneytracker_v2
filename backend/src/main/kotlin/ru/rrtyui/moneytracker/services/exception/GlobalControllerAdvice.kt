@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.ServletWebRequest
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import ru.rrtyui.moneytracker.services.exception.response.ErrorResponse
@@ -67,14 +68,14 @@ class GlobalControllerAdvice: ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any> {
-        request as HttpServletRequest
+        val path = (request as? ServletWebRequest)?.request?.requestURI ?: "unknown"
 
         val fieldErrors = buildErrorFields(exception)
         val errorResponse = ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             error = HttpStatus.BAD_REQUEST.reasonPhrase,
             message = exception.message,
-            path = request.requestURI,
+            path = path,
             details = fieldErrors
         )
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse)

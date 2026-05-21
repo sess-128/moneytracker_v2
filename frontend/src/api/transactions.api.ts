@@ -1,6 +1,7 @@
 import { apiClient } from './client'
+import { API_ENDPOINTS } from './endpoints'
 import type {
-  TransactionRequest,
+  TransactionCreateRequest,
   TransactionResponse,
   TransactionUpdateRequest,
   TransactionFilterRequest,
@@ -8,14 +9,14 @@ import type {
 
 export const transactionsApi = {
   getAll: () =>
-    apiClient.get<TransactionResponse[]>('/api/v1/transactions').then((r) => r.data),
+    apiClient.get<TransactionResponse[]>(API_ENDPOINTS.transactions.root).then((r) => r.data),
 
-  create: (data: TransactionRequest) =>
-    apiClient.post<TransactionResponse>('/api/v1/transactions', data).then((r) => r.data),
+  create: (data: TransactionCreateRequest) =>
+    apiClient.post<TransactionResponse>(API_ENDPOINTS.transactions.root, data).then((r) => r.data),
 
   update: (data: TransactionUpdateRequest) =>
-    apiClient.put<TransactionResponse>('/api/v1/transactions', data).then((r) => r.data),
+    apiClient.put<TransactionResponse>(API_ENDPOINTS.transactions.root, data).then((r) => r.data),
 
   getByFilter: (data: TransactionFilterRequest) =>
-    apiClient.post<TransactionResponse[]>('/api/v1/transactions/by-filter', data).then((r) => r.data),
+    apiClient.post<TransactionResponse[]>(API_ENDPOINTS.transactions.byFilter, data).then((r) => r.data),
 }

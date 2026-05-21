@@ -2,12 +2,12 @@ package ru.rrtyui.moneytracker.client.api.v1
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
@@ -29,7 +29,7 @@ class UserAuthenticationController(
     @PostMapping("/login")
     @Operation(summary = "Вход в систему", description = "Возвращает JWT токен при успешной аутентификации")
     fun loginUser(
-        @ParameterObject requestDto: UserLoginRequest
+        @RequestBody requestDto: UserLoginRequest
     ) : ResponseEntity<UserTokenResponse> =
         ok(securityService.loginUser(requestDto))
 
@@ -37,7 +37,7 @@ class UserAuthenticationController(
     @PostMapping("/registration")
     @Operation(summary = "Регистрация", description = "Возвращает имя успешно зарегистрированного пользователя")
     fun registerUser(
-        @ParameterObject requestDto: UserRegistrationRequest
+        @RequestBody requestDto: UserRegistrationRequest
     ): ResponseEntity<String> =
         ok(securityService.registerUser(requestDto))
 

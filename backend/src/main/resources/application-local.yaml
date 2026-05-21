@@ -12,14 +12,14 @@ spring:
     compose:
       file: docker-compose-local.yml
   datasource:
-    url: jdbc:postgresql://localhost:5438/money-tracker-db
-    username: postgres
-    password: postgres
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
   exposed:
     generate-ddl: false
 application:
   mode: local
 jwt:
-  accessTokenExpiration: 6000000
-  secret: ScoSHDpqKX3P9VgKC61rTdI0FrV1AvnVYugSXvqGM8X
+  accessTokenExpiration: ${JWT_TOKEN_EXPIRE_TIME}
+  secret: ${JWT_TOKEN_SECRET}

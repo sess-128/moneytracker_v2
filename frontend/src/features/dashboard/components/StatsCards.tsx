@@ -26,11 +26,14 @@ export const StatsCards = ({ stats }: StatsCardsProps) => {
 
   return (
     <GlassCard padding="md">
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-3 h-24">
         {items.map(({ label, value }, i) => (
-          <div key={label} className={i === 0 ? 'pr-5' : i === 2 ? 'pl-5' : 'px-5'}>
-            <p className="text-white/50 text-xs leading-snug mb-2">{label}</p>
-            <p className="text-white text-xl font-semibold tracking-tight leading-tight">{value}</p>
+          <div
+            key={label}
+            className={`flex flex-col justify-between ${i === 0 ? 'pr-5' : i === 2 ? 'pl-5' : 'px-5'}`}
+          >
+            <p className="text-white/50 text-xs leading-snug">{label}</p>
+            <p className="text-white text-2xl font-semibold tracking-tight leading-none">{value}</p>
           </div>
         ))}
       </div>

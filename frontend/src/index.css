@@ -9,6 +9,7 @@
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
+    background: #0c0c14;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -22,57 +23,51 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
+    background: #2a2a3e;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  input[type='date']::-webkit-calendar-picker-indicator {
-    filter: invert(1) opacity(0.4);
-    cursor: pointer;
+    background: #3a3a52;
   }
 }
 
 @layer components {
-  /* ─── Dark card ──────────────────────────────────────────────── */
+  /* ─── Card ───────────────────────────────────────────────────── */
   .dark-card {
-    background: rgba(10, 6, 20, 0.82);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.5);
+    background: #15151e;
+    border: 1px solid #25253a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
-  /* ─── Navbar pill ────────────────────────────────────────────── */
+  /* ─── Navbar ─────────────────────────────────────────────────── */
   .glass-nav {
-    background: rgba(8, 4, 16, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #15151e;
+    border: 1px solid #25253a;
   }
 
-  /* ─── Inputs inside dark cards ───────────────────────────────── */
+  /* ─── Inputs ─────────────────────────────────────────────────── */
   .glass-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #0c0c14;
+    border: 1px solid #25253a;
     color: #ffffff;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.15s ease;
     outline: none;
   }
   .glass-input::placeholder {
-    color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.25);
   }
   .glass-input:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(147, 51, 234, 0.55);
+    border-color: #7c3aed;
   }
 
-  /* ─── Auth page inputs ───────────────────────────────────────── */
+  /* ─── Auth inputs ────────────────────────────────────────────── */
   .auth-input {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: #0c0c14;
+    border: 1px solid #25253a;
     color: #ffffff;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.15s ease;
     outline: none;
-    border-radius: 73px;
+    border-radius: 8px;
     padding: 10px 18px;
     font-size: 14px;
     width: 100%;
@@ -82,19 +77,18 @@
     color: rgba(255, 255, 255, 0.25);
   }
   .auth-input:focus {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(147, 51, 234, 0.6);
+    border-color: #7c3aed;
   }
 
   /* ─── Buttons ────────────────────────────────────────────────── */
   .glass-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    background: #1e1e2e;
+    border: 1px solid #2e2e45;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   }
   .glass-btn:hover {
-    background: rgba(255, 255, 255, 0.13);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: #252538;
+    border-color: #3a3a55;
   }
   .glass-btn:active {
     transform: scale(0.97);
@@ -104,14 +98,14 @@
   select.glass-input {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
     padding-right: 32px;
     cursor: pointer;
   }
   select.glass-input option {
-    background: #0e0818;
+    background: #15151e;
     color: #fff;
   }
 }

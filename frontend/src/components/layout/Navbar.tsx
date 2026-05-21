@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
+import { Avatar } from '@/components/ui/Avatar'
 
 const NAV_ITEMS = [
   { label: 'Home', path: '/' },
@@ -46,9 +47,9 @@ export const Navbar = () => {
       <button
         onClick={handleLogout}
         title="Выйти"
-        className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/15 hover:ring-purple-400/50 transition-all duration-200 flex-shrink-0"
+        className="rounded-full ring-2 ring-white/15 hover:ring-purple-400/50 transition-all duration-200"
       >
-        <img src="/avatar.png" alt="Avatar" className="w-full h-full object-cover" />
+        <Avatar username={user?.login ?? '?'} size={40} />
       </button>
     </header>
   )
