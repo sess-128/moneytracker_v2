@@ -21,7 +21,8 @@ export const useDashboardStats = (transactions: TransactionResponse[] | undefine
     const totalBalance = transactions.reduce((sum, t) => sum + t.amount, 0)
 
     const monthlyTransactions = transactions.filter((t) => {
-      const d = new Date(t.startDate)
+      if (!t.transactionDate) return false
+      const d = new Date(t.transactionDate)
       return d >= monthStart && d <= monthEnd
     })
 

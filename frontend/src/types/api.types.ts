@@ -1,5 +1,6 @@
-export type TransactionType = 'EXPENSE' | 'INCOME' | 'SAVINGS'
+export type CategoryType = 'EXPENSE' | 'INCOME'
 
+// ─── Auth ────────────────────────────────────────────────────────
 export interface UserLoginRequest {
   username: string
   password: string
@@ -20,53 +21,52 @@ export interface UserInfoResponse {
   login: string
 }
 
-export interface TransactionRequest {
-  categoryName: string
-  amount: number
-  description: string
-  startDate: string
-  endDate: string
-}
-
-export interface TransactionUpdateRequest {
-  id: string
-  createdAt: string
-}
-
-export interface TransactionResponse {
-  id: string
-  categoryName: string
-  userName: string
-  amount: number
-  description: string
-  startDate: string
-  endDate: string
-}
-
-export interface TransactionFilterRequest {
-  startDate: string
-  endDate: string
-  parentCategoryIds: number[]
-  categoryIds: number[]
-  minAmount: number
-  maxAmount: number
-  description: string
-  type?: TransactionType | null
-}
-
+// ─── Categories ──────────────────────────────────────────────────
 export interface CategoryResponse {
   id: string
   name: string
-  type: TransactionType
+  type: CategoryType
   parentId?: string | null
 }
 
 export interface CategoryCreateRequest {
   name: string
-  type: TransactionType
+  type: CategoryType
   parentId?: string | null
 }
 
 export interface CategoryUpdateRequest {
   name: string
+}
+
+// ─── Transactions ────────────────────────────────────────────────
+export interface TransactionCreateRequest {
+  categoryId: string
+  amount: number
+  description?: string | null
+  transactionDate?: string | null  // ISO datetime: "2026-05-22T00:00:00"
+}
+
+export interface TransactionUpdateRequest {
+  id: string
+  transactionDate: string          // ISO datetime: "2026-05-22T00:00:00"
+}
+
+export interface TransactionResponse {
+  id: string
+  categoryId: string
+  amount: number
+  description?: string | null
+  transactionDate?: string | null
+}
+
+export interface TransactionFilterRequest {
+  startDate: string
+  endDate: string
+  parentCategoryIds: string[]
+  categoryIds: string[]
+  minAmount: number
+  maxAmount: number
+  description: string
+  type?: CategoryType | null
 }

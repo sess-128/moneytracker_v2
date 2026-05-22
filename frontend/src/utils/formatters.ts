@@ -7,8 +7,8 @@ export const formatCurrency = (amount: number): string =>
   }).format(amount)
 
 export const formatDate = (dateStr: string): string => {
-  const [y, m, d] = dateStr.split('-')
-  return `${d}-${m}-${y}`
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
 export const getCurrentMonthLabel = (): string =>

@@ -4,12 +4,12 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import mu.KLogger
 import mu.KotlinLogging
-import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
@@ -40,7 +40,7 @@ class CategoryController(
     @PostMapping
     @Operation(description = "Создать новую категорию")
     fun createCategory(
-        @ParameterObject request: CategoryCreateRequest,
+        @RequestBody request: CategoryCreateRequest,
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponse> {
         logger.info { "Пользователь ${user.id} создает категорию $request" }
@@ -51,7 +51,7 @@ class CategoryController(
     @Operation(description = "Обновить имя категории")
     @Deprecated("Т.к категории шареные - пока отключено, решить позже")
     fun updateCategory(
-        @ParameterObject request: CategoryUpdateRequest,
+        @RequestBody request: CategoryUpdateRequest,
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponse> {
         logger.info { "Пользователь ${user.id} обновляет наименование категории на имя = ${request.name}" }

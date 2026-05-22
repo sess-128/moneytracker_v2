@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
@@ -45,7 +46,7 @@ class TransactionController(
     @PostMapping
     @Operation(description = "Создать новую транзакцию")
     fun createTransaction(
-        @ParameterObject transactionCreateRequest: TransactionCreateRequest,
+        @RequestBody transactionCreateRequest: TransactionCreateRequest,
         @AuthenticationPrincipal principal: UserPrincipal
     ) =
         ok(transactionService.createTransactionByUser(principal, transactionCreateRequest))
@@ -53,7 +54,7 @@ class TransactionController(
     @PutMapping
     @Operation(description = "Обновить дату транзакции")
     fun updateTransaction(
-        @ParameterObject transactionRequestDto: TransactionUpdateRequest
+        @RequestBody transactionRequestDto: TransactionUpdateRequest
     ) =
         ok(transactionService.updateTransactionByUser(transactionRequestDto))
 }
