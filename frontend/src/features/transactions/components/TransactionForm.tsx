@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/Input'
 import { AmountInput } from '@/components/ui/AmountInput'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { useCreateTransaction } from '../hooks/useTransactions'
-import { useCategories } from '@/features/categories/hooks/useCategories'
 import { toISODate } from '@/utils/formatters'
+import { CategorySelect } from '@/features/categories/components/CategorySelect'
 
 export const TransactionForm = () => {
   const today = toISODate(new Date())
@@ -15,7 +15,6 @@ export const TransactionForm = () => {
   const [description, setDescription] = useState('')
   const [date, setDate] = useState(today)
 
-  const { data: categories = [], isError: categoriesError, isLoading: categoriesLoading } = useCategories()
   const { mutate: create, isPending } = useCreateTransaction()
 
   const handleSubmit = (e: FormEvent) => {
@@ -45,27 +44,17 @@ export const TransactionForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-3">
           <AmountInput value={amount} onChange={setAmount} />
-
-          <div className="flex flex-col gap-1 w-full">
-            <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
-              Категория
-            </label>
-            <select
-              className="glass-input rounded-lg px-4 py-2.5 text-sm w-full"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              required
-            >
-              <option value="">
-                {categoriesError ? 'Ошибка загрузки' : categoriesLoading ? 'Загрузка...' : 'Выберите'}
-              </option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
+                Категория
+              </label>
+              <CategorySelect
+                  value={categoryId}
+                  onChange={setCategoryId}
+                  filterType="children"
+              />
+            </div>
+            {/* ---------------------------------- */}
 
           <Input
             label="Описание"
