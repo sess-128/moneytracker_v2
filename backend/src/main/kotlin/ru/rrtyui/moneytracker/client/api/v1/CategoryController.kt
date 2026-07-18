@@ -2,8 +2,6 @@ package ru.rrtyui.moneytracker.client.api.v1
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import mu.KLogger
-import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,7 +23,6 @@ import ru.rrtyui.moneytracker.services.service.CategoryService
 @RequestMapping("$API_V1/$CATEGORIES_URL")
 @Tag(name = "Работа с категориями", description = "API для CRUD-операций с категориями")
 class CategoryController(
-    private val logger: KLogger = KotlinLogging.logger {},
     private val categoryService: CategoryService
 ){
     @GetMapping()
@@ -33,7 +30,6 @@ class CategoryController(
     fun getCategories(
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<List<CategoryResponse>> {
-        logger.info { "Пользователь  ${user.id}  список всех категорий" }
         return ResponseEntity.ok(categoryService.getAllCategories(user))
     }
 
@@ -43,7 +39,6 @@ class CategoryController(
         @RequestBody request: CategoryCreateRequest,
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponse> {
-        logger.info { "Пользователь ${user.id} создает категорию $request" }
         return ResponseEntity.ok(categoryService.findOrCreateCategory(request, user))
     }
 
@@ -54,7 +49,6 @@ class CategoryController(
         @RequestBody request: CategoryUpdateRequest,
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponse> {
-        logger.info { "Пользователь ${user.id} обновляет наименование категории на имя = ${request.name}" }
         return ResponseEntity.ok(categoryService.updateCategory(request))
     }
 
