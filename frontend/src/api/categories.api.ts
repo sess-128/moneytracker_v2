@@ -15,4 +15,7 @@ export const categoriesApi = {
 
   update: (data: CategoryUpdateRequest) =>
     apiClient.patch<CategoryResponse>(API_ENDPOINTS.categories.root, data).then((r) => r.data),
+
+  delete: (id: string) =>
+    apiClient.delete(API_ENDPOINTS.categories.byId(id)).then((r) => r.data),
 }

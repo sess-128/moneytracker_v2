@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   },
   categories: {
     root: `${V1}/categories`,
+    byId: (id: string) => `${V1}/categories/${id}`,
   },
   transactions: {
     root: `${V1}/transactions`,
