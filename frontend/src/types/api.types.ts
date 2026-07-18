@@ -36,7 +36,10 @@ export interface CategoryCreateRequest {
 }
 
 export interface CategoryUpdateRequest {
+  id: string
   name: string
+  type?: CategoryType
+  parentId?: string | null
 }
 
 // ─── Transactions ────────────────────────────────────────────────
