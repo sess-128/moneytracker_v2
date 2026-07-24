@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
-import ru.rrtyui.moneytracker.services.persistence.tables.CategoryType
+import ru.rrtyui.moneytracker.services.persistence.tables.CategoryTableType
 
 data class TransactionFilterRequest(
     @field:Schema(description = "Начальная дата периода фильтрации", example = "2023-10-01")
@@ -29,5 +29,5 @@ data class TransactionFilterRequest(
     val description: String = "",
 
     @field:Schema(description = "Тип транзакции (доход/расход). Если ничего не указано, то поиск по всем типам", example = "EXPENSE")
-    val type: CategoryType? = null
+    val type: CategoryTableType? = null
 )

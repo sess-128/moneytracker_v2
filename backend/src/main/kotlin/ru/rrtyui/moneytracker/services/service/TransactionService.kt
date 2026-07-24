@@ -8,7 +8,7 @@ import ru.rrtyui.moneytracker.client.request.TransactionFilterRequest
 import ru.rrtyui.moneytracker.client.request.TransactionUpdateRequest
 import ru.rrtyui.moneytracker.client.response.TransactionResponse
 import ru.rrtyui.moneytracker.services.persistence.repository.TransactionRepository
-import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
+import ru.rrtyui.moneytracker.application.security.data.UserPrincipal
 
 @Service
 class TransactionService(

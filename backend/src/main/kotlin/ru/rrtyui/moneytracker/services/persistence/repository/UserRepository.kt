@@ -10,7 +10,7 @@ import ru.rrtyui.moneytracker.client.request.UserRegistrationRequest
 import ru.rrtyui.moneytracker.services.persistence.tables.UserRole
 import ru.rrtyui.moneytracker.services.persistence.tables.UsersTable
 import ru.rrtyui.moneytracker.services.persistence.mapper.toUser
-import ru.rrtyui.moneytracker.services.security.data.UserData
+import ru.rrtyui.moneytracker.application.security.data.UserData
 
 @Repository
 class UserRepository {

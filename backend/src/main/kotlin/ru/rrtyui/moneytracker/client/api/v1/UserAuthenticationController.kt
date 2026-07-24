@@ -16,7 +16,7 @@ import ru.rrtyui.moneytracker.client.request.UserLoginRequest
 import ru.rrtyui.moneytracker.client.request.UserRegistrationRequest
 import ru.rrtyui.moneytracker.client.response.UserInfoResponse
 import ru.rrtyui.moneytracker.client.response.UserTokenResponse
-import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
+import ru.rrtyui.moneytracker.application.security.data.UserPrincipal
 import ru.rrtyui.moneytracker.services.service.SecurityService
 
 @RestController

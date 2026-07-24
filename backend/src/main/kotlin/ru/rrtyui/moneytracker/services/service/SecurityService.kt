@@ -7,7 +7,7 @@ import ru.rrtyui.moneytracker.client.request.UserRegistrationRequest
 import ru.rrtyui.moneytracker.client.response.UserTokenResponse
 import ru.rrtyui.moneytracker.services.exception.UserAlreadyExistsException
 import ru.rrtyui.moneytracker.services.persistence.repository.UserRepository
-import ru.rrtyui.moneytracker.services.security.service.AuthenticationService
+import ru.rrtyui.moneytracker.application.security.service.AuthenticationService
 
 @Service
 class SecurityService(

@@ -13,7 +13,7 @@ import ru.rrtyui.moneytracker.client.response.TransactionResponse
 import ru.rrtyui.moneytracker.client.request.TransactionUpdateRequest
 import ru.rrtyui.moneytracker.services.persistence.tables.TransactionsTable
 import ru.rrtyui.moneytracker.services.persistence.mapper.toTransactionDto
-import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
+import ru.rrtyui.moneytracker.application.security.data.UserPrincipal
 
 @Repository
 class TransactionRepository {

@@ -10,36 +10,42 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.rrtyui.moneytracker.application.security.data.UserPrincipal
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
 import ru.rrtyui.moneytracker.client.RestConstants.CATEGORIES_URL
+import ru.rrtyui.moneytracker.client.mapper.CategoryControllerMapper.toResponse
+import ru.rrtyui.moneytracker.client.mapper.CategoryControllerMapper.toUseCase
 import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
 import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
 import ru.rrtyui.moneytracker.client.response.CategoryResponse
-import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
-import ru.rrtyui.moneytracker.services.service.CategoryService
+import ru.rrtyui.moneytracker.services.service.impl.CategoryServiceImpl
+import ru.rrtyui.moneytracker.services.usecase.CategoryCreateUseCase
 
 
 @RestController
 @RequestMapping("$API_V1/$CATEGORIES_URL")
 @Tag(name = "Работа с категориями", description = "API для CRUD-операций с категориями")
 class CategoryController(
-    private val categoryService: CategoryService
+    private val categoryServiceImpl: CategoryServiceImpl,
+    private val categoryCreateUseCase: CategoryCreateUseCase
 ){
     @GetMapping()
     @Operation(description = "Получить все категории пользователя")
     fun getCategories(
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<List<CategoryResponse>> {
-        return ResponseEntity.ok(categoryService.getAllCategories(user))
+        return ResponseEntity.ok(categoryServiceImpl.getAllCategories(user))
     }
 
     @PostMapping
     @Operation(description = "Создать новую категорию")
     fun createCategory(
         @RequestBody request: CategoryCreateRequest,
-        @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponse> {
-        return ResponseEntity.ok(categoryService.findOrCreateCategory(request, user))
+        val command = request.toUseCase()
+        val result = categoryCreateUseCase.invoke(command)
+        val response = result.toResponse()
+        return ResponseEntity.ok(response)
     }
 
     @PatchMapping
@@ -49,7 +55,7 @@ class CategoryController(
         @RequestBody request: CategoryUpdateRequest,
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<CategoryResponse> {
-        return ResponseEntity.ok(categoryService.updateCategory(request))
+        return ResponseEntity.ok(categoryServiceImpl.updateCategory(request))
     }
 
 //    @DeleteMapping
