@@ -1,11 +1,11 @@
 package ru.rrtyui.moneytracker.services.usecase.impl
 
 import org.springframework.stereotype.Service
+import ru.rrtyui.moneytracker.services.service.ActorPrincipalService
 import ru.rrtyui.moneytracker.services.service.CategoryService
 import ru.rrtyui.moneytracker.services.service.CategoryTreeService
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeValidateModel
-import ru.rrtyui.moneytracker.services.service.ActorPrincipalService
 import ru.rrtyui.moneytracker.services.usecase.CategoryCreateUseCase
 import ru.rrtyui.moneytracker.services.usecase.mapper.CategoryMapper.toServiceModel
 import ru.rrtyui.moneytracker.services.usecase.mapper.CategoryMapper.toUseCase
@@ -18,7 +18,7 @@ class CategoryCreateUseCaseImpl(
     private val categoryService: CategoryService,
     private val categoryTreeService: CategoryTreeService,
 ): CategoryCreateUseCase {
-    override fun invoke(params: CategoryCreateCommand): CategoryCreateResult {
+    override fun invoke(command: CategoryCreateCommand): CategoryCreateResult {
         val actorPrincipal = actorPrincipalService.getCurrentActor()
         /**
          * Найти по имени категорию, если нал то создать и получить у нее айди.
@@ -34,25 +34,26 @@ class CategoryCreateUseCaseImpl(
          * Собираем ответ, где все данные получены из первого сервиса кроме parentId
          */
 
-        val categoryCreateModel = params.toServiceModel(actorPrincipal)
+        val categoryCreateModel = command.toServiceModel(actorPrincipal)
 
         val categoryServiceModel = categoryService.create(categoryCreateModel)
 
-        val treeCreateModel = CategoryTreeCreateModel(
-            categoryId = categoryServiceModel.id,
-            parentId = params.parentId,
-            actorId = actorPrincipal.id
-        )
-
-        if (params.parentId != null) {
+        if (command.parentId != null) {
             val validateModel = CategoryTreeValidateModel(
                 categoryId = categoryServiceModel.id,
-                parentId = params.parentId,
+                parentId = command.parentId,
                 actorId = actorPrincipal.id
             )
 
             categoryTreeService.validateParent(validateModel)
+            //TODO если указывается родительская категория, то дочерняя должна наследовать тип категории родительской
         }
+
+        val treeCreateModel = CategoryTreeCreateModel(
+            categoryId = categoryServiceModel.id,
+            parentId = command.parentId,
+            actorId = actorPrincipal.id
+        )
 
         val categoryLink = categoryTreeService.createLink(treeCreateModel)
 

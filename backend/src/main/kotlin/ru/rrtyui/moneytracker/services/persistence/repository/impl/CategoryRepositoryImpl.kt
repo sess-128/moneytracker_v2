@@ -2,6 +2,7 @@ package ru.rrtyui.moneytracker.services.persistence.repository.impl
 
 import java.util.UUID
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
 import org.springframework.stereotype.Repository
 import ru.rrtyui.moneytracker.services.persistence.entity.CategoryEntity
 import ru.rrtyui.moneytracker.services.persistence.model.CategoryCreateRow
@@ -35,7 +36,7 @@ class CategoryRepositoryImpl: CategoryRepository {
         }
     }
 
-    override fun findByName(name: String): CategoryEntity? {
+    override fun getByName(name: String): CategoryEntity? {
         val predicate = (CategoriesTable.name eq name)
 
         return CategoryEntity
@@ -49,6 +50,14 @@ class CategoryRepositoryImpl: CategoryRepository {
         return CategoryEntity
             .find { predicate }
             .singleOrNull()
+    }
+
+    override fun findByIds(ids: List<UUID>): List<CategoryEntity> {
+        val predicate = (CategoriesTable.id inList ids)
+
+        return CategoryEntity
+            .find { predicate }
+            .toList()
     }
 
     override fun update() {

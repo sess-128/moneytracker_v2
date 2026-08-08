@@ -3,20 +3,20 @@ package ru.rrtyui.moneytracker.services.service
 import java.util.UUID
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeServiceModel
+import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeValidateModel
 
 interface CategoryTreeService {
-    fun findAllLinksByActorId(actorId: UUID)
+    fun findAllLinksByActorId(actorId: UUID): List<CategoryTreeServiceModel>
 
     fun createLink(categoryTreeCreateModel: CategoryTreeCreateModel): CategoryTreeServiceModel
 
-    fun removeLink(
+    fun checkExist(
+        userId: UUID,
         categoryId: UUID
     )
 
-    fun updateLink(
-
-    )
+    fun updateLink(categoryTreeUpdateModel: CategoryTreeUpdateModel)
 
     fun validateParent(
         categoryTreeValidateModel: CategoryTreeValidateModel,

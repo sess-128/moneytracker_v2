@@ -3,14 +3,12 @@ package ru.rrtyui.moneytracker.client.api.v1
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.rrtyui.moneytracker.application.security.data.UserPrincipal
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
 import ru.rrtyui.moneytracker.client.RestConstants.CATEGORIES_URL
 import ru.rrtyui.moneytracker.client.mapper.CategoryControllerMapper.toResponse
@@ -18,8 +16,11 @@ import ru.rrtyui.moneytracker.client.mapper.CategoryControllerMapper.toUseCase
 import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
 import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
 import ru.rrtyui.moneytracker.client.response.CategoryResponse
+import ru.rrtyui.moneytracker.client.response.FindCategoriesByUserResponse
 import ru.rrtyui.moneytracker.services.service.impl.CategoryServiceImpl
 import ru.rrtyui.moneytracker.services.usecase.CategoryCreateUseCase
+import ru.rrtyui.moneytracker.services.usecase.CategoryUpdateUseCase
+import ru.rrtyui.moneytracker.services.usecase.FindCategoriesByUserUseCase
 
 
 @RestController
@@ -27,14 +28,16 @@ import ru.rrtyui.moneytracker.services.usecase.CategoryCreateUseCase
 @Tag(name = "Работа с категориями", description = "API для CRUD-операций с категориями")
 class CategoryController(
     private val categoryServiceImpl: CategoryServiceImpl,
-    private val categoryCreateUseCase: CategoryCreateUseCase
+    private val categoryCreateUseCase: CategoryCreateUseCase,
+    private val categoryUpdateUseCase: CategoryUpdateUseCase,
+    private val findCategoriesByUserUseCase: FindCategoriesByUserUseCase,
 ){
     @GetMapping()
     @Operation(description = "Получить все категории пользователя")
-    fun getCategories(
-        @AuthenticationPrincipal user: UserPrincipal
-    ): ResponseEntity<List<CategoryResponse>> {
-        return ResponseEntity.ok(categoryServiceImpl.getAllCategories(user))
+    fun getAllCategories(): ResponseEntity<List<FindCategoriesByUserResponse>> {
+        val result = findCategoriesByUserUseCase.invoke()
+        val response = result.map { it.toResponse() }
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping
@@ -48,14 +51,14 @@ class CategoryController(
         return ResponseEntity.ok(response)
     }
 
-    @PatchMapping
+    @PutMapping
     @Operation(description = "Обновить имя категории")
-    @Deprecated("Т.к категории шареные - пока отключено, решить позже")
     fun updateCategory(
         @RequestBody request: CategoryUpdateRequest,
-        @AuthenticationPrincipal user: UserPrincipal
-    ): ResponseEntity<CategoryResponse> {
-        return ResponseEntity.ok(categoryServiceImpl.updateCategory(request))
+    ): ResponseEntity<Unit> {
+        val command = request.toUseCase()
+        categoryUpdateUseCase.invoke(command)
+        return ResponseEntity.ok().build()
     }
 
 //    @DeleteMapping
