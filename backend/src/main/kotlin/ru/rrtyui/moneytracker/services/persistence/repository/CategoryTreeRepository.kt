@@ -7,7 +7,7 @@ import ru.rrtyui.moneytracker.services.persistence.model.CategoryTreeDeleteRow
 import ru.rrtyui.moneytracker.services.persistence.model.CategoryTreeUpdateRow
 
 interface CategoryTreeRepository {
-    fun existById(id: UUID): Boolean //TODO не потому айди идет проверка
+    fun existByParentId(id: UUID): Boolean
 
     fun existByUserIdAndCategoryId(userId: UUID, categoryId: UUID): Boolean
 

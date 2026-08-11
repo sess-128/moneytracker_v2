@@ -14,8 +14,8 @@ import ru.rrtyui.moneytracker.services.persistence.tables.CategoryTreeTable
 
 @Repository
 class CategoryTreeRepositoryImpl: CategoryTreeRepository {
-    override fun existById(id: UUID): Boolean {
-        val predicate = (CategoryTreeTable.id eq id)
+    override fun existByParentId(id: UUID): Boolean {
+        val predicate = (CategoryTreeTable.parentId eq id)
 
         return CategoryTreeEntity
             .find { predicate }

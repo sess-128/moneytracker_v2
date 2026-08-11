@@ -63,7 +63,7 @@ class CategoryTreeServiceImpl(
             throw RuntimeException("Category cannot be its own parent")
         }
 
-        if (!categoryTreeRepository.existById(parentId)) {
+        if (!categoryTreeRepository.existByParentId(parentId)) {
             throw RuntimeException("Parent category with id $parentId does not exist")
         }
 

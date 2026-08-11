@@ -23,7 +23,7 @@ class CategoryUpdateUseCaseImpl(
         val oldCategory = categoryService.findById(command.oldCategoryId)
             ?: throw RuntimeException("Не удалось найти категорию ${command.oldCategoryId} ")
 
-        categoryTreeService.checkExist(actorPrincipal.id, oldCategory.id) //TODO добавить проверку типа категории?
+        categoryTreeService.checkExist(actorPrincipal.id, oldCategory.id)
 
         if (command.name == oldCategory.name) {
             throw RuntimeException("Старое наименование категории совпадает с новым")
