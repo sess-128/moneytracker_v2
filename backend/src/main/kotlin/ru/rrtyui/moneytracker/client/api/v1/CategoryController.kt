@@ -17,7 +17,6 @@ import ru.rrtyui.moneytracker.client.request.CategoryCreateRequest
 import ru.rrtyui.moneytracker.client.request.CategoryUpdateRequest
 import ru.rrtyui.moneytracker.client.response.CategoryResponse
 import ru.rrtyui.moneytracker.client.response.FindCategoriesByUserResponse
-import ru.rrtyui.moneytracker.services.service.impl.CategoryServiceImpl
 import ru.rrtyui.moneytracker.services.usecase.CategoryCreateUseCase
 import ru.rrtyui.moneytracker.services.usecase.CategoryUpdateUseCase
 import ru.rrtyui.moneytracker.services.usecase.FindCategoriesByUserUseCase
@@ -27,7 +26,6 @@ import ru.rrtyui.moneytracker.services.usecase.FindCategoriesByUserUseCase
 @RequestMapping("$API_V1/$CATEGORIES_URL")
 @Tag(name = "Работа с категориями", description = "API для CRUD-операций с категориями")
 class CategoryController(
-    private val categoryServiceImpl: CategoryServiceImpl,
     private val categoryCreateUseCase: CategoryCreateUseCase,
     private val categoryUpdateUseCase: CategoryUpdateUseCase,
     private val findCategoriesByUserUseCase: FindCategoriesByUserUseCase,
@@ -61,6 +59,15 @@ class CategoryController(
         return ResponseEntity.ok().build()
     }
 
+    //TODO удаление категории несет большие проверки, а именно:
+    /**
+     * - является ли категория родительской? Если да, то что делать с дочерними? Переносить на другого? Делать все дочерние родительскими? Как будто
+     * потенциально лучше заставить пользователя сделать перенос всех дочерних категорий на нового родителя, чтобы у удаляемой категории не было
+     * дочерних категорий
+     * - если категория НЕродительская, то нужно
+     * 1) заставить пользователя перенести все дочерние категории на новую категорию
+     * то есть по сути мы должны сделать апдейт как в обновлении категории и просто обновить старыйАйди на новый и удалить связь со старой, пока не приоритет
+     */
 //    @DeleteMapping
 //    fun deleteCategory(
 //        @ParameterObject request: CategoryUpdateDto,
