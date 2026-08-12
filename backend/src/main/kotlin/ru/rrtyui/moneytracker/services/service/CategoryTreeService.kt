@@ -16,6 +16,11 @@ interface CategoryTreeService {
         categoryId: UUID
     )
 
+    fun checkIsLastSubCategory(
+        userId: UUID,
+        categoryId: UUID
+    )
+
     fun updateLink(categoryTreeUpdateModel: CategoryTreeUpdateModel)
 
     fun validateParent(

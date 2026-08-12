@@ -10,7 +10,7 @@ import ru.rrtyui.moneytracker.services.persistence.repository.CategoryRepository
 import ru.rrtyui.moneytracker.services.persistence.tables.CategoriesTable
 
 @Repository
-class CategoryRepositoryImpl: CategoryRepository {
+class CategoryRepositoryImpl: CategoryRepository { //TODO обернуть все в транзакшионал
     override fun existByName(name: String): Boolean {
         val predicate = (CategoriesTable.name eq name)
 
@@ -36,7 +36,7 @@ class CategoryRepositoryImpl: CategoryRepository {
         }
     }
 
-    override fun getByName(name: String): CategoryEntity? {
+    override fun findByName(name: String): CategoryEntity? {
         val predicate = (CategoriesTable.name eq name)
 
         return CategoryEntity

@@ -11,7 +11,7 @@ interface CategoryRepository {
 
     fun create(categoryCreateRow: CategoryCreateRow): CategoryEntity
 
-    fun getByName(name: String): CategoryEntity?
+    fun findByName(name: String): CategoryEntity?
 
     fun findById(id: UUID): CategoryEntity?
 

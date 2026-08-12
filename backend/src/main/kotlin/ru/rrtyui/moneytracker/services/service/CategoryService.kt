@@ -7,7 +7,7 @@ import ru.rrtyui.moneytracker.services.service.model.CategoryServiceModel
 interface CategoryService {
     fun findByName(name: String): CategoryServiceModel?
 
-    fun findById(id: UUID): CategoryServiceModel?
+    fun getById(id: UUID): CategoryServiceModel
 
     fun findAllByIds(categoriesIds: List<UUID>): List<CategoryServiceModel>
 

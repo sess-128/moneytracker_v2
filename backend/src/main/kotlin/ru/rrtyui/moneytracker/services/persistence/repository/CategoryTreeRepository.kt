@@ -11,6 +11,8 @@ interface CategoryTreeRepository {
 
     fun existByUserIdAndCategoryId(userId: UUID, categoryId: UUID): Boolean
 
+    fun existSubCategoryByUserIdAndCategoryId(userId: UUID, categoryId: UUID): Boolean
+
     fun createLink(categoryTreeCreateRow: CategoryTreeCreateRow): CategoryTreeEntity
 
     fun findAllByActorId(id: UUID): List<CategoryTreeEntity>

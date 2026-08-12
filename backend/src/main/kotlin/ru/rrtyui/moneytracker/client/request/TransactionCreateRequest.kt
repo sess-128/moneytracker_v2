@@ -19,3 +19,5 @@ data class TransactionCreateRequest(
     @field:Schema(description = "Дата и время транзакции. Если не указано, используется текущее время", example = "2023-10-25T14:30:00")
     val transactionDate: LocalDateTime?
 )
+
+//TODO добавить валидации на все модели запросов, например что amount > 0

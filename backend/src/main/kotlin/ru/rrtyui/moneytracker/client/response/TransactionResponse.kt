@@ -14,6 +14,9 @@ data class TransactionResponse(
     @field:Schema(description = "ID категории, к которой относится транзакция", example = "123e4567-e89b-12d3-a456-426614174000")
     val categoryId: UUID,
 
+    @field:Schema(description = "Тип категории", example = "EXPENSE", allowableValues = ["EXPENSE", "INCOME"])
+    val type: CategoryTypeStatusResponse,
+
     @field:Schema(description = "Сумма транзакции", example = "1500.50")
     val amount: BigDecimal,
 

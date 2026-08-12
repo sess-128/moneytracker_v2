@@ -20,8 +20,7 @@ class CategoryUpdateUseCaseImpl(
     @Transactional(propagation = Propagation.REQUIRED)
     override fun invoke(command: CategoryUpdateCommand) {
         val actorPrincipal = actorPrincipalService.getCurrentActor()
-        val oldCategory = categoryService.findById(command.oldCategoryId)
-            ?: throw RuntimeException("Не удалось найти категорию ${command.oldCategoryId} ")
+        val oldCategory = categoryService.getById(command.oldCategoryId)
 
         categoryTreeService.checkExist(actorPrincipal.id, oldCategory.id)
 

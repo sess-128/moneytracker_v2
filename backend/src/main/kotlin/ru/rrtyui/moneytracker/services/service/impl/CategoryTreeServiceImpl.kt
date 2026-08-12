@@ -42,6 +42,21 @@ class CategoryTreeServiceImpl(
         }
     }
 
+    override fun checkIsLastSubCategory(userId: UUID, categoryId: UUID) {
+        val existByUserIdAndCategoryId = categoryTreeRepository.existByUserIdAndCategoryId(userId, categoryId)
+
+        if (!existByUserIdAndCategoryId) {
+            throw RuntimeException("Категория $categoryId не существует у пользователя $userId")
+        }
+
+        val existSubCategoryByUserIdAndCategoryId =
+            categoryTreeRepository.existSubCategoryByUserIdAndCategoryId(userId, categoryId)
+
+        if (existSubCategoryByUserIdAndCategoryId){
+            throw RuntimeException("Категория $categoryId не является крайней дочерней категорией")
+        }
+    }
+
     @Transactional(propagation = Propagation.REQUIRED)
     override fun updateLink(categoryTreeUpdateModel: CategoryTreeUpdateModel) {
         val updateRow = categoryTreeUpdateModel.toUpdateRow()

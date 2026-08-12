@@ -33,6 +33,19 @@ class CategoryTreeRepositoryImpl: CategoryTreeRepository {
             .count() > 0
     }
 
+    override fun existSubCategoryByUserIdAndCategoryId(
+        userId: UUID,
+        categoryId: UUID
+    ): Boolean {
+        val predicate =
+            (CategoryTreeTable.userId eq userId) and
+                    (CategoryTreeTable.parentId eq categoryId)
+
+        return CategoryTreeEntity
+            .find { predicate }
+            .count() > 0
+    }
+
     override fun createLink(categoryTreeCreateRow: CategoryTreeCreateRow): CategoryTreeEntity {
         return CategoryTreeEntity.new {
             categoryId = categoryTreeCreateRow.categoryId

@@ -17,14 +17,16 @@ class CategoryServiceImpl(
 ): CategoryService {
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     override fun findByName(name: String): CategoryServiceModel? {
-        val category = categoryRepository.getByName(name)
+        val category = categoryRepository.findByName(name)
         return category?.toServiceModel()
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    override fun findById(id: UUID): CategoryServiceModel? {
+    override fun getById(id: UUID): CategoryServiceModel {
         val category = categoryRepository.findById(id)
-        return category?.toServiceModel()
+            ?: throw RuntimeException("Не удалось найти категорию $id")
+
+        return category.toServiceModel()
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -36,7 +38,7 @@ class CategoryServiceImpl(
 
     @Transactional(propagation = Propagation.REQUIRED)
     override fun create(createModel: CategoryCreateModel): CategoryServiceModel {
-        val existingCategory = categoryRepository.getByName(createModel.name)
+        val existingCategory = categoryRepository.findByName(createModel.name)
         if (existingCategory != null) {
             return existingCategory.toServiceModel()
         }
