@@ -12,9 +12,9 @@ spring:
     compose:
       file: docker-compose-local.yml
   datasource:
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    url: ${SPRING_DATASOURCE_URL}
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5438/money-tracker-db
     driver-class-name: org.postgresql.Driver
   exposed:
     generate-ddl: false

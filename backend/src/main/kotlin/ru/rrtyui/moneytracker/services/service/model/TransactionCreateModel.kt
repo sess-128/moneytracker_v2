@@ -6,6 +6,7 @@ import java.util.UUID
 
 data class TransactionCreateModel(
     val categoryId: UUID,
+    val categoryName: String,
     val transactionDateTime: LocalDateTime? = LocalDateTime.now(),
     val amount: BigDecimal,
     val description: String?,

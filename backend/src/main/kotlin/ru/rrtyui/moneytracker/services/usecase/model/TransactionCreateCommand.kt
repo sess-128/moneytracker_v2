@@ -6,6 +6,7 @@ import java.util.UUID
 
 data class TransactionCreateCommand(
     val categoryId: UUID,
+    val categoryName: String,
     val amount: BigDecimal,
     val description: String?,
     val transactionDate: LocalDateTime?

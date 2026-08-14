@@ -11,6 +11,7 @@ class TransactionEntity(
 ): UUIDEntity(id) { companion object : UUIDEntityClass<TransactionEntity>(TransactionsTable)
     var userId by TransactionsTable.userId
     var categoryId by TransactionsTable.categoryId
+    var categoryName by TransactionsTable.categoryName
     var amount by TransactionsTable.amount
     var transactionDate by TransactionsTable.transactionDate
     var description by TransactionsTable.description

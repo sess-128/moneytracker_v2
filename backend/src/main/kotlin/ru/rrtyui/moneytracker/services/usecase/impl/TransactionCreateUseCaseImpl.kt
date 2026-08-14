@@ -7,9 +7,9 @@ import ru.rrtyui.moneytracker.services.service.CategoryTreeService
 import ru.rrtyui.moneytracker.services.service.TransactionService
 import ru.rrtyui.moneytracker.services.service.model.TransactionCreateModel
 import ru.rrtyui.moneytracker.services.usecase.TransactionCreateUseCase
-import ru.rrtyui.moneytracker.services.usecase.mapper.TransactionMapper.toResult
+import ru.rrtyui.moneytracker.services.usecase.mapper.TransactionMapper.toUseCase
 import ru.rrtyui.moneytracker.services.usecase.model.TransactionCreateCommand
-import ru.rrtyui.moneytracker.services.usecase.model.TransactionCreateResult
+import ru.rrtyui.moneytracker.services.usecase.model.TransactionResult
 
 @Service
 class TransactionCreateUseCaseImpl(
@@ -18,7 +18,7 @@ class TransactionCreateUseCaseImpl(
     private val categoryService: CategoryService,
     private val transactionService: TransactionService,
 ): TransactionCreateUseCase {
-    override fun invoke(command: TransactionCreateCommand): TransactionCreateResult {
+    override fun invoke(command: TransactionCreateCommand): TransactionResult {
         /**
          * Перед созданием транзакции
          * - проверяем что это категория пользователя
@@ -36,6 +36,7 @@ class TransactionCreateUseCaseImpl(
 
         val createModel = TransactionCreateModel(
             categoryId = command.categoryId,
+            categoryName = command.categoryName,
             transactionDateTime = command.transactionDate,
             amount = command.amount,
             description = command.description,
@@ -44,6 +45,6 @@ class TransactionCreateUseCaseImpl(
         )
         val createdTransaction = transactionService.create(createModel)
 
-        return createdTransaction.toResult(category.type)
+        return createdTransaction.toUseCase(category.type)
     }
 }

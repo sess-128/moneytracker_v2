@@ -42,6 +42,14 @@ class CategoryTreeServiceImpl(
         }
     }
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    override fun existByCategoryId(userId: UUID, categoryId: UUID): Boolean {
+        val existByUserIdAndCategoryId = categoryTreeRepository.existByUserIdAndCategoryId(userId, categoryId)
+
+        return existByUserIdAndCategoryId
+    }
+
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     override fun checkIsLastSubCategory(userId: UUID, categoryId: UUID) {
         val existByUserIdAndCategoryId = categoryTreeRepository.existByUserIdAndCategoryId(userId, categoryId)
 
@@ -78,7 +86,7 @@ class CategoryTreeServiceImpl(
             throw RuntimeException("Category cannot be its own parent")
         }
 
-        if (!categoryTreeRepository.existByParentId(parentId)) {
+        if (categoryTreeRepository.existByUserIdAndCategoryId(actorId, categoryId)) {
             throw RuntimeException("Parent category with id $parentId does not exist")
         }
 

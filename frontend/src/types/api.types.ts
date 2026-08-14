@@ -1,4 +1,4 @@
-export type CategoryType = 'EXPENSE' | 'INCOME'
+export type CategoryType = 'EXPENSE' | 'INCOME' | 'SAVINGS'
 
 // ─── Auth ────────────────────────────────────────────────────────
 export interface UserLoginRequest {
@@ -23,10 +23,18 @@ export interface UserInfoResponse {
 
 // ─── Categories ──────────────────────────────────────────────────
 export interface CategoryResponse {
-  id: string
+  categoryId: string
+  parentId: string | null
+  linkId?: string
   name: string
   type: CategoryType
-  parentId?: string | null
+}
+
+export interface CategoryTreeResponse {
+  categoryId: string
+  name: string
+  type: CategoryType
+  childCategories: CategoryTreeResponse[]
 }
 
 export interface CategoryCreateRequest {
@@ -36,15 +44,14 @@ export interface CategoryCreateRequest {
 }
 
 export interface CategoryUpdateRequest {
-  id: string
+  oldCategoryId: string
   name: string
-  type?: CategoryType
-  parentId?: string | null
 }
 
 // ─── Transactions ────────────────────────────────────────────────
 export interface TransactionCreateRequest {
   categoryId: string
+  categoryName: string
   amount: number
   description?: string | null
   transactionDate?: string | null  // ISO datetime: "2026-05-22T00:00:00"
@@ -58,6 +65,8 @@ export interface TransactionUpdateRequest {
 export interface TransactionResponse {
   id: string
   categoryId: string
+  categoryName: string
+  type: CategoryType
   amount: number
   description?: string | null
   transactionDate?: string | null

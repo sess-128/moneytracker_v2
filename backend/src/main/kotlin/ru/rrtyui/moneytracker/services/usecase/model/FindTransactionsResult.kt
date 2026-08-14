@@ -4,11 +4,11 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
 
-data class TransactionCreateResult(
+data class FindTransactionsResult(
     val id: UUID,
     val categoryId: UUID,
-    val type: CategoryTypeCommand,
+    val actorId: UUID,
+    val transactionDate: LocalDateTime,
     val amount: BigDecimal,
     val description: String?,
-    val transactionDate: LocalDateTime?
 )

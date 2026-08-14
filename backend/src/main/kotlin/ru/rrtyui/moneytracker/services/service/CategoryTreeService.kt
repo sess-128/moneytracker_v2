@@ -16,6 +16,11 @@ interface CategoryTreeService {
         categoryId: UUID
     )
 
+    fun existByCategoryId(
+        userId: UUID,
+        categoryId: UUID
+    ): Boolean
+
     fun checkIsLastSubCategory(
         userId: UUID,
         categoryId: UUID

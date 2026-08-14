@@ -13,7 +13,7 @@ import ru.rrtyui.moneytracker.services.persistence.repository.CategoryTreeReposi
 import ru.rrtyui.moneytracker.services.persistence.tables.CategoryTreeTable
 
 @Repository
-class CategoryTreeRepositoryImpl: CategoryTreeRepository {
+class CategoryTreeRepositoryImpl : CategoryTreeRepository {
     override fun existByParentId(id: UUID): Boolean {
         val predicate = (CategoryTreeTable.parentId eq id)
 
@@ -48,6 +48,7 @@ class CategoryTreeRepositoryImpl: CategoryTreeRepository {
 
     override fun createLink(categoryTreeCreateRow: CategoryTreeCreateRow): CategoryTreeEntity {
         return CategoryTreeEntity.new {
+            userId = categoryTreeCreateRow.actorId
             categoryId = categoryTreeCreateRow.categoryId
             parentId = categoryTreeCreateRow.parentId
         }
@@ -68,12 +69,13 @@ class CategoryTreeRepositoryImpl: CategoryTreeRepository {
             (CategoryTreeTable.userId eq updateRow.actorId) and
                     (CategoryTreeTable.categoryId eq updateRow.oldCategoryId)
 
-        val updateRootCount = CategoryTreeTable.update(
-            where = { predicateRoot },
-            body = { row ->
-                row[CategoryTreeTable.parentId] = updateRow.newCategoryId
-            }
-        )
+        val updateRootCount =
+            CategoryTreeTable.update(
+                where = { predicateRoot },
+                body = { row ->
+                    row[CategoryTreeTable.parentId] = updateRow.newCategoryId
+                }
+            )
 
         val updateCount = CategoryTreeTable.update(
             where = { predicateChild },

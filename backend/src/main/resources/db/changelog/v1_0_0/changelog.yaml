@@ -14,3 +14,12 @@ databaseChangeLog:
   - include:
       file: 090526_00_00-create-table-category_tree.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 090526_01_00_fix_categories_unique_constraint.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 090526_02_00_fix_users_unique_username.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 090526_03_00_fix_category_tree_table.sql
+      relativeToChangelogFile: true
