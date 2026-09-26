@@ -7,6 +7,7 @@ import ru.rrtyui.moneytracker.services.service.TransactionService
 import ru.rrtyui.moneytracker.services.service.mapper.TransactionServiceMapper.toCreateRow
 import ru.rrtyui.moneytracker.services.service.mapper.TransactionServiceMapper.toReplaceRow
 import ru.rrtyui.moneytracker.services.service.mapper.TransactionServiceMapper.toServiceModel
+import ru.rrtyui.moneytracker.services.service.model.FilterTransactionServiceModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionCreateModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionReplaceCategoryModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionServiceModel
@@ -31,5 +32,9 @@ class TransactionServiceImpl(
         val replaceRow = replaceCategoryModel.toReplaceRow()
 
         transactionRepository.replaceCategory(replaceRow)
+    }
+
+    override fun filterTransaction(filterParams: FilterTransactionServiceModel): TransactionServiceModel {
+        val entities = transactionRepository.findFiltered()
     }
 }
