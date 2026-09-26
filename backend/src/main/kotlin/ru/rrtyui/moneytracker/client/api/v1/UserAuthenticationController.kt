@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.rrtyui.moneytracker.application.security.data.UserPrincipal
+import ru.rrtyui.moneytracker.application.security.service.SecurityService
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
 import ru.rrtyui.moneytracker.client.RestConstants.USERS_URL
 import ru.rrtyui.moneytracker.client.request.UserLoginRequest
 import ru.rrtyui.moneytracker.client.request.UserRegistrationRequest
 import ru.rrtyui.moneytracker.client.response.UserInfoResponse
 import ru.rrtyui.moneytracker.client.response.UserTokenResponse
-import ru.rrtyui.moneytracker.services.security.data.UserPrincipal
-import ru.rrtyui.moneytracker.services.service.SecurityService
 
 @RestController
 @RequestMapping("$API_V1/$USERS_URL")

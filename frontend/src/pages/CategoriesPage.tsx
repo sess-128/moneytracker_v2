@@ -2,18 +2,30 @@ import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { useCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from '@/features/categories/hooks/useCategories'
-import type { CategoryResponse } from '@/types/api.types'
+import type { CategoryTreeResponse, CategoryResponse, CategoryType } from '@/types/api.types'
 
 interface CategoryForm {
   name: string
-  type: 'EXPENSE' | 'INCOME'
+  type: CategoryType
   parentId: string | null
+}
+
+// Flatten tree to list for table display
+function flattenCategories(cats: CategoryTreeResponse[]): CategoryResponse[] {
+  return cats.flatMap(cat => [
+    { categoryId: cat.categoryId, name: cat.name, type: cat.type, parentId: null, linkId: undefined },
+    ...flattenCategories(cat.childCategories).map(c => ({
+      ...c,
+      parentId: cat.categoryId
+    }))
+  ])
 }
 
 const emptyForm: CategoryForm = { name: '', type: 'EXPENSE', parentId: null }
 
 export const CategoriesPage = () => {
-  const { data: categories = [], isLoading } = useCategories()
+  const { data: categoryTree = [], isLoading } = useCategories()
+  const categories = flattenCategories(categoryTree)
   const { mutate: createCat } = useCreateCategory()
   const { mutate: updateCat } = useUpdateCategory()
   const { mutate: deleteCat } = useDeleteCategory()
@@ -52,7 +64,7 @@ export const CategoriesPage = () => {
 
     if (editingCat) {
       updateCat(
-        { id: editingCat.id, name: form.name, type: form.type, parentId: form.parentId },
+        { oldCategoryId: editingCat.categoryId, name: form.name },
         { onSuccess: closeDialog, onError: (e: any) => setError(e.response?.data?.message || 'Ошибка обновления') },
       )
     } else {
@@ -65,14 +77,14 @@ export const CategoriesPage = () => {
 
   const handleDelete = (cat: CategoryResponse) => {
     if (!window.confirm(`Удалить категорию «${cat.name}»?`)) return
-    deleteCat(cat.id, {
+    deleteCat(cat.categoryId, {
       onError: (e: any) => alert(e.response?.data?.message || 'Не удалось удалить категорию'),
     })
   }
 
   const getParentName = (cat: CategoryResponse) => {
     if (!cat.parentId) return '—'
-    return categories.find((c) => c.id === cat.parentId)?.name ?? cat.parentId
+    return categories.find((c) => c.categoryId === cat.parentId)?.name ?? cat.parentId
   }
 
   return (
@@ -109,7 +121,7 @@ export const CategoriesPage = () => {
             <tbody>
               {categories.map((cat, i) => (
                 <tr
-                  key={cat.id}
+                  key={cat.categoryId}
                   className="border-b border-white/[0.03] transition-colors hover:bg-white/[0.02]"
                 >
                   <td className="px-4 py-3 text-white font-medium">{cat.name}</td>
@@ -117,9 +129,11 @@ export const CategoriesPage = () => {
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                       cat.type === 'INCOME'
                         ? 'bg-emerald-500/15 text-emerald-400'
-                        : 'bg-rose-500/15 text-rose-400'
+                        : cat.type === 'SAVINGS'
+                          ? 'bg-blue-500/15 text-blue-400'
+                          : 'bg-rose-500/15 text-rose-400'
                     }`}>
-                      {cat.type === 'INCOME' ? 'Доход' : 'Расход'}
+                      {cat.type === 'INCOME' ? 'Доход' : cat.type === 'SAVINGS' ? 'Накопление' : 'Расход'}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-white/50">{getParentName(cat)}</td>
@@ -185,6 +199,7 @@ export const CategoriesPage = () => {
                 >
                   <option value="EXPENSE">Расход</option>
                   <option value="INCOME">Доход</option>
+                  <option value="SAVINGS">Накопление</option>
                 </select>
               </div>
 
@@ -199,9 +214,9 @@ export const CategoriesPage = () => {
                 >
                   <option value="">Без родителя (корневая)</option>
                   {rootCategories
-                    .filter((c) => editingCat ? c.id !== editingCat.id : true)
+                    .filter((c) => editingCat ? c.categoryId !== editingCat.categoryId : true)
                     .map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
+                      <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
                     ))
                   }
                 </select>

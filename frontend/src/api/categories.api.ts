@@ -1,6 +1,7 @@
 import { apiClient } from './client'
 import { API_ENDPOINTS } from './endpoints'
-import type {
+import {
+  CategoryTreeResponse,
   CategoryResponse,
   CategoryCreateRequest,
   CategoryUpdateRequest,
@@ -8,7 +9,7 @@ import type {
 
 export const categoriesApi = {
   getAll: () =>
-    apiClient.get<CategoryResponse[]>(API_ENDPOINTS.categories.root).then((r) => r.data),
+    apiClient.get<CategoryTreeResponse[]>(API_ENDPOINTS.categories.root).then((r) => r.data),
 
   create: (data: CategoryCreateRequest) =>
     apiClient.post<CategoryResponse>(API_ENDPOINTS.categories.root, data).then((r) => r.data),

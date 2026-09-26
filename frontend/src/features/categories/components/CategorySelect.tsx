@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { SelectWithSearch, SelectOption } from '@/components/ui/SelectWithSearch';
 import { useCategories } from '../hooks/useCategories';
-import type { CategoryResponse } from '@/types/api.types'; // Импорт типа из твоего API
+import type { CategoryTreeResponse } from '@/types/api.types'; // Импорт типа из твоего API
 
 // Типы фильтрации для гибкости
 export type CategoryFilterType = 'all' | 'roots' | 'children';
@@ -24,19 +24,37 @@ export const CategorySelect = ({
                                    placeholder
                                }: CategorySelectProps) => {
 
-    const { data: categories, isLoading, isError } = useCategories();
+    const { data: categoryTree, isLoading, isError } = useCategories();
+
+    // Flatten tree to list
+    const flattenCategories = (cats: CategoryTreeResponse[], parentId: string | null = null): Array<{ categoryId: string; parentId: string | null }> => {
+        return cats.flatMap(cat => [
+            { categoryId: cat.categoryId, parentId },
+            ...flattenCategories(cat.childCategories, cat.categoryId)
+        ])
+    }
+
+    const categories = useMemo(() => flattenCategories(categoryTree || []), [categoryTree]);
+
+    const categoryMap = useMemo(() => {
+        const map = new Map<string, string>();
+        const buildMap = (cats: CategoryTreeResponse[]) => {
+            cats.forEach(cat => {
+                map.set(cat.categoryId, cat.name);
+                buildMap(cat.childCategories);
+            });
+        };
+        buildMap(categoryTree || []);
+        return map;
+    }, [categoryTree]);
 
     // БИЗНЕС-ЛОГИКА: Фильтрация на клиенте
     const filteredCategories = useMemo(() => {
-        if (!categories) return [];
-
         switch (filterType) {
             case 'roots':
-                // Корневые: у которых НЕТ родителя (parentId === null или undefined)
                 return categories.filter((cat) => cat.parentId == null);
 
             case 'children':
-                // Дочерние: у которых ЕСТЬ родитель (parentId !== null)
                 return categories.filter((cat) => cat.parentId != null);
 
             case 'all':
@@ -47,8 +65,8 @@ export const CategorySelect = ({
 
     // Маппинг данных из API в формат UI-компонента
     const options: SelectOption<string>[] = filteredCategories.map((cat) => ({
-        value: cat.id,
-        label: cat.name,
+        value: cat.categoryId,
+        label: categoryMap.get(cat.categoryId) ?? cat.categoryId,
     }));
 
     if (isError) {

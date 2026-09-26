@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260917-01
+      author: rrtyui
+      changes:
+        - sqlFile:
+            path: 2026-09-17_01-alter-table-storage_transactions.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 20260917-02
+      author: rrtyui
+      changes:
+        - sqlFile:
+            path: 2026-09-17_02-data-migration-storage_transactions.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 20260917-03
+      author: rrtyui
+      changes:
+        - sqlFile:
+            path: 2026-09-17_03-alter-table-storage_transactions.sql
+            relativeToChangelogFile: true

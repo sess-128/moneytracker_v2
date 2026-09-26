@@ -6,12 +6,25 @@ import { DatePicker } from '@/components/ui/DatePicker'
 import { useCreateTransaction } from '../hooks/useTransactions'
 import { toISODate } from '@/utils/formatters'
 import { CategorySelect } from '@/features/categories/components/CategorySelect'
+import { useCategories } from '@/features/categories/hooks/useCategories'
+import type { CategoryTreeResponse } from '@/types/api.types'
+
+function findCategoryById(cats: CategoryTreeResponse[], id: string): CategoryTreeResponse | undefined {
+  for (const cat of cats) {
+    if (cat.categoryId === id) return cat
+    const found = findCategoryById(cat.childCategories, id)
+    if (found) return found
+  }
+  return undefined
+}
 
 export const TransactionForm = () => {
   const today = toISODate(new Date())
+  const { data: categoryTree = [] } = useCategories()
 
   const [amount, setAmount] = useState('')
   const [categoryId, setCategoryId] = useState('')
+  const [categoryName, setCategoryName] = useState('')
   const [description, setDescription] = useState('')
   const [date, setDate] = useState(today)
 
@@ -25,12 +38,15 @@ export const TransactionForm = () => {
       {
         amount: parseFloat(amount),
         categoryId,
+        categoryName,
         description: description || null,
         transactionDate: `${date}T00:00:00`,
       },
       {
         onSuccess: () => {
           setAmount('')
+          setCategoryName('')
+          setCategoryId('')
           setDescription('')
         },
       },
@@ -50,7 +66,11 @@ export const TransactionForm = () => {
               </label>
               <CategorySelect
                   value={categoryId}
-                  onChange={setCategoryId}
+                  onChange={(id) => {
+                    setCategoryId(id)
+                    const cat = findCategoryById(categoryTree, id)
+                    setCategoryName(cat?.name ?? '')
+                  }}
                   filterType="children"
               />
             </div>

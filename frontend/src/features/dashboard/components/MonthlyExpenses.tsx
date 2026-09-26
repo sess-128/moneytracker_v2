@@ -1,6 +1,7 @@
 import { GlassCard } from '@/components/ui/GlassCard'
 import { useTransactions } from '@/features/transactions/hooks/useTransactions'
 import { useCategories } from '@/features/categories/hooks/useCategories'
+import type { CategoryTreeResponse } from '@/types/api.types'
 
 const COLORS = [
   '#7c3aed', '#2563eb', '#0891b2', '#059669',
@@ -10,9 +11,18 @@ const COLORS = [
 
 export const MonthlyExpenses = () => {
   const { data: transactions = [] } = useTransactions()
-  const { data: categories = [] } = useCategories()
+  const { data: categoryTree = [] } = useCategories()
 
-  const categoryMap = new Map(categories.map((c) => [c.id, c.name]))
+  // Flatten tree to get all categories
+  const flattenCategories = (cats: CategoryTreeResponse[]): Array<{ categoryId: string; name: string }> => {
+    return cats.flatMap(cat => [
+      { categoryId: cat.categoryId, name: cat.name },
+      ...flattenCategories(cat.childCategories)
+    ])
+  }
+
+  const categories = flattenCategories(categoryTree)
+  const categoryMap = new Map(categories.map((c) => [c.categoryId, c.name]))
 
   const countMap = new Map<string, number>()
   for (const tx of transactions) {

@@ -10,6 +10,9 @@ data class TransactionCreateRequest(
     @field:Schema(description = "ID категории транзакции", example = "123e4567-e89b-12d3-a456-426614174000")
     val categoryId: UUID,
 
+    @field:Schema(description = "Название категории", example = "Продукты")
+    val categoryName: String,
+
     @field:Schema(description = "Сумма транзакции", example = "1500.50")
     val amount: BigDecimal,
 

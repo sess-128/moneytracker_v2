@@ -1,20 +1,28 @@
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Avatar } from '@/components/ui/Avatar'
-import { useCategories } from '@/features/categories/hooks/useCategories'
 import { useAuthStore } from '@/store/authStore'
-import type { TransactionResponse } from '@/types/api.types'
+import type { TransactionResponse, CategoryType } from '@/types/api.types'
 import { formatCurrency, formatDate } from '@/utils/formatters'
+
+const getTypeConfig = (type: CategoryType) => {
+  switch (type) {
+    case 'INCOME':
+      return { label: 'ДОХОД', className: 'text-emerald-400' }
+    case 'SAVINGS':
+      return { label: 'НАКОПЛЕНИЕ', className: 'text-blue-400' }
+    case 'EXPENSE':
+    default:
+      return { label: 'РАСХОД', className: 'text-red-400' }
+  }
+}
 
 interface TransactionTableProps {
   transactions: TransactionResponse[]
 }
 
-// TODO: убрать когда бэк будет отдавать тип транзакции
-const resolveSign = (_amount: number) => ({ label: 'РАСХОД', className: 'text-red-400' })
+
 
 export const TransactionTable = ({ transactions }: TransactionTableProps) => {
-  const { data: categories = [] } = useCategories()
-  const categoryMap = new Map(categories.map((c) => [c.id, c.name]))
   const username = useAuthStore((s) => s.user?.login ?? '')
 
   return (
@@ -38,8 +46,7 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
           </div>
         ) : (
           transactions.map((tx) => {
-            const sign = resolveSign(tx.amount)
-            const categoryName = categoryMap.get(tx.categoryId) ?? tx.categoryId.slice(0, 8)
+            const typeConfig = getTypeConfig(tx.type)
             return (
               <div
                 key={tx.id}
@@ -47,8 +54,8 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
                 style={{ gridTemplateColumns: '32px 1fr 90px 90px 80px 52px' }}
               >
                 <Avatar username={username} size={32} />
-                <span className="text-white text-sm truncate">{categoryName}</span>
-                <span className={`text-xs font-semibold ${sign.className}`}>{sign.label}</span>
+                <span className="text-white text-sm truncate">{tx.categoryName}</span>
+                <span className={`text-xs font-semibold ${typeConfig.className}`}>{typeConfig.label}</span>
                 <span className="text-white text-sm">{formatCurrency(tx.amount)}</span>
                 <span className="text-white/50 text-xs">
                   {tx.transactionDate ? formatDate(tx.transactionDate) : '—'}

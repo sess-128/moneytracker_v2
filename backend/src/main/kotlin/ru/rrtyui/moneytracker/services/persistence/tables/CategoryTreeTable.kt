@@ -1,13 +1,14 @@
 package ru.rrtyui.moneytracker.services.persistence.tables
 
-import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
+import org.jetbrains.exposed.v1.core.java.javaUUID
 
-object CategoryTreeTable : Table("relations.category_tree") {
-    val userId = reference("user_id", UsersTable)
+object CategoryTreeTable : UUIDTable("relations.category_tree", columnName = "id") {
+    val userId = javaUUID("user_id")
+    val categoryId = javaUUID("category_id")
+    val parentId = javaUUID("parent_id").nullable()
 
-    val categoryId = reference("category_id",CategoriesTable)
-
-    val parentId = optReference("parent_id", CategoriesTable)
-
-    override val primaryKey = PrimaryKey(userId, categoryId)
+    init {
+        uniqueIndex(userId, categoryId)
+    }
 }
