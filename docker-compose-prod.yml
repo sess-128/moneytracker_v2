@@ -9,24 +9,27 @@ services:
       - postgres-prod:/var/lib/postgresql/data
     networks:
       - mt-network-prod
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend-prod:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: rrtyuisess/moneytracker-backend:2.0.0
     container_name: mt-backend-prod
     restart: unless-stopped
     env_file:
       - .env.prod
     depends_on:
-      - postgres-prod
+      postgres-prod:
+        condition: service_healthy
     networks:
       - mt-network-prod
 
   frontend-prod:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    # Используем конкретный тег из Docker Hub
+    image: rrtyuisess/moneytracker-frontend:2.0.0
     container_name: mt-frontend-prod
     restart: unless-stopped
     ports:
