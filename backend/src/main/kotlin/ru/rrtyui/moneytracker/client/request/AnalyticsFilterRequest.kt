@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
 
-data class TransactionFilterRequest(
+data class AnalyticsFilterRequest(
     @field:Schema(description = "Список ID конкретных категорий для фильтрации")
     val categoryIds: List<UUID> = emptyList(),
 
@@ -20,10 +20,4 @@ data class TransactionFilterRequest(
 
     @field:Schema(description = "Максимальная сумма транзакции", example = "50000.00")
     val maxAmount: BigDecimal? = null,
-
-    @field:Schema(description = "Тип транзакции (доход/расход). Если ничего не указано, то поиск по всем типам", example = "EXPENSE")
-    val type: CategoryTypeStatusRequest = CategoryTypeStatusRequest.EXPENSE,
-
-    @field:Schema(description = "Часть текста для поиска по описанию транзакции", example = "Пятерочка")
-    val description: String? = null
 )

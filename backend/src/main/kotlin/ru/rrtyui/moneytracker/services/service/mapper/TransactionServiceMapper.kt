@@ -1,8 +1,10 @@
 package ru.rrtyui.moneytracker.services.service.mapper
 
 import ru.rrtyui.moneytracker.services.persistence.entity.TransactionEntity
+import ru.rrtyui.moneytracker.services.persistence.model.FilterTransactionRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionCreateRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionReplaceCategoryRow
+import ru.rrtyui.moneytracker.services.service.model.FilterTransactionServiceModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionCreateModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionReplaceCategoryModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionServiceModel
@@ -38,5 +40,15 @@ object TransactionServiceMapper {
             newCategoryId = this.newCategoryId,
             actorId = this.actorId,
             newCategoryName = this.newCategoryName
+        )
+
+    fun FilterTransactionServiceModel.toFilterRow() =
+        FilterTransactionRow(
+            categoryIds = this.categoryIds,
+            startDate = this.startDate.atStartOfDay(),
+            endDate = this.endDate?.atStartOfDay(),
+            minAmount = this.minAmount,
+            maxAmount = this.maxAmount,
+            actorId = this.actorId,
         )
 }
