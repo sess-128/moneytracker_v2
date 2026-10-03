@@ -61,9 +61,12 @@ class TransactionRepositoryImpl : TransactionRepository {
         transaction {
             var predicate =
                 (TransactionsTable.userId eq filterRow.actorId) and
-                (TransactionsTable.categoryId inList filterRow.categoryIds) and
                 (TransactionsTable.transactionDate greaterEq filterRow.startDate) and //TODO надо как-то брать даты нормально
                 (TransactionsTable.amount greaterEq filterRow.minAmount)
+
+            if (filterRow.categoryIds.isNotEmpty()) { //TODO выглядит как шляпа
+                predicate = predicate and (TransactionsTable.categoryId inList filterRow.categoryIds)
+            }
 
             filterRow.endDate?.let {
                 predicate = predicate and (TransactionsTable.transactionDate lessEq it)
