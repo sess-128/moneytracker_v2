@@ -16,7 +16,7 @@ services:
       retries: 5
 
   backend-prod:
-    image: rrtyuisess/moneytracker-backend:2.0.0
+    image: rrtyuisess/moneytracker:backend-1.1.0
     container_name: mt-backend-prod
     restart: unless-stopped
     env_file:
@@ -29,7 +29,7 @@ services:
 
   frontend-prod:
     # Используем конкретный тег из Docker Hub
-    image: rrtyuisess/moneytracker-frontend:2.0.0
+    image: rrtyuisess/moneytracker:frontend-1.1.0
     container_name: mt-frontend-prod
     restart: unless-stopped
     ports:
