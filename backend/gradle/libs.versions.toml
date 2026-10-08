@@ -11,7 +11,6 @@ kotlinx-coroutines = "1.10.2"
 jwt-token-api = "0.11.5"
 kotlin-logging-jvm = "3.0.5"
 
-
 [libraries]
 
 #Spring libs
@@ -27,7 +26,6 @@ jwtTokenJackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jwt-
 exposedSpringBootStarter = { module = "org.jetbrains.exposed:exposed-spring-boot-starter", version.ref = "exposed" }
 exposedCore = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposedJdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
-exposedKotlinDatetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 exposedJavaDatetime = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
 
 #Kotlin

@@ -29,12 +29,11 @@ dependencies {
 	implementation(libs.jwtTokenImpl)
 	implementation(libs.jwtTokenJackson)
 
-	developmentOnly(libs.springBootDockerCompose)
+//	developmentOnly(libs.springBootDockerCompose)
 
 	implementation(libs.exposedSpringBootStarter)
 	implementation(libs.exposedCore)
 	implementation(libs.exposedJdbc)
-	implementation(libs.exposedKotlinDatetime)
 	implementation(libs.exposedJavaDatetime)
 
 	implementation(libs.jacksonModuleKotlin)

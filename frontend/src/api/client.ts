@@ -3,6 +3,9 @@ import axios from 'axios'
 export const apiClient = axios.create({
   baseURL: '/',
   headers: { 'Content-Type': 'application/json' },
+  paramsSerializer: {
+    indexes: null, // отправляет как categoryIds=id1&categoryIds=id2 (без скобок)
+  },
 })
 
 apiClient.interceptors.request.use((config) => {

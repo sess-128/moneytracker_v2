@@ -82,3 +82,19 @@ export interface TransactionFilterRequest {
   description: string
   type?: CategoryType | null
 }
+
+// ─── Analytics ───────────────────────────────────────────────────
+export interface AnalyticsFilterRequest {
+  categoryIds: string[]
+  startDate: string          // "yyyy-MM-dd"
+  endDate?: string           // "yyyy-MM-dd"
+  minAmount?: number
+  maxAmount?: number
+}
+
+export interface AnalyticsFilterResponse {
+  categoryName: string
+  amount: string
+  countOfTransactions: number
+  avgInDay: number
+}

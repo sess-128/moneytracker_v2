@@ -1,11 +1,13 @@
 package ru.rrtyui.moneytracker.client.mapper
 
 import ru.rrtyui.moneytracker.client.mapper.CategoryControllerMapper.toResponse
+import ru.rrtyui.moneytracker.client.request.AnalyticsFilterRequest
 import ru.rrtyui.moneytracker.client.request.TransactionCreateRequest
-import ru.rrtyui.moneytracker.client.request.TransactionFilterRequest
+import ru.rrtyui.moneytracker.client.response.AnalyticsFilterResponse
 import ru.rrtyui.moneytracker.client.response.TransactionResponse
+import ru.rrtyui.moneytracker.services.usecase.model.AnalyticsFilterParams
+import ru.rrtyui.moneytracker.services.usecase.model.AnalyticsFilterResult
 import ru.rrtyui.moneytracker.services.usecase.model.TransactionCreateCommand
-import ru.rrtyui.moneytracker.services.usecase.model.TransactionFilterParams
 import ru.rrtyui.moneytracker.services.usecase.model.TransactionResult
 
 object TransactionControllerMapper {
@@ -29,14 +31,20 @@ object TransactionControllerMapper {
             transactionDate = this.transactionDate,
         )
 
-    fun TransactionFilterRequest.toParams() =
-        TransactionFilterParams(
+    fun AnalyticsFilterRequest.toParams() =
+        AnalyticsFilterParams(
             categoryIds = this.categoryIds,
             startDate = this.startDate,
             endDate = this.endDate,
             minAmount = this.minAmount,
             maxAmount = this.maxAmount,
-            type = this.type,
-            description = this.description,
+        )
+
+    fun AnalyticsFilterResult.toResponse() =
+        AnalyticsFilterResponse(
+            categoryName = this.categoryName,
+            amount = this.amount,
+            countOfTransactions = this.countOfTransactions,
+            avgInDay = this.avgInDay,
         )
 }

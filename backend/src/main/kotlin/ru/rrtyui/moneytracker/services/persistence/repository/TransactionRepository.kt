@@ -2,9 +2,9 @@ package ru.rrtyui.moneytracker.services.persistence.repository
 
 import java.util.UUID
 import ru.rrtyui.moneytracker.services.persistence.entity.TransactionEntity
+import ru.rrtyui.moneytracker.services.persistence.model.FilterTransactionRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionCreateRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionReplaceCategoryRow
-import ru.rrtyui.moneytracker.services.usecase.model.TransactionFilterParams
 
 interface TransactionRepository {
     fun create(createRow: TransactionCreateRow): TransactionEntity
@@ -13,5 +13,5 @@ interface TransactionRepository {
 
     fun replaceCategory(replaceRow: TransactionReplaceCategoryRow)
 
-    fun findFiltered(filterParams: TransactionFilterParams)
+    fun findFiltered(filterRow: FilterTransactionRow): List<TransactionEntity>
 }
