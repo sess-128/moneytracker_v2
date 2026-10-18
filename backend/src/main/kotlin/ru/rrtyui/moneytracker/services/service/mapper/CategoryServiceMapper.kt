@@ -8,6 +8,7 @@ import ru.rrtyui.moneytracker.services.persistence.tables.CategoryTableType
 import ru.rrtyui.moneytracker.services.service.model.CategoryCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateModel
+import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateRootModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTypeModel
 
 object CategoryServiceMapper {
@@ -44,5 +45,12 @@ object CategoryServiceMapper {
         CategoryTreeDeleteRow(
             categoryId = this.oldCategoryId,
             actorId = this.actorId
+        )
+
+    fun CategoryTreeUpdateRootModel.toUpdateRow() =
+        CategoryTreeUpdateRow(
+            oldCategoryId = this.categoryId,
+            newCategoryId = this.newRootId,
+            actorId = this.actorId,
         )
 }

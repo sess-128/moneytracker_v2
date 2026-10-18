@@ -10,15 +10,21 @@ interface CategoryForm {
   parentId: string | null
 }
 
-// Flatten tree to list for table display
-function flattenCategories(cats: CategoryTreeResponse[]): CategoryResponse[] {
-  return cats.flatMap(cat => [
-    { categoryId: cat.categoryId, name: cat.name, type: cat.type, parentId: null, linkId: undefined },
-    ...flattenCategories(cat.childCategories).map(c => ({
-      ...c,
-      parentId: cat.categoryId
-    }))
-  ])
+// Flatten tree to list for table display, preserving actual parentId from each node
+function flattenCategories(cats: CategoryTreeResponse[], parentCategoryId: string | null = null): CategoryResponse[] {
+  return cats.flatMap(cat => {
+    const self: CategoryResponse = {
+      categoryId: cat.categoryId,
+      name: cat.name,
+      type: cat.type,
+      parentId: parentCategoryId,
+      linkId: undefined,
+    }
+    const children: CategoryResponse[] = cat.childCategories.length > 0
+      ? flattenCategories(cat.childCategories, cat.categoryId)
+      : []
+    return [self, ...children]
+  })
 }
 
 const emptyForm: CategoryForm = { name: '', type: 'EXPENSE', parentId: null }
@@ -64,7 +70,7 @@ export const CategoriesPage = () => {
 
     if (editingCat) {
       updateCat(
-        { oldCategoryId: editingCat.categoryId, name: form.name },
+        { categoryId: editingCat.categoryId, name: form.name, categoryRoot: form.parentId },
         { onSuccess: closeDialog, onError: (e: any) => setError(e.response?.data?.message || 'Ошибка обновления') },
       )
     } else {

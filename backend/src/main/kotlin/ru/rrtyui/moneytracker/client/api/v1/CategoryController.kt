@@ -51,7 +51,7 @@ class CategoryController(
 
     @PatchMapping
     @Operation(description = "Обновить имя категории")
-    fun updateCategory(
+    fun updateCategoryName(
         @RequestBody request: CategoryUpdateRequest,
     ): ResponseEntity<Unit> {
         val command = request.toUseCase()

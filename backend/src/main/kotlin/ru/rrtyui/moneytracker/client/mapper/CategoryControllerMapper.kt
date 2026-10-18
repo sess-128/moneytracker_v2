@@ -60,6 +60,7 @@ object CategoryControllerMapper {
     fun CategoryUpdateRequest.toUseCase() =
         CategoryUpdateCommand(
             name = this.name,
-            oldCategoryId = this.oldCategoryId,
+            categoryId = this.categoryId,
+            categoryRoot = this.categoryRoot,
         )
 }

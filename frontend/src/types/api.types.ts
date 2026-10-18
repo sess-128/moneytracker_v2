@@ -44,8 +44,9 @@ export interface CategoryCreateRequest {
 }
 
 export interface CategoryUpdateRequest {
-  oldCategoryId: string
+  categoryId: string
   name: string
+  categoryRoot?: string | null
 }
 
 // ─── Transactions ────────────────────────────────────────────────

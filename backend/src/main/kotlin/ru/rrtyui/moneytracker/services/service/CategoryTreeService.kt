@@ -4,6 +4,7 @@ import java.util.UUID
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeServiceModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateModel
+import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateRootModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeValidateModel
 
 interface CategoryTreeService {
@@ -27,6 +28,8 @@ interface CategoryTreeService {
     )
 
     fun updateLink(categoryTreeUpdateModel: CategoryTreeUpdateModel)
+
+    fun updateRoot(categoryTreeUpdateRootModel: CategoryTreeUpdateRootModel)
 
     fun validateParent(
         categoryTreeValidateModel: CategoryTreeValidateModel,
