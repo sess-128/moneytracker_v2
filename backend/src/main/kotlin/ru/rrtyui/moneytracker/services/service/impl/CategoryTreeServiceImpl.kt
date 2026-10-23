@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import ru.rrtyui.moneytracker.services.persistence.entity.CategoryTreeEntity
 import ru.rrtyui.moneytracker.services.persistence.mapper.toServiceModel
+import ru.rrtyui.moneytracker.services.persistence.model.CategoryTreeUpdateRow
 import ru.rrtyui.moneytracker.services.persistence.repository.CategoryTreeRepository
 import ru.rrtyui.moneytracker.services.service.CategoryTreeService
 import ru.rrtyui.moneytracker.services.service.mapper.CategoryServiceMapper.toCreateRow
@@ -13,6 +14,7 @@ import ru.rrtyui.moneytracker.services.service.mapper.CategoryServiceMapper.toUp
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeServiceModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateModel
+import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateRootModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeValidateModel
 
 @Service
@@ -67,13 +69,34 @@ class CategoryTreeServiceImpl(
 
     @Transactional(propagation = Propagation.REQUIRED)
     override fun updateLink(categoryTreeUpdateModel: CategoryTreeUpdateModel) {
+        //TODO возможно стоит добавить логирование или какую то инфу типо что было стало
         val updateRow = categoryTreeUpdateModel.toUpdateRow()
 
         val updateCount = categoryTreeRepository.update(updateRow)
 
-        if (updateCount == 0) {
-            throw RuntimeException("Я хуй знает как такое может произойти при обновлении")
-        }
+//        if (updateCount == 0) {
+//            throw RuntimeException("Я хуй знает как такое может произойти при обновлении")
+//        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    override fun updateRoot(categoryTreeUpdateRootModel: CategoryTreeUpdateRootModel) {
+        val categoryTreeEntity = categoryTreeRepository.findByCategoryId(
+            categoryTreeUpdateRootModel.categoryId,
+            categoryTreeUpdateRootModel.actorId
+        )?: throw RuntimeException(" ")
+
+        val updateRow = CategoryTreeUpdateRow(
+            oldCategoryId = categoryTreeEntity.id.value,
+            newCategoryId = categoryTreeUpdateRootModel.newRootId,
+            actorId = categoryTreeUpdateRootModel.actorId
+        )
+
+        val updated = categoryTreeRepository.updateRoot(updateRow)
+
+//        if (updateCount == 0) {
+//            throw RuntimeException("Я хуй знает как такое может произойти при обновлении")
+//        }
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)

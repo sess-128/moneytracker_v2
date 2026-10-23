@@ -3,6 +3,7 @@ package ru.rrtyui.moneytracker.services.persistence.repository.impl
 import java.util.UUID
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
 import ru.rrtyui.moneytracker.services.persistence.entity.CategoryTreeEntity
@@ -60,6 +61,17 @@ class CategoryTreeRepositoryImpl : CategoryTreeRepository {
             .toList()
     }
 
+    override fun findByCategoryId(id: UUID, actorId: UUID): CategoryTreeEntity? =
+        transaction {
+            val predicate = (CategoryTreeTable.userId eq actorId) and
+                    (CategoryTreeTable.categoryId eq id)
+
+            CategoryTreeEntity
+                .find { predicate }
+                .firstOrNull()
+        }
+
+
     override fun update(updateRow: CategoryTreeUpdateRow): Int {
         val predicateRoot =
             (CategoryTreeTable.userId eq updateRow.actorId) and
@@ -85,6 +97,17 @@ class CategoryTreeRepositoryImpl : CategoryTreeRepository {
         )
         return updateCount + updateRootCount
     }
+
+    override fun updateRoot(updateRow: CategoryTreeUpdateRow): CategoryTreeEntity? =
+        transaction {
+            CategoryTreeEntity
+                .findByIdAndUpdate(
+                    id = updateRow.oldCategoryId,
+                    block = {
+                        it.parentId = updateRow.newCategoryId
+                    }
+                )
+        }
 
     override fun delete(deleteRow: CategoryTreeDeleteRow): Int {
         TODO("Not yet implemented")

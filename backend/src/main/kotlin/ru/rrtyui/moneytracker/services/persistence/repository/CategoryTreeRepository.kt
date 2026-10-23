@@ -17,7 +17,11 @@ interface CategoryTreeRepository {
 
     fun findAllByActorId(id: UUID): List<CategoryTreeEntity>
 
+    fun findByCategoryId(id: UUID, actorId: UUID): CategoryTreeEntity?
+
     fun update(updateRow: CategoryTreeUpdateRow): Int
+
+    fun updateRoot(updateRow: CategoryTreeUpdateRow): CategoryTreeEntity?
 
     fun delete(deleteRow: CategoryTreeDeleteRow): Int
 }

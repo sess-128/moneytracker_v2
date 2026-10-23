@@ -33,7 +33,6 @@ class CategoryCreateUseCaseImpl(
          *
          * Собираем ответ, где все данные получены из первого сервиса кроме parentId
          */
-
         val categoryCreateModel = command.toServiceModel(actorPrincipal)
 
         val categoryServiceModel = categoryService.create(categoryCreateModel)

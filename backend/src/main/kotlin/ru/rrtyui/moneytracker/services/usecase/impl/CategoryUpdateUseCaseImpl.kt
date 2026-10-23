@@ -9,6 +9,7 @@ import ru.rrtyui.moneytracker.services.service.CategoryTreeService
 import ru.rrtyui.moneytracker.services.service.TransactionService
 import ru.rrtyui.moneytracker.services.service.model.CategoryCreateModel
 import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateModel
+import ru.rrtyui.moneytracker.services.service.model.CategoryTreeUpdateRootModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionReplaceCategoryModel
 import ru.rrtyui.moneytracker.services.usecase.CategoryUpdateUseCase
 import ru.rrtyui.moneytracker.services.usecase.model.CategoryUpdateCommand
@@ -23,7 +24,7 @@ class CategoryUpdateUseCaseImpl(
     @Transactional(propagation = Propagation.REQUIRED)
     override fun invoke(command: CategoryUpdateCommand) {
         val actorPrincipal = actorPrincipalService.getCurrentActor()
-        val oldCategory = categoryService.getById(command.oldCategoryId)
+        val oldCategory = categoryService.getById(command.categoryId)
 
         val existByCategoryId = categoryTreeService.existByCategoryId(actorPrincipal.id, oldCategory.id)
 
@@ -31,9 +32,9 @@ class CategoryUpdateUseCaseImpl(
             throw RuntimeException("Категория $command.oldCategoryId не найдена! Пользователь: ${actorPrincipal.id}")
         }
 
-        if (command.name == oldCategory.name) {
-            throw RuntimeException("Старое наименование категории совпадает с новым")
-        }
+//        if (command.name == oldCategory.name) {
+//            throw RuntimeException("Старое наименование категории совпадает с новым")
+//        }
 
         val categoryCreateModel = CategoryCreateModel(
             name = command.name,
@@ -49,6 +50,14 @@ class CategoryUpdateUseCaseImpl(
             actorId = actorPrincipal.id
         )
         categoryTreeService.updateLink(updateTreeModel)
+        if (command.categoryRoot != null) {
+            categoryTreeService.updateRoot(CategoryTreeUpdateRootModel(
+                categoryId = newCategory.id,
+                newRootId = command.categoryRoot,
+                actorId = actorPrincipal.id
+            ))
+        }
+
 
         val transactionReplaceCategoryModel = TransactionReplaceCategoryModel(
             oldCategoryId = oldCategory.id,

@@ -8,5 +8,8 @@ data class CategoryUpdateRequest(
     val name: String,
 
     @field:Schema(description = "ID обновляемой категории", example = "123e4567-e89b-12d3-a456-426614174000")
-    val oldCategoryId: UUID,
+    val categoryId: UUID,
+
+    @field:Schema(description = "ID новой родительской категории", example = "123e4567-e89b-12d3-a456-426614174000")
+    val categoryRoot: UUID?,
 )
