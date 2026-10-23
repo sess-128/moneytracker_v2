@@ -17,6 +17,9 @@ export const transactionsApi = {
   update: (data: TransactionUpdateRequest) =>
     apiClient.put<TransactionResponse>(API_ENDPOINTS.transactions.root, data).then((r) => r.data),
 
+  delete: (id: string) =>
+    apiClient.delete(API_ENDPOINTS.transactions.byId(id)).then((r) => r.data),
+
   getByFilter: (data: TransactionFilterRequest) =>
     apiClient.post<TransactionResponse[]>(API_ENDPOINTS.transactions.byFilter, data).then((r) => r.data),
 }

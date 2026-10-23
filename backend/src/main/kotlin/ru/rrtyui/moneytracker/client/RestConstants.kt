@@ -8,5 +8,5 @@ object RestConstants {
     const val ANALYTICS_URL = "analytics"
     const val USERS_URL = "users"
 
-
+    const val TRANSACTION_ID = "transaction-id"
 }

@@ -6,6 +6,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.greaterEq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.lessEq
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
@@ -79,4 +80,15 @@ class TransactionRepositoryImpl : TransactionRepository {
                 .find { predicate }
                 .toList()
         }
+
+    override fun existById(id: UUID): Boolean =
+        transaction {
+            TransactionEntity.find { TransactionsTable.id eq id }.count() > 0
+        }
+
+    override fun deleteById(id: UUID) {
+        transaction {
+            TransactionsTable.deleteWhere { (TransactionsTable.id eq id) }
+        }
+    }
 }

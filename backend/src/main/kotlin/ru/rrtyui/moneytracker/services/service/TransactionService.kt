@@ -15,4 +15,6 @@ interface TransactionService {
     fun replaceCategoryWithNew(replaceCategoryModel: TransactionReplaceCategoryModel)
 
     fun filterTransaction(filterParams: FilterTransactionServiceModel): List<AnalyticsFilterServiceModel>
+
+    fun deleteById(transactionId: UUID)
 }

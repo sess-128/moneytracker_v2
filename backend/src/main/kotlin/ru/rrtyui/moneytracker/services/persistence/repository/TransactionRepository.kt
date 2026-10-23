@@ -14,4 +14,8 @@ interface TransactionRepository {
     fun replaceCategory(replaceRow: TransactionReplaceCategoryRow)
 
     fun findFiltered(filterRow: FilterTransactionRow): List<TransactionEntity>
+
+    fun existById(id: UUID): Boolean
+
+    fun deleteById(id: UUID)
 }

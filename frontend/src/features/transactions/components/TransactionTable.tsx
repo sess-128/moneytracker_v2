@@ -1,6 +1,9 @@
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Avatar } from '@/components/ui/Avatar'
 import { useAuthStore } from '@/store/authStore'
+import { useDeleteTransaction } from '@/features/transactions/hooks/useTransactions'
 import type { TransactionResponse, CategoryType } from '@/types/api.types'
 import { formatCurrency, formatDate } from '@/utils/formatters'
 
@@ -24,6 +27,22 @@ interface TransactionTableProps {
 
 export const TransactionTable = ({ transactions }: TransactionTableProps) => {
   const username = useAuthStore((s) => s.user?.login ?? '')
+  const { mutate: deleteTx } = useDeleteTransaction()
+
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
+
+  const openDelete = (id: string, name: string) => {
+    setDeleteTarget({ id, name })
+  }
+
+  const closeDelete = () => {
+    setDeleteTarget(null)
+  }
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+    deleteTx(deleteTarget.id, { onSuccess: closeDelete })
+  }
 
   return (
     <GlassCard padding="md" className="flex flex-col flex-1 min-h-0">
@@ -60,14 +79,50 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
                 <span className="text-white/50 text-xs">
                   {tx.transactionDate ? formatDate(tx.transactionDate) : '—'}
                 </span>
-                <button className="glass-btn text-white text-xs rounded-lg px-2.5 py-1 flex items-center justify-center">
-                  Edit
+                <button
+                  onClick={() => openDelete(tx.id, tx.categoryName)}
+                  className="glass-btn rounded-lg p-1.5 text-rose-400/60 hover:text-rose-400 transition-colors flex items-center justify-center"
+                  title="Удалить"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    <path d="M10 11v5M14 11v5" />
+                  </svg>
                 </button>
               </div>
             )
           })
         )}
       </div>
+
+      {deleteTarget && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.6)' }}>
+          <div
+            className="dark-card rounded-2xl p-6 w-full shadow-2xl"
+            style={{ maxWidth: 380 }}
+          >
+            <h3 className="text-white text-base font-medium mb-3">Удалить транзакцию</h3>
+            <p className="text-white/60 text-sm mb-5">
+              Удалить транзакцию из&nbsp;«{deleteTarget.name}»?
+            </p>
+            <div className="flex items-center justify-end gap-2">
+              <button
+                onClick={closeDelete}
+                className="glass-btn text-white/70 text-sm rounded-lg px-4 py-2 hover:text-white"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-rose-500 text-white text-sm font-medium rounded-lg px-5 py-2 hover:bg-rose-600 transition-colors"
+              >
+                Удалить
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )}
     </GlassCard>
   )
 }
