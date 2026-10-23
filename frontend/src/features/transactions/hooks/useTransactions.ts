@@ -20,3 +20,14 @@ export const useCreateTransaction = () => {
     },
   })
 }
+
+export const useDeleteTransaction = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: string) => transactionsApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: TRANSACTIONS_QUERY_KEY })
+    },
+  })
+}

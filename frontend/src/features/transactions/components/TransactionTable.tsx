@@ -1,6 +1,7 @@
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Avatar } from '@/components/ui/Avatar'
 import { useAuthStore } from '@/store/authStore'
+import { useDeleteTransaction } from '@/features/transactions/hooks/useTransactions'
 import type { TransactionResponse, CategoryType } from '@/types/api.types'
 import { formatCurrency, formatDate } from '@/utils/formatters'
 
@@ -24,6 +25,12 @@ interface TransactionTableProps {
 
 export const TransactionTable = ({ transactions }: TransactionTableProps) => {
   const username = useAuthStore((s) => s.user?.login ?? '')
+  const { mutate: deleteTx } = useDeleteTransaction()
+
+  const handleDelete = (id: string, categoryName: string) => {
+    if (!window.confirm(`Удалить транзакцию из «${categoryName}»?`)) return
+    deleteTx(id)
+  }
 
   return (
     <GlassCard padding="md" className="flex flex-col flex-1 min-h-0">
@@ -60,8 +67,15 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
                 <span className="text-white/50 text-xs">
                   {tx.transactionDate ? formatDate(tx.transactionDate) : '—'}
                 </span>
-                <button className="glass-btn text-white text-xs rounded-lg px-2.5 py-1 flex items-center justify-center">
-                  Edit
+                <button
+                  onClick={() => handleDelete(tx.id, tx.categoryName)}
+                  className="glass-btn rounded-lg p-1.5 text-rose-400/60 hover:text-rose-400 transition-colors"
+                  title="Удалить"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    <path d="M10 11v5M14 11v5" />
+                  </svg>
                 </button>
               </div>
             )

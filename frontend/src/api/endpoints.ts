@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   },
   transactions: {
     root: `${V1}/transactions`,
+    byId: (id: string) => `${V1}/transactions/${id}`,
     byFilter: `${V1}/transactions/by-filter`,
   },
   analytics: {
