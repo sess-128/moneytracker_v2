@@ -1,6 +1,7 @@
 package ru.rrtyui.moneytracker.services.persistence.repository.impl
 
 import java.util.UUID
+import org.jetbrains.exposed.v1.core.StdOutSqlLogger
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.greaterEq
@@ -60,6 +61,7 @@ class TransactionRepositoryImpl : TransactionRepository {
         filterRow: FilterTransactionRow
     ): List<TransactionEntity> =
         transaction {
+            addLogger(StdOutSqlLogger)
             var predicate =
                 (TransactionsTable.userId eq filterRow.actorId) and
                 (TransactionsTable.transactionDate greaterEq filterRow.startDate) and //TODO надо как-то брать даты нормально

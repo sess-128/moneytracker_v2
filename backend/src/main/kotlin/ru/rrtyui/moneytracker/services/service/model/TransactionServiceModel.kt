@@ -8,7 +8,7 @@ data class TransactionServiceModel(
     val id: UUID,
     val categoryId: UUID,
     val categoryName: String,
-    val transactionDate: LocalDateTime? = LocalDateTime.now(),
+    val transactionDate: LocalDateTime,
     val amount: BigDecimal,
     val description: String?,
     val actorId: UUID,

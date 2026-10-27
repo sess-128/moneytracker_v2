@@ -10,7 +10,7 @@ data class AnalyticsFilterRequest(
     val categoryIds: List<UUID> = emptyList(),
 
     @field:Schema(description = "Начальная дата периода фильтрации", example = "2023-10-01")
-    val startDate: LocalDate = LocalDate.now(),
+    val startDate: LocalDate = LocalDate.of(2000,1,1),
 
     @field:Schema(description = "Конечная дата периода фильтрации", example = "2023-10-31")
     val endDate: LocalDate? = null,
