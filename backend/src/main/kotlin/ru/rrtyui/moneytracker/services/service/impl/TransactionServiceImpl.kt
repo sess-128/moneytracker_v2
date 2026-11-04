@@ -1,5 +1,6 @@
 package ru.rrtyui.moneytracker.services.service.impl
 
+import java.util.Base64
 import java.util.UUID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -12,6 +13,8 @@ import ru.rrtyui.moneytracker.services.service.mapper.TransactionServiceMapper.t
 import ru.rrtyui.moneytracker.services.service.mapper.TransactionServiceMapper.toServiceModel
 import ru.rrtyui.moneytracker.services.service.model.FilterTransactionServiceModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionCreateModel
+import ru.rrtyui.moneytracker.services.service.model.TransactionCursor
+import ru.rrtyui.moneytracker.services.service.model.TransactionPageServiceModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionReplaceCategoryModel
 import ru.rrtyui.moneytracker.services.service.model.TransactionServiceModel
 
@@ -31,6 +34,32 @@ class TransactionServiceImpl(
         val entities = transactionRepository.findAll(userId)
 
         return entities.map { it.toServiceModel() }
+    }
+
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    override fun findPageByUserId(
+        userId: UUID,
+        cursor: TransactionCursor?
+    ): TransactionPageServiceModel {
+        val entities = transactionRepository.findPage(userId, cursor)
+        val hasNextPage = entities.size > 25
+        val pageEntities = entities.take(25)
+
+        val nextCursor = if (hasNextPage) {
+            pageEntities.last().let {
+                val cursorValue = "${it.transactionDate}|${it.id.value}"
+                Base64.getUrlEncoder()
+                    .withoutPadding()
+                    .encodeToString(cursorValue.toByteArray())
+            }
+        } else {
+            null
+        }
+
+        return TransactionPageServiceModel(
+            items = pageEntities.map { it.toServiceModel() },
+            nextCursor = nextCursor
+        )
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

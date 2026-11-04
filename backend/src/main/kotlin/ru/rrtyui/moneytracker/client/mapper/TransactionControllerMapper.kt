@@ -2,8 +2,10 @@ package ru.rrtyui.moneytracker.client.mapper
 
 import ru.rrtyui.moneytracker.client.mapper.CategoryControllerMapper.toResponse
 import ru.rrtyui.moneytracker.client.request.TransactionCreateRequest
+import ru.rrtyui.moneytracker.client.response.TransactionPageResponse
 import ru.rrtyui.moneytracker.client.response.TransactionResponse
 import ru.rrtyui.moneytracker.services.usecase.model.TransactionCreateCommand
+import ru.rrtyui.moneytracker.services.usecase.model.TransactionPageResult
 import ru.rrtyui.moneytracker.services.usecase.model.TransactionResult
 
 object TransactionControllerMapper {
@@ -25,5 +27,11 @@ object TransactionControllerMapper {
             amount = this.amount,
             description = this.description,
             transactionDate = this.transactionDate,
+        )
+
+    fun TransactionPageResult.toResponse() =
+        TransactionPageResponse(
+            items = this.items.map { it.toResponse() },
+            nextCursor = this.nextCursor
         )
 }

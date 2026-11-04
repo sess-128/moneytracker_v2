@@ -1,12 +1,15 @@
 package ru.rrtyui.moneytracker.services.persistence.repository.impl
 
 import java.util.UUID
+import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.StdOutSqlLogger
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.greaterEq
 import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.core.lessEq
+import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
@@ -17,6 +20,7 @@ import ru.rrtyui.moneytracker.services.persistence.model.TransactionCreateRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionReplaceCategoryRow
 import ru.rrtyui.moneytracker.services.persistence.repository.TransactionRepository
 import ru.rrtyui.moneytracker.services.persistence.tables.TransactionsTable
+import ru.rrtyui.moneytracker.services.service.model.TransactionCursor
 
 @Repository
 class TransactionRepositoryImpl : TransactionRepository {
@@ -38,6 +42,33 @@ class TransactionRepositoryImpl : TransactionRepository {
 
             TransactionEntity
                 .find { predicate }
+                .toList()
+        }
+
+    override fun findPage(
+        userId: UUID,
+        cursor: TransactionCursor?
+    ): List<TransactionEntity> =
+        transaction {
+            var predicate = TransactionsTable.userId eq userId
+
+            cursor?.let {
+                predicate = predicate and (
+                    (TransactionsTable.transactionDate less it.transactionDate) or
+                        (
+                            (TransactionsTable.transactionDate eq it.transactionDate) and
+                            (TransactionsTable.id less it.id)
+                        )
+                    )
+            }
+
+            TransactionEntity
+                .find { predicate }
+                .orderBy(
+                    TransactionsTable.transactionDate to SortOrder.DESC,
+                    TransactionsTable.id to SortOrder.DESC
+                )
+                .limit(26)
                 .toList()
         }
 
