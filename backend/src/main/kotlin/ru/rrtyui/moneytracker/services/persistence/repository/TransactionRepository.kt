@@ -5,11 +5,17 @@ import ru.rrtyui.moneytracker.services.persistence.entity.TransactionEntity
 import ru.rrtyui.moneytracker.services.persistence.model.FilterTransactionRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionCreateRow
 import ru.rrtyui.moneytracker.services.persistence.model.TransactionReplaceCategoryRow
+import ru.rrtyui.moneytracker.services.service.model.TransactionCursor
 
 interface TransactionRepository {
     fun create(createRow: TransactionCreateRow): TransactionEntity
 
     fun findAll(userId: UUID): List<TransactionEntity>
+
+    fun findPage(
+        userId: UUID,
+        cursor: TransactionCursor?
+    ): List<TransactionEntity>
 
     fun replaceCategory(replaceRow: TransactionReplaceCategoryRow)
 

@@ -3,7 +3,7 @@ import { DateFilters } from '@/features/analytics/components/DateFilters'
 import { SummaryCard } from '@/features/analytics/components/SummaryCard'
 import { TopCategories } from '@/features/analytics/components/TopCategories'
 import { MonthlyChart } from '@/features/analytics/components/MonthlyChart'
-import { useTransactions } from '@/features/transactions/hooks/useTransactions'
+import { useTransactionsFlat } from '@/features/transactions/hooks/useTransactions'
 import { useCategories } from '@/features/categories/hooks/useCategories'
 import { useAnalytics, useInvalidateAnalytics } from '@/features/analytics/hooks/useAnalytics'
 import type { CategoryTreeResponse, AnalyticsFilterRequest, TransactionResponse } from '@/types/api.types'
@@ -16,7 +16,7 @@ const flattenCategories = (cats: CategoryTreeResponse[]): Array<{ categoryId: st
 }
 
 export const AnalyticsPage = () => {
-  const { data: transactions = [] } = useTransactions()
+  const { data: transactions = [] } = useTransactionsFlat()
   const { data: categoryTree = [] } = useCategories()
 
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([])

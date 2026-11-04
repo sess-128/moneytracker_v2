@@ -73,6 +73,11 @@ export interface TransactionResponse {
   transactionDate?: string | null
 }
 
+export interface TransactionPageResult {
+  items: TransactionResponse[]
+  nextCursor: string | null
+}
+
 export interface TransactionFilterRequest {
   startDate: string
   endDate: string

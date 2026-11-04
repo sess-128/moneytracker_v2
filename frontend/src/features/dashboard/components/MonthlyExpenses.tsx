@@ -1,5 +1,5 @@
 import { GlassCard } from '@/components/ui/GlassCard'
-import { useTransactions } from '@/features/transactions/hooks/useTransactions'
+import { useTransactionsFlat } from '@/features/transactions/hooks/useTransactions'
 import { useCategories } from '@/features/categories/hooks/useCategories'
 import type { CategoryTreeResponse } from '@/types/api.types'
 
@@ -10,7 +10,7 @@ const COLORS = [
 ]
 
 export const MonthlyExpenses = () => {
-  const { data: transactions = [] } = useTransactions()
+  const { data: transactions = [] } = useTransactionsFlat()
   const { data: categoryTree = [] } = useCategories()
 
   // Flatten tree to get all categories

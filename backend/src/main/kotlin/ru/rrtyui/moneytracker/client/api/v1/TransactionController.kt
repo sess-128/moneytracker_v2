@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import ru.rrtyui.moneytracker.client.RestConstants.API_V1
 import ru.rrtyui.moneytracker.client.RestConstants.TRANSACTIONS_URL
@@ -17,8 +18,10 @@ import ru.rrtyui.moneytracker.client.RestConstants.TRANSACTION_ID
 import ru.rrtyui.moneytracker.client.mapper.TransactionControllerMapper.toCommand
 import ru.rrtyui.moneytracker.client.mapper.TransactionControllerMapper.toResponse
 import ru.rrtyui.moneytracker.client.request.TransactionCreateRequest
+import ru.rrtyui.moneytracker.client.response.TransactionPageResponse
 import ru.rrtyui.moneytracker.client.response.TransactionResponse
 import ru.rrtyui.moneytracker.services.usecase.FindTransactionsByUserUseCase
+import ru.rrtyui.moneytracker.services.usecase.FindTransactionsPageByUserUseCase
 import ru.rrtyui.moneytracker.services.usecase.TransactionCreateUseCase
 import ru.rrtyui.moneytracker.services.usecase.TransactionDeleteUseCase
 
@@ -29,12 +32,24 @@ class TransactionController(
     private val transactionCreateUseCase: TransactionCreateUseCase,
     private val findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
     private val transactionDeleteUseCase: TransactionDeleteUseCase,
+    private val findTransactionsPageByUserUseCase: FindTransactionsPageByUserUseCase,
 ) {
+//    @GetMapping
+//    @Operation(description = "Получить все транзакции пользователя")
+//    fun findAllTransactions(): ResponseEntity<List<TransactionResponse>> {
+//        val result = findTransactionsByUserUseCase.invoke()
+//        val response = result.map { it.toResponse() }
+//        return ResponseEntity.ok(response)
+//    }
+
     @GetMapping
-    @Operation(description = "Получить все транзакции пользователя")
-    fun findAllTransactions(): ResponseEntity<List<TransactionResponse>> {
-        val result = findTransactionsByUserUseCase.invoke()
-        val response = result.map { it.toResponse() }
+    @Operation(description = "Получить страницу транзакций пользователя")
+    fun findAllTransactionsPage(
+        @RequestParam(required = false) cursor: String?
+    ): ResponseEntity<TransactionPageResponse> {
+        val result = findTransactionsPageByUserUseCase.invoke(cursor)
+        val response = result.toResponse()
+
         return ResponseEntity.ok(response)
     }
 

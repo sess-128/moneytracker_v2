@@ -2,13 +2,13 @@ import { StatsCards } from '@/features/dashboard/components/StatsCards'
 import { MonthlyExpenses } from '@/features/dashboard/components/MonthlyExpenses'
 import { TransactionForm } from '@/features/transactions/components/TransactionForm'
 import { TransactionTable } from '@/features/transactions/components/TransactionTable'
-import { useTransactions } from '@/features/transactions/hooks/useTransactions'
+import { useTransactionsFlat } from '@/features/transactions/hooks/useTransactions'
 import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
 import { useCurrentUser } from '@/features/auth/hooks/useAuth'
 
 export const MainPage = () => {
   useCurrentUser()
-  const { data: transactions = [] } = useTransactions()
+  const { data: transactions = [], isFetchingNextPage, fetchNextPage, hasNextPage } = useTransactionsFlat()
   const stats = useDashboardStats(transactions)
 
   return (
@@ -19,7 +19,7 @@ export const MainPage = () => {
       </div>
       <div className="flex flex-col gap-3 min-h-0">
         <TransactionForm />
-        <TransactionTable transactions={transactions} />
+        <TransactionTable transactions={transactions} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} />
       </div>
     </div>
   )

@@ -5,9 +5,12 @@ import type {
   TransactionResponse,
   TransactionUpdateRequest,
   TransactionFilterRequest,
+  TransactionPageResult,
 } from '@/types/api.types'
 
 export const transactionsApi = {
+  getPage: (cursor?: string) =>
+    apiClient.get<TransactionPageResult>(API_ENDPOINTS.transactions.root, { params: { cursor } }).then((r) => r.data),
   getAll: () =>
     apiClient.get<TransactionResponse[]>(API_ENDPOINTS.transactions.root).then((r) => r.data),
 

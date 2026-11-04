@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Avatar } from '@/components/ui/Avatar'
@@ -21,11 +21,12 @@ const getTypeConfig = (type: CategoryType) => {
 
 interface TransactionTableProps {
   transactions: TransactionResponse[]
+  isFetchingNextPage: boolean
+  fetchNextPage: () => void
+  hasNextPage: boolean
 }
 
-
-
-export const TransactionTable = ({ transactions }: TransactionTableProps) => {
+export const TransactionTable = ({ transactions, isFetchingNextPage, fetchNextPage, hasNextPage }: TransactionTableProps) => {
   const username = useAuthStore((s) => s.user?.login ?? '')
   const { mutate: deleteTx } = useDeleteTransaction()
 
@@ -64,34 +65,55 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
             <p className="text-white/25 text-sm">Нет транзакций</p>
           </div>
         ) : (
-          transactions.map((tx) => {
-            const typeConfig = getTypeConfig(tx.type)
-            return (
-              <div
-                key={tx.id}
-                className="grid items-center gap-3 py-2 px-1 rounded-xl hover:bg-white/5 transition-colors duration-150"
-                style={{ gridTemplateColumns: '32px 1fr 90px 90px 80px 52px' }}
-              >
-                <Avatar username={username} size={32} />
-                <span className="text-white text-sm truncate">{tx.categoryName}</span>
-                <span className={`text-xs font-semibold ${typeConfig.className}`}>{typeConfig.label}</span>
-                <span className="text-white text-sm">{formatCurrency(tx.amount)}</span>
-                <span className="text-white/50 text-xs">
-                  {tx.transactionDate ? formatDate(tx.transactionDate) : '—'}
-                </span>
-                <button
-                  onClick={() => openDelete(tx.id, tx.categoryName)}
-                  className="glass-btn rounded-lg p-1.5 text-rose-400/60 hover:text-rose-400 transition-colors flex items-center justify-center"
-                  title="Удалить"
+          <>
+            {transactions.map((tx) => {
+              const typeConfig = getTypeConfig(tx.type)
+              return (
+                <div
+                  key={tx.id}
+                  className="grid items-center gap-3 py-2 px-1 rounded-xl hover:bg-white/5 transition-colors duration-150"
+                  style={{ gridTemplateColumns: '32px 1fr 90px 90px 80px 52px' }}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                    <path d="M10 11v5M14 11v5" />
-                  </svg>
-                </button>
+                  <Avatar username={username} size={32} />
+                  <span className="text-white text-sm truncate">{tx.categoryName}</span>
+                  <span className={`text-xs font-semibold ${typeConfig.className}`}>{typeConfig.label}</span>
+                  <span className="text-white text-sm">{formatCurrency(tx.amount)}</span>
+                  <span className="text-white/50 text-xs">
+                    {tx.transactionDate ? formatDate(tx.transactionDate) : '—'}
+                  </span>
+                  <button
+                    onClick={() => openDelete(tx.id, tx.categoryName)}
+                    className="glass-btn rounded-lg p-1.5 text-rose-400/60 hover:text-rose-400 transition-colors flex items-center justify-center"
+                    title="Удалить"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                      <path d="M10 11v5M14 11v5" />
+                    </svg>
+                  </button>
+                </div>
+              )
+            })}
+            {hasNextPage && (
+              <div
+                ref={(el) => {
+                  if (!el) return
+                  const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting && !isFetchingNextPage) {
+                      fetchNextPage()
+                    }
+                  })
+                  observer.observe(el)
+                  return () => observer.disconnect()
+                }}
+                className="h-1 flex items-center justify-center"
+              >
+                {isFetchingNextPage && (
+                  <span className="text-white/30 text-xs">Загрузка...</span>
+                )}
               </div>
-            )
-          })
+            )}
+          </>
         )}
       </div>
 
