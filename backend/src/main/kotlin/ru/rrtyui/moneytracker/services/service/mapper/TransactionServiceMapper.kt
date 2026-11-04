@@ -14,7 +14,7 @@ object TransactionServiceMapper {
         TransactionCreateRow(
             categoryId = this.categoryId,
             categoryName = this.categoryName,
-            transactionDateTime = this.transactionDateTime!!, //TODO убрать !!
+            transactionDateTime = this.transactionDateTime,
             amount = this.amount,
             description = this.description,
             actorId = this.actorId,

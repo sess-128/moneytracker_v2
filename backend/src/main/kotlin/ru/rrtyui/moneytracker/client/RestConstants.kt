@@ -9,4 +9,7 @@ object RestConstants {
     const val USERS_URL = "users"
 
     const val TRANSACTION_ID = "transaction-id"
+    const val SUMMARY = "summary"
+    const val BY_TYPE = "by-type"
+    const val BY_FILTER = "by-filter"
 }

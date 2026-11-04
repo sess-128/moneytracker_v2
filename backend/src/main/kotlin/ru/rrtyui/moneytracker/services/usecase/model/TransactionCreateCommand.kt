@@ -9,5 +9,5 @@ data class TransactionCreateCommand(
     val categoryName: String,
     val amount: BigDecimal,
     val description: String?,
-    val transactionDate: LocalDateTime?
+    val transactionDate: LocalDateTime
 )

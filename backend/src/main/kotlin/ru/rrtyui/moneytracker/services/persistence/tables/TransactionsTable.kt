@@ -16,6 +16,6 @@ object TransactionsTable: UUIDTable("storage.transactions") {
     val amount: Column<BigDecimal> = decimal("amount", 18, 4)
     val transactionDate: Column<LocalDateTime> = datetime("transaction_date").defaultExpression(CurrentDateTime)
     val description: Column<String?> = varchar("description", 255).nullable()
-    val createdAt: Column<LocalDateTime> = datetime("created_at").defaultExpression(CurrentDateTime)
-    val updatedAt: Column<LocalDateTime> = datetime("updated_at").defaultExpression(CurrentDateTime)
+    val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
+    val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
 }
