@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Avatar } from '@/components/ui/Avatar'
@@ -45,6 +45,38 @@ export const TransactionTable = ({ transactions, isFetchingNextPage, fetchNextPa
     deleteTx(deleteTarget.id, { onSuccess: closeDelete })
   }
 
+  const listRef = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  // Рефы для отслеживания изменений
+  const isFetchingRef = useRef(isFetchingNextPage)
+  isFetchingRef.current = isFetchingNextPage
+
+  const hasNextPageRef = useRef(hasNextPage)
+  hasNextPageRef.current = hasNextPage
+
+  const fetchNextPageRef = useRef(fetchNextPage)
+  fetchNextPageRef.current = fetchNextPage
+
+  // Scroll handler для бесконечной прокрутки
+  useEffect(() => {
+    const listEl = listRef.current
+    if (!listEl || !hasNextPage) return
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = listEl
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 200
+
+      if (isNearBottom && !isFetchingRef.current && hasNextPageRef.current) {
+        fetchNextPageRef.current()
+      }
+    }
+
+    listEl.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => listEl.removeEventListener('scroll', handleScroll)
+  }, [hasNextPage])
+
   return (
     <GlassCard padding="md" className="flex flex-col flex-1 min-h-0">
       <div
@@ -59,7 +91,7 @@ export const TransactionTable = ({ transactions, isFetchingNextPage, fetchNextPa
         <span />
       </div>
 
-      <div className="flex-1 overflow-y-auto mt-1 flex flex-col gap-0.5 pr-0.5">
+      <div ref={listRef} className="flex-1 overflow-y-auto mt-1 flex flex-col gap-0.5 pr-0.5">
         {transactions.length === 0 ? (
           <div className="flex-1 flex items-center justify-center pt-8">
             <p className="text-white/25 text-sm">Нет транзакций</p>
@@ -96,16 +128,7 @@ export const TransactionTable = ({ transactions, isFetchingNextPage, fetchNextPa
             })}
             {hasNextPage && (
               <div
-                ref={(el) => {
-                  if (!el) return
-                  const observer = new IntersectionObserver((entries) => {
-                    if (entries[0].isIntersecting && !isFetchingNextPage) {
-                      fetchNextPage()
-                    }
-                  })
-                  observer.observe(el)
-                  return () => observer.disconnect()
-                }}
+                ref={sentinelRef}
                 className="h-1 flex items-center justify-center"
               >
                 {isFetchingNextPage && (
