@@ -8,9 +8,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary: 'bg-white text-gray-900 hover:bg-gray-100 font-medium',
-  glass: 'glass-btn text-white',
-  ghost: 'bg-transparent text-white/70 hover:text-white hover:bg-white/8 border border-white/10',
+  primary: 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100 font-medium',
+  glass: 'glass-btn text-gray-800 dark:text-white',
+  ghost: 'bg-transparent text-gray-500 dark:text-white/70 hover:text-gray-900 dark:hover:text-white hover:bg-gray-900/5 dark:hover:bg-white/8 border border-gray-900/15 dark:border-white/10',
 }
 
 const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {

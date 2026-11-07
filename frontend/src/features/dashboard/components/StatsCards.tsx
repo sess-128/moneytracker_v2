@@ -32,8 +32,8 @@ export const StatsCards = ({ stats }: StatsCardsProps) => {
             key={label}
             className={`flex flex-col justify-between ${i === 0 ? 'pr-5' : i === 2 ? 'pl-5' : 'px-5'}`}
           >
-            <p className="text-white/50 text-xs leading-snug">{label}</p>
-            <p className="text-white text-2xl font-semibold tracking-tight leading-none">{value}</p>
+            <p className="text-gray-500 dark:text-white/50 text-xs leading-snug">{label}</p>
+            <p className="text-gray-900 dark:text-white text-2xl font-semibold tracking-tight leading-none">{value}</p>
           </div>
         ))}
       </div>

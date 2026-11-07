@@ -9,7 +9,7 @@ import ru.rrtyui.moneytracker.client.response.TransactionGroup
 import ru.rrtyui.moneytracker.client.response.TransactionItem
 import ru.rrtyui.moneytracker.client.response.TypedSummary
 import ru.rrtyui.moneytracker.services.service.ActorPrincipalService
-import ru.rrtyui.moneytracker.services.service.CategoryService // <-- Импорт
+import ru.rrtyui.moneytracker.services.service.CategoryService
 import ru.rrtyui.moneytracker.services.service.CategoryTreeService
 import ru.rrtyui.moneytracker.services.service.TransactionService
 import ru.rrtyui.moneytracker.services.service.model.FilterTransactionServiceModel
@@ -37,7 +37,10 @@ class AnalyticsTypedSummaryUseCaseImpl(
             actorId = actorId,
         )
 
-        val transactions = transactionService.filterTransaction(filter)
+        val candidates = transactionService.filterTransaction(filter)
+        val categories = categoryService.findAllByIds(candidates.map { it.categoryId }.distinct())
+        val typedCategoryIds = categories.filter { it.type.name == params.type.name }.map { it.id }.toSet()
+        val transactions = candidates.filter { it.categoryId in typedCategoryIds }
 
         if (transactions.isEmpty()) {
             return AnalyticsTypedSummaryResponse(
@@ -72,10 +75,11 @@ class AnalyticsTypedSummaryUseCaseImpl(
         val categoryNamesMap = allCategories.associate { it.id to it.name }
 
         // Рекурсивный сбор транзакций поддерева
-        fun collectSubtreeTransactions(groupId: UUID): List<TransactionServiceModel> {
+        fun collectSubtreeTransactions(groupId: UUID, path: Set<UUID> = emptySet()): List<TransactionServiceModel> {
+            if (groupId in path) return emptyList()
             val current = transactionsByCategory[groupId].orEmpty()
             val children = childrenByParent[groupId].orEmpty()
-            return current + children.flatMap { collectSubtreeTransactions(it) }
+            return current + children.flatMap { collectSubtreeTransactions(it, path + groupId) }
         }
 
         fun buildGroup(categoryId: UUID, path: Set<UUID> = emptySet()): TransactionGroup? {

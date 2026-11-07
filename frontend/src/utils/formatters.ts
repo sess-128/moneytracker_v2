@@ -25,3 +25,18 @@ export const getCurrentMonthRange = (): { startDate: string; endDate: string } =
 }
 
 export const toISODate = (date: Date): string => date.toISOString().split('T')[0]
+
+/** «71,4%» */
+export const formatPercent = (value: number, fractionDigits = 1): string =>
+  `${new Intl.NumberFormat('ru-RU', {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(Number.isFinite(value) ? value : 0)}%`
+
+/** «+21,1%» / «−4,0%» */
+export const formatSignedPercent = (value: number, fractionDigits = 1): string =>
+  `${value > 0 ? '+' : value < 0 ? '−' : ''}${formatPercent(Math.abs(value), fractionDigits)}`
+
+/** «+50 000 ₽» / «−60 000 ₽» */
+export const formatSignedCurrency = (amount: number): string =>
+  `${amount > 0 ? '+' : amount < 0 ? '−' : ''}${formatCurrency(Math.abs(amount))}`
