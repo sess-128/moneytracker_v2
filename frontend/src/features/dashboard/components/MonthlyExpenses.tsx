@@ -90,11 +90,11 @@ export const MonthlyExpenses = () => {
 
   return (
     <GlassCard padding="md" className="flex flex-col flex-1 min-h-0">
-      <p className="text-white/55 text-sm mb-3 flex-shrink-0">По категориям:</p>
+      <p className="text-gray-500 dark:text-white/55 text-sm mb-3 flex-shrink-0">По категориям:</p>
 
       {total === 0 ? (
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-white/25 text-sm">Нет транзакций</p>
+          <p className="text-gray-300 dark:text-white/25 text-sm">Нет транзакций</p>
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center gap-4 min-h-0 overflow-hidden">
@@ -102,7 +102,7 @@ export const MonthlyExpenses = () => {
             <circle
               cx={CX} cy={CY} r={R}
               fill="none"
-              stroke="rgba(255,255,255,0.05)"
+              stroke="var(--svg-track)"
               strokeWidth={STROKE}
             />
             {arcs.map((arc) => (
@@ -120,7 +120,7 @@ export const MonthlyExpenses = () => {
             <text
               x={CX} y={CY - 12}
               textAnchor="middle"
-              fill="rgba(255,255,255,0.9)"
+              fill="var(--svg-text)"
               fontSize="34"
               fontWeight="700"
               style={{ transform: 'rotate(90deg)', transformOrigin: `${CX}px ${CY}px` }}
@@ -130,7 +130,7 @@ export const MonthlyExpenses = () => {
             <text
               x={CX} y={CY + 16}
               textAnchor="middle"
-              fill="rgba(255,255,255,0.3)"
+              fill="var(--svg-text-muted)"
               fontSize="12"
               style={{ transform: 'rotate(90deg)', transformOrigin: `${CX}px ${CY}px` }}
             >
@@ -145,8 +145,8 @@ export const MonthlyExpenses = () => {
                   className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                   style={{ background: slice.color }}
                 />
-                <span className="text-white/65 text-xs truncate flex-1">{slice.name}</span>
-                <span className="text-white/35 text-xs tabular-nums flex-shrink-0">
+                <span className="text-gray-600 dark:text-white/65 text-xs truncate flex-1">{slice.name}</span>
+                <span className="text-gray-400 dark:text-white/35 text-xs tabular-nums flex-shrink-0">
                   {slice.count}
                 </span>
               </div>

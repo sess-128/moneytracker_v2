@@ -6,7 +6,7 @@ export const AppShell = () => {
   const location = useLocation()
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col" style={{ background: '#0c0c14' }}>
+    <div className="h-screen overflow-hidden flex flex-col" style={{ background: location.pathname === '/analytics' ? 'var(--an-bg)' : 'var(--bg)', transition: 'background 0.2s ease' }}>
       <div className="flex flex-col h-full mx-auto w-full px-6 py-4 gap-3" style={{ maxWidth: 1480 }}>
         <Navbar />
         <AnimatePresence mode="wait" initial={false}>

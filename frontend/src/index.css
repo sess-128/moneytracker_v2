@@ -2,6 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Theme tokens ────────────────────────────────────────── */
+:root {
+  /* Light theme — Notion-inspired warm tones */
+  --bg:                #f7f6f3;
+  --card-bg:           #ffffff;
+  --card-border:       #e9e8e4;
+  --card-shadow:       rgba(55, 53, 47, 0.06);
+  --nav-bg:            #ffffff;
+  --nav-border:        #e9e8e4;
+  --btn-bg:            #f1f0ec;
+  --btn-border:        #dddcd8;
+  --btn-hover:         #e9e8e4;
+  --btn-border-hover:  #c9c8c4;
+  --input-bg:          #ffffff;
+  --input-border:      #dddcd8;
+  --input-color:       #37352f;
+  --input-placeholder: rgba(55, 53, 47, 0.35);
+  --scrollbar:         #cccbc7;
+  --scrollbar-hover:   #a8a7a3;
+  --auth-gradient:     linear-gradient(160deg, #f0eeff 0%, #ede8ff 50%, #e8f0ff 100%);
+  --auth-border:       rgba(55, 53, 47, 0.08);
+  --svg-text:          rgba(55, 53, 47, 0.9);
+  --svg-text-muted:    rgba(55, 53, 47, 0.4);
+  --svg-track:         rgba(55, 53, 47, 0.08);
+
+  /* Analytics (Figma «Финансовая аналитика») */
+  --an-bg:             var(--bg);
+  --an-card:           #ffffff;
+  --an-inset:          #f4f3ef;
+  --an-chip:           #efe9fb;
+  --an-chip-border:    #a778ee;
+  --an-segment:        #ecebe7;
+  --an-track:          #e9e8e4;
+  --an-text:           #37352f;
+  --an-text-2:         rgba(55, 53, 47, 0.6);
+  --an-separator:      rgba(55, 53, 47, 0.12);
+  --an-hover:          rgba(55, 53, 47, 0.04);
+  --an-green:          #1fa64a;
+  --an-red:            #e5383b;
+  --an-purple:         #b622cc;
+  --an-blue:           #007ae6;
+  --an-neutral:        #a8a7a3;
+  --an-rest:           #c9c8c4;
+}
+
+html.dark {
+  --bg:                #0c0c14;
+  --card-bg:           #15151e;
+  --card-border:       #25253a;
+  --card-shadow:       rgba(0, 0, 0, 0.3);
+  --nav-bg:            #15151e;
+  --nav-border:        #25253a;
+  --btn-bg:            #1e1e2e;
+  --btn-border:        #2e2e45;
+  --btn-hover:         #252538;
+  --btn-border-hover:  #3a3a55;
+  --input-bg:          #0c0c14;
+  --input-border:      #25253a;
+  --input-color:       #ffffff;
+  --input-placeholder: rgba(255, 255, 255, 0.25);
+  --scrollbar:         #2a2a3e;
+  --scrollbar-hover:   #3a3a52;
+  --auth-gradient:     linear-gradient(160deg, #1a1030 0%, #0f0a1e 50%, #12101e 100%);
+  --auth-border:       rgba(255, 255, 255, 0.05);
+  --svg-text:          rgba(255, 255, 255, 0.9);
+  --svg-text-muted:    rgba(255, 255, 255, 0.3);
+  --svg-track:         rgba(255, 255, 255, 0.05);
+
+  --an-bg:             #09090f;
+  --an-card:           #0e0e17;
+  --an-inset:          #13131d;
+  --an-chip:           #292038;
+  --an-chip-border:    #a778ee;
+  --an-segment:        rgba(118, 118, 128, 0.24);
+  --an-track:          #242433;
+  --an-text:           #ffffff;
+  --an-text-2:         rgba(235, 235, 245, 0.7);
+  --an-separator:      rgba(255, 255, 255, 0.17);
+  --an-hover:          rgba(255, 255, 255, 0.04);
+  --an-green:          #30d158;
+  --an-red:            #ff4245;
+  --an-purple:         #db34f2;
+  --an-blue:           #0091ff;
+  --an-neutral:        rgba(235, 235, 245, 0.7);
+  --an-rest:           #666679;
+}
+
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -9,63 +96,53 @@
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background: #0c0c14;
+    background: var(--bg);
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background 0.2s ease;
   }
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #2a2a3e;
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a52;
-  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
 }
 
 @layer components {
-  /* ─── Card ───────────────────────────────────────────────────── */
+  /* ─── Card ───────────────────────────────────────────────── */
   .dark-card {
-    background: #15151e;
-    border: 1px solid #25253a;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 2px 8px var(--card-shadow);
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
-  /* ─── Navbar ─────────────────────────────────────────────────── */
+  /* ─── Navbar ─────────────────────────────────────────────── */
   .glass-nav {
-    background: #15151e;
-    border: 1px solid #25253a;
+    background: var(--nav-bg);
+    border: 1px solid var(--nav-border);
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
-  /* ─── Inputs ─────────────────────────────────────────────────── */
+  /* ─── Inputs ─────────────────────────────────────────────── */
   .glass-input {
-    background: #0c0c14;
-    border: 1px solid #25253a;
-    color: #ffffff;
-    transition: border-color 0.15s ease;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--input-color);
+    transition: border-color 0.15s ease, background 0.2s ease;
     outline: none;
   }
-  .glass-input::placeholder {
-    color: rgba(255, 255, 255, 0.25);
-  }
-  .glass-input:focus {
-    border-color: #7c3aed;
-  }
+  .glass-input::placeholder { color: var(--input-placeholder); }
+  .glass-input:focus { border-color: #7c3aed; }
 
-  /* ─── Auth inputs ────────────────────────────────────────────── */
+  /* ─── Auth inputs ────────────────────────────────────────── */
   .auth-input {
-    background: #0c0c14;
-    border: 1px solid #25253a;
-    color: #ffffff;
-    transition: border-color 0.15s ease;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--input-color);
+    transition: border-color 0.15s ease, background 0.2s ease;
     outline: none;
     border-radius: 8px;
     padding: 10px 18px;
@@ -73,39 +150,104 @@
     width: 100%;
     font-family: 'Inter', sans-serif;
   }
-  .auth-input::placeholder {
-    color: rgba(255, 255, 255, 0.25);
-  }
-  .auth-input:focus {
-    border-color: #7c3aed;
-  }
+  .auth-input::placeholder { color: var(--input-placeholder); }
+  .auth-input:focus { border-color: #7c3aed; }
 
-  /* ─── Buttons ────────────────────────────────────────────────── */
+  /* ─── Buttons ────────────────────────────────────────────── */
   .glass-btn {
-    background: #1e1e2e;
-    border: 1px solid #2e2e45;
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
     transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   }
   .glass-btn:hover {
-    background: #252538;
-    border-color: #3a3a55;
+    background: var(--btn-hover);
+    border-color: var(--btn-border-hover);
   }
-  .glass-btn:active {
-    transform: scale(0.97);
-  }
+  .glass-btn:active { transform: scale(0.97); }
 
-  /* ─── Select ─────────────────────────────────────────────────── */
+  /* ─── Select ─────────────────────────────────────────────── */
   select.glass-input {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(120,120,160,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
     padding-right: 32px;
     cursor: pointer;
   }
   select.glass-input option {
-    background: #15151e;
-    color: #fff;
+    background: var(--card-bg);
+    color: var(--input-color);
+  }
+
+  /* ─── Analytics ──────────────────────────────────────────── */
+  .an-card {
+    background: var(--an-card);
+    border-radius: 14px;
+    transition: background 0.2s ease;
+  }
+  .an-inset {
+    background: var(--an-inset);
+    border-radius: 8px;
+  }
+  .an-title1  { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--an-text); }
+  .an-body    { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--an-text); }
+  .an-caption { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--an-text-2); }
+  .an-caption2 { font-size: 11px; line-height: 13px; letter-spacing: 0.06px; font-weight: 400; color: var(--an-text-2); }
+  .an-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    color: var(--an-text);
+    font-size: 12px;
+    line-height: 16px;
+    transition: opacity 0.15s ease;
+  }
+  .an-control:hover { opacity: 0.85; }
+  .an-control:focus-visible, .an-tab:focus-visible,
+  .an-calendar button:focus-visible {
+    outline: 2px solid var(--an-chip-border);
+    outline-offset: 2px;
+  }
+  .an-calendar {
+    background: var(--an-card);
+    border-color: var(--an-separator);
+    color: var(--an-text);
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .an-calendar-nav, .an-calendar-heading, .an-calendar-day {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.15s ease, opacity 0.15s ease;
+  }
+  .an-calendar-nav { width: 28px; height: 28px; flex-shrink: 0; }
+  .an-calendar-heading { min-height: 28px; padding: 4px 8px; }
+  .an-calendar-day { height: 30px; border: 1px solid transparent; }
+  .an-calendar button:hover:not(:disabled) { background: var(--an-hover); }
+  .an-calendar button:disabled { opacity: 0.3; cursor: default; }
+
+  /* ─── Auth page backgrounds ──────────────────────────────── */
+  .auth-page { background: var(--bg); }
+  .auth-panel {
+    background: var(--auth-gradient);
+    border-color: var(--auth-border);
   }
 }
+
+/* ─── Light theme: Notion-style warm text overrides ──────── */
+/* Remaps Tailwind gray-* to #37352f-based scale in light mode,
+   so components don't need individual changes */
+html:not(.dark) .text-gray-900 { color: #37352f; }
+html:not(.dark) .text-gray-800 { color: rgba(55, 53, 47, 0.87); }
+html:not(.dark) .text-gray-700 { color: rgba(55, 53, 47, 0.72); }
+html:not(.dark) .text-gray-600 { color: rgba(55, 53, 47, 0.60); }
+html:not(.dark) .text-gray-500 { color: rgba(55, 53, 47, 0.50); }
+html:not(.dark) .text-gray-400 { color: rgba(55, 53, 47, 0.40); }
+html:not(.dark) .text-gray-300 { color: rgba(55, 53, 47, 0.30); }

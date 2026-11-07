@@ -27,12 +27,12 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4" style={{ width: 300 }}>
-      <h2 className="text-white text-2xl font-semibold mb-1">
+      <h2 className="text-gray-900 dark:text-white text-2xl font-semibold mb-1">
         Зарегистрируйтесь на платформу
       </h2>
 
       <div className="flex flex-col gap-1">
-        <label className="text-white/45 text-xs">почта</label>
+        <label className="text-gray-500 dark:text-white/45 text-xs">почта</label>
         <input
           className="auth-input"
           type="email"
@@ -44,7 +44,7 @@ export const RegisterForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-white/45 text-xs">логин</label>
+        <label className="text-gray-500 dark:text-white/45 text-xs">логин</label>
         <input
           className="auth-input"
           type="text"
@@ -56,7 +56,7 @@ export const RegisterForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-white/45 text-xs">пароль</label>
+        <label className="text-gray-500 dark:text-white/45 text-xs">пароль</label>
         <input
           className="auth-input"
           type="password"
@@ -65,7 +65,7 @@ export const RegisterForm = () => {
           autoComplete="new-password"
           required
         />
-        <p className="text-white/30 text-[11px] mt-0.5">
+        <p className="text-gray-400 dark:text-white/30 text-[11px] mt-0.5">
           Мин. 8 символов: A–Z, a–z, 0–9, спецсимвол (#?!@$%^&*-)
         </p>
       </div>
@@ -77,17 +77,17 @@ export const RegisterForm = () => {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-white text-gray-900 font-medium text-sm rounded-full py-2.5 mt-1
-                   hover:bg-gray-100 transition-colors duration-200
+        className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium text-sm rounded-full py-2.5 mt-1
+                   hover:bg-gray-700 dark:hover:bg-gray-100 transition-colors duration-200
                    disabled:opacity-50 disabled:cursor-not-allowed
                    flex items-center justify-center"
       >
         {isPending ? 'Регистрация...' : 'Регистрация'}
       </button>
 
-      <p className="text-white/45 text-sm text-center">
+      <p className="text-gray-500 dark:text-white/45 text-sm text-center">
         Уже есть аккаунт? Тогда используйтесь{' '}
-        <Link to="/login" className="text-purple-400 hover:text-purple-300 transition-colors">
+        <Link to="/login" className="text-purple-500 dark:text-purple-400 hover:text-purple-400 dark:hover:text-purple-300 transition-colors">
           Входом
         </Link>
       </p>

@@ -5,6 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { App } from './App'
 import './index.css'
 
+// Apply theme before React mounts to prevent flash of wrong theme
+const savedTheme = localStorage.getItem('theme') ?? 'dark'
+document.documentElement.classList.toggle('dark', savedTheme !== 'light')
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

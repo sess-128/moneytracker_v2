@@ -104,3 +104,66 @@ export interface AnalyticsFilterResponse {
   countOfTransactions: number
   avgInDay: number
 }
+
+// ─── Analytics: summary (/analytics/summary) ─────────────────────
+export interface AnalyticsPeriodRequest {
+  startDate: string          // "yyyy-MM-dd", включительно
+  endDate?: string           // "yyyy-MM-dd", бэкенд сравнивает с началом дня (не включительно)
+}
+
+export interface AnalyticsSummaryValues {
+  income: number
+  expense: number
+  savings: number
+  balance: number
+}
+
+export interface AnalyticsMonthSummary {
+  month: number              // 1..12
+  summary: AnalyticsSummaryValues
+}
+
+export interface AnalyticsYearSummary {
+  year: number
+  months: AnalyticsMonthSummary[]
+  summary: AnalyticsSummaryValues
+}
+
+export interface AnalyticsSummaryResponse {
+  years: AnalyticsYearSummary[]
+}
+
+// ─── Analytics: typed summary (/analytics/summary/by-type) ──────
+export interface AnalyticsTypedSummaryRequest extends AnalyticsPeriodRequest {
+  type: CategoryType
+  minAmount?: number
+}
+
+export interface AnalyticsTypedSummary {
+  sum: number
+  percentage: number
+  maxForMonth: number
+  average: number
+}
+
+export interface AnalyticsTransactionItem {
+  id: string
+  categoryId: string
+  categoryName: string
+  amount: number
+  description: string | null
+  transactionDate: string    // ISO datetime
+}
+
+export interface AnalyticsTransactionGroup {
+  categoryId: string
+  categoryName: string
+  summary: AnalyticsTypedSummary       // сумма по всему поддереву
+  items: AnalyticsTransactionItem[]    // операции только этой категории
+  childCategories: AnalyticsTransactionGroup[]
+}
+
+export interface AnalyticsTypedSummaryResponse {
+  summary: AnalyticsTypedSummary
+  transactions: AnalyticsTransactionGroup[]
+}

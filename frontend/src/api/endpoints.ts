@@ -16,6 +16,8 @@ export const API_ENDPOINTS = {
     byFilter: `${V1}/transactions/by-filter`,
   },
   analytics: {
-    byFilter: `${V1}/analytics/by-filter`,
+    byFilter: `${V1}/analytics/summary/by-filter`,
+    summary: `${V1}/analytics/summary`,
+    summaryByType: `${V1}/analytics/summary/by-type`,
   },
 } as const
