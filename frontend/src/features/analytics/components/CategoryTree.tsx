@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
-import type { AnalyticsTransactionGroup } from '@/types/api.types'
-import { formatCurrency, formatPercent } from '@/utils/formatters'
+import type { AnalyticsTransactionGroup, AnalyticsTransactionItem } from '@/types/api.types'
+import { formatCurrency, formatDate, formatPercent } from '@/utils/formatters'
 import { groupTotal, share, sum } from '@/features/analytics/lib/aggregate'
 
 interface CategoryTreeProps {
@@ -15,6 +15,22 @@ const Chevron = ({ open }: { open: boolean }) => (
   <span aria-hidden="true" className="inline-flex w-2 shrink-0 justify-center transition-transform duration-150" style={{ transform: open ? 'rotate(90deg)' : undefined }}>›</span>
 )
 
+const TransactionList = ({ items, categoryName }: { items: AnalyticsTransactionItem[]; categoryName: string }) => (
+  <ul className="m-0 list-none p-0" aria-label={`Транзакции: ${categoryName}`}>
+    {[...items].sort((a, b) => b.transactionDate.localeCompare(a.transactionDate) || a.id.localeCompare(b.id)).map(item => (
+      <li key={item.id} className="flex min-h-9 items-start justify-between gap-3 py-2">
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <span className="an-caption break-words" style={{ color: 'var(--an-text)' }}>
+            {item.description?.trim() || item.categoryName || 'Без описания'}
+          </span>
+          <time dateTime={item.transactionDate} className="an-caption2">{formatDate(item.transactionDate)}</time>
+        </div>
+        <span className="an-body shrink-0 whitespace-nowrap tabular-nums">{formatCurrency(Number(item.amount))}</span>
+      </li>
+    ))}
+  </ul>
+)
+
 /** Подкатегории остаются внутри блока своего родителя на любой глубине. */
 const CategoryChildren = ({ group, expanded, onToggle }: {
   group: AnalyticsTransactionGroup
@@ -26,7 +42,7 @@ const CategoryChildren = ({ group, expanded, onToggle }: {
   return (
     <ul className="m-0 list-none p-0" aria-label={`Подкатегории: ${group.categoryName}`}>
       {group.childCategories.map(child => {
-        const hasChildren = child.childCategories.length > 0
+        const hasChildren = child.childCategories.length > 0 || child.items.length > 0
         const open = expanded.has(child.categoryId)
         const regionId = `${id}-${child.categoryId}`
         const content = (
@@ -59,10 +75,15 @@ const CategoryChildren = ({ group, expanded, onToggle }: {
           </li>
         )
       })}
-      {own !== 0 && (
-        <li className="flex min-h-9 items-center justify-between gap-3">
-          <span className="an-caption min-w-0 truncate">Операции в «{group.categoryName}»</span>
-          <span className="an-body shrink-0 whitespace-nowrap tabular-nums">{formatCurrency(own)}</span>
+      {group.items.length > 0 && (
+        <li>
+          {group.childCategories.length > 0 && (
+            <div className="flex min-h-9 items-center justify-between gap-3">
+              <span className="an-caption min-w-0 truncate">Операции в «{group.categoryName}»</span>
+              <span className="an-body shrink-0 whitespace-nowrap tabular-nums">{formatCurrency(own)}</span>
+            </div>
+          )}
+          <TransactionList items={group.items} categoryName={group.categoryName} />
         </li>
       )}
     </ul>
