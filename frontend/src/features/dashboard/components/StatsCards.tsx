@@ -1,42 +1,21 @@
-import { GlassCard } from '@/components/ui/GlassCard'
 import { formatCurrency, getCurrentMonthLabel } from '@/utils/formatters'
 import type { DashboardStats } from '../hooks/useDashboardStats'
 
-interface StatsCardsProps {
-  stats: DashboardStats
-}
-
-export const StatsCards = ({ stats }: StatsCardsProps) => {
-  const monthLabel = getCurrentMonthLabel()
-
+export const StatsCards = ({ stats }: { stats: DashboardStats }) => {
   const items = [
-    {
-      label: 'Общий баланс средств',
-      value: formatCurrency(stats.totalBalance),
-    },
-    {
-      label: 'Баланс средств за тек.месяц',
-      value: `${formatCurrency(stats.currentMonthTotal)} (${monthLabel})`,
-    },
-    {
-      label: 'Средняя трата за день',
-      value: formatCurrency(stats.avgDailySpend),
-    },
+    { label: 'Общий баланс средств', value: stats.totalBalance, caption: 'Все операции' },
+    { label: 'Баланс средств за текущий месяц', value: stats.currentMonthTotal, caption: getCurrentMonthLabel().replace(/^./, letter => letter.toUpperCase()) },
+    { label: 'Средняя трата за день', value: stats.avgDailySpend, caption: 'Текущий месяц' },
   ]
-
   return (
-    <GlassCard padding="md">
-      <div className="grid grid-cols-3 h-24">
-        {items.map(({ label, value }, i) => (
-          <div
-            key={label}
-            className={`flex flex-col justify-between ${i === 0 ? 'pr-5' : i === 2 ? 'pl-5' : 'px-5'}`}
-          >
-            <p className="text-gray-500 dark:text-white/50 text-xs leading-snug">{label}</p>
-            <p className="text-gray-900 dark:text-white text-2xl font-semibold tracking-tight leading-none">{value}</p>
-          </div>
-        ))}
-      </div>
-    </GlassCard>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {items.map(({ label, value, caption }, i) => (
+        <section key={label} className="an-card flex flex-col gap-1.5 px-5 py-5">
+          <h2 className="an-caption">{label}</h2>
+          <p className="an-body" style={i === 0 ? { color: 'var(--an-chip-border)' } : undefined}>{formatCurrency(value)}</p>
+          <p className="an-caption">{caption}</p>
+        </section>
+      ))}
+    </div>
   )
 }

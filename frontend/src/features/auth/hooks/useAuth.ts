@@ -42,7 +42,7 @@ export const useCurrentUser = () => {
     queryKey: ['me'],
     queryFn: async () => {
       const user = await authApi.getMe()
-      setUser(user)
+      if (useAuthStore.getState().token === token) setUser(user)
       return user
     },
     enabled: Boolean(token),

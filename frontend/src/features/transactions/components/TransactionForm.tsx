@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useCallback, useEffect, type FormEvent, type KeyboardEvent } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Input } from '@/components/ui/Input'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -84,7 +85,7 @@ export const TransactionForm = () => {
   const highlightRef = useRef(highlightedIndex)
   highlightRef.current = highlightedIndex
 
-  const { mutate: create, isPending } = useCreateTransaction()
+  const { mutate: create, isPending, isError } = useCreateTransaction()
 
   // After successful creation, focus back to amount input
   const handleCreateSuccess = useCallback(() => {
@@ -189,21 +190,21 @@ export const TransactionForm = () => {
   }, [highlightedIndex])
 
   return (
-    <GlassCard padding="md">
-      <p className="text-white/65 text-sm font-medium mb-4">Новая транзакция</p>
+    <GlassCard padding="lg" className="transaction-form">
+      <p className="an-title1 mb-4">Новая транзакция</p>
 
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {/* Row 1: Amount + Date */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
+              <label className="an-caption">
                 Сумма
               </label>
               <input
                 ref={amountInputRef}
                 type="number"
-                className="glass-input rounded-lg px-4 py-2.5 text-sm w-full text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="glass-input rounded-lg px-4 py-2.5 text-sm w-full text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
@@ -214,7 +215,7 @@ export const TransactionForm = () => {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
+              <label className="an-caption">
                 Дата
               </label>
               <DatePicker value={date} onChange={setDate} />
@@ -223,7 +224,7 @@ export const TransactionForm = () => {
 
           {/* Row 2: Category */}
           <div className="flex flex-col gap-1">
-            <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
+            <label className="an-caption">
               Категория
             </label>
             <div className="relative w-full">
@@ -261,6 +262,7 @@ export const TransactionForm = () => {
                 />
               )}
 
+              {!selectedCategory && <ChevronDown aria-hidden="true" size={15} className="pointer-events-none absolute right-3 top-3.5 text-[var(--an-text-2)]" />}
               {/* Dropdown */}
               {showDropdown && !selectedCategory && (
                 <div
@@ -309,7 +311,7 @@ export const TransactionForm = () => {
               ref={submitButtonRef}
               type="submit"
               disabled={isPending || !amount || !categoryId}
-              className="glass-btn text-white text-sm rounded-lg px-6 py-2.5
+              className="create-transaction text-sm rounded-lg px-7 py-2.5
                          disabled:opacity-50 disabled:cursor-not-allowed
                          flex items-center justify-center flex-shrink-0 self-end"
             >
@@ -317,6 +319,7 @@ export const TransactionForm = () => {
             </button>
           </div>
         </div>
+        {isError && <p role="alert" className="mt-3 text-xs text-red-500">Не удалось создать транзакцию. Попробуйте ещё раз.</p>}
       </form>
     </GlassCard>
   )

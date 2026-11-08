@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { ArrowRight, LoaderCircle, UserRoundPlus } from 'lucide-react'
+import { PasswordField } from './PasswordField'
 import { useRegister } from '../hooks/useAuth'
 
 const extractErrorMessage = (error: unknown): string => {
@@ -26,16 +28,20 @@ export const RegisterForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" style={{ width: 300 }}>
-      <h2 className="text-gray-900 dark:text-white text-2xl font-semibold mb-1">
-        Зарегистрируйтесь на платформу
-      </h2>
+    <form onSubmit={handleSubmit} className="auth-form">
+      <div className="auth-form-heading">
+        <span className="auth-form-icon"><UserRoundPlus size={22} strokeWidth={1.6} /></span>
+        <h2>Создайте аккаунт</h2>
+        <p>Начните вести бюджет и видеть больше за цифрами.</p>
+      </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-gray-500 dark:text-white/45 text-xs">почта</label>
+        <label htmlFor="RegisterForm-email">Почта</label>
         <input
           className="auth-input"
           type="email"
+          id="RegisterForm-email"
+          placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
@@ -44,10 +50,12 @@ export const RegisterForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-gray-500 dark:text-white/45 text-xs">логин</label>
+        <label htmlFor="RegisterForm-username">Логин</label>
         <input
           className="auth-input"
           type="text"
+          id="RegisterForm-username"
+          placeholder="Введите логин"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="username"
@@ -56,39 +64,30 @@ export const RegisterForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-gray-500 dark:text-white/45 text-xs">пароль</label>
-        <input
-          className="auth-input"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="new-password"
-          required
-        />
-        <p className="text-gray-400 dark:text-white/30 text-[11px] mt-0.5">
+        <label htmlFor="RegisterForm-password">Пароль</label>
+        <PasswordField id="RegisterForm-password" value={password} onChange={setPassword} autoComplete="new-password" describedBy="password-hint" />
+        <p id="password-hint" className="auth-password-hint">
           Мин. 8 символов: A–Z, a–z, 0–9, спецсимвол (#?!@$%^&*-)
         </p>
       </div>
 
       {isError && (
-        <p className="text-red-400 text-sm">{extractErrorMessage(error)}</p>
+        <p role="alert" className="auth-error">{extractErrorMessage(error)}</p>
       )}
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium text-sm rounded-full py-2.5 mt-1
-                   hover:bg-gray-700 dark:hover:bg-gray-100 transition-colors duration-200
-                   disabled:opacity-50 disabled:cursor-not-allowed
-                   flex items-center justify-center"
+        className="auth-submit"
+        aria-busy={isPending}
       >
-        {isPending ? 'Регистрация...' : 'Регистрация'}
+        {isPending ? <><LoaderCircle size={16} className="animate-spin" />Создаём аккаунт…</> : <>Создать аккаунт<ArrowRight size={16} /></>}
       </button>
 
-      <p className="text-gray-500 dark:text-white/45 text-sm text-center">
-        Уже есть аккаунт? Тогда используйтесь{' '}
-        <Link to="/login" className="text-purple-500 dark:text-purple-400 hover:text-purple-400 dark:hover:text-purple-300 transition-colors">
-          Входом
+      <p className="auth-switch">
+        Уже есть аккаунт?{' '}
+        <Link to="/login" className="auth-link">
+          Войти
         </Link>
       </p>
     </form>
