@@ -1,9 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { formatCurrency, formatPercent } from '@/utils/formatters'
 import { usePeriodSummary, useTypedSummary } from '@/features/analytics/hooks/useFinanceAnalytics'
-import { useCategories } from '@/features/categories/hooks/useCategories'
-import { expenseCategoryTree } from '@/features/analytics/lib/categoryTree'
-import { buildMonthTotals, CHART_COLORS, groupTotal, share, sum, topCategorySeries } from '@/features/analytics/lib/aggregate'
+import { buildMonthTotals, CHART_COLORS, groupTotal, share, sortGroups, sum, topCategorySeries } from '@/features/analytics/lib/aggregate'
 import { plural } from '@/features/analytics/lib/period'
 import { LineChart } from '@/features/analytics/components/Charts'
 import { CategoryTreeColumn, useExpandedCategories } from '@/features/analytics/components/CategoryTree'
@@ -28,12 +26,8 @@ const joinNames = (names: string[]) =>
 export const ExpensesTab = ({ period, keys, labels }: TabProps) => {
   const expenses = useTypedSummary('EXPENSE', period)
   const summary = usePeriodSummary(period)
-  const categories = useCategories()
   const { expanded, toggle, setExpanded } = useExpandedCategories()
-  const roots = useMemo(() => expenseCategoryTree(
-    expenses.data?.transactions ?? [],
-    categories.data ?? [],
-  ), [expenses.data, categories.data])
+  const roots = useMemo(() => sortGroups(expenses.data?.transactions ?? []), [expenses.data])
 
   const model = useMemo(() => {
     const series = topCategorySeries(expenses.data ? { ...expenses.data, transactions: roots } : undefined, keys, PALETTE, 'Остальные категории')
@@ -60,8 +54,8 @@ export const ExpensesTab = ({ period, keys, labels }: TabProps) => {
   const leftRoots = roots.slice(0, splitIndex)
   const rightRoots = roots.slice(splitIndex)
 
-  const loading = expenses.isLoading || categories.isLoading
-  if (expenses.isError || summary.isError || categories.isError) return <AnalyticsError onRetry={() => { void expenses.refetch(); void summary.refetch(); void categories.refetch() }} />
+  const loading = expenses.isLoading
+  if (expenses.isError || summary.isError) return <AnalyticsError onRetry={() => { void expenses.refetch(); void summary.refetch() }} />
 
   return (
     <>
