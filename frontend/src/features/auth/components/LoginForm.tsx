@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { ArrowRight, LoaderCircle, LogIn } from 'lucide-react'
+import { PasswordField } from './PasswordField'
 import { useLogin } from '../hooks/useAuth'
 
 const extractErrorMessage = (error: unknown): string => {
@@ -24,14 +26,20 @@ export const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" style={{ width: 300 }}>
-      <h2 className="text-gray-900 dark:text-white text-2xl font-semibold mb-1">Войдите на платформу</h2>
+    <form onSubmit={handleSubmit} className="auth-form">
+      <div className="auth-form-heading">
+        <span className="auth-form-icon"><LogIn size={22} strokeWidth={1.6} /></span>
+        <h2>С возвращением</h2>
+        <p>Войдите, чтобы продолжить управлять финансами.</p>
+      </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-gray-500 dark:text-white/45 text-xs">логин</label>
+        <label htmlFor="LoginForm-username">Логин</label>
         <input
           className="auth-input"
           type="text"
+          id="LoginForm-username"
+          placeholder="Введите логин"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="username"
@@ -40,35 +48,26 @@ export const LoginForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-gray-500 dark:text-white/45 text-xs">пароль</label>
-        <input
-          className="auth-input"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-        />
+        <label htmlFor="LoginForm-password">Пароль</label>
+        <PasswordField id="LoginForm-password" value={password} onChange={setPassword} autoComplete="current-password" />
       </div>
 
       {isError && (
-        <p className="text-red-400 text-sm">{extractErrorMessage(error)}</p>
+        <p role="alert" className="auth-error">{extractErrorMessage(error)}</p>
       )}
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium text-sm rounded-full py-2.5 mt-1
-                   hover:bg-gray-700 dark:hover:bg-gray-100 transition-colors duration-200
-                   disabled:opacity-50 disabled:cursor-not-allowed
-                   flex items-center justify-center"
+        className="auth-submit"
+        aria-busy={isPending}
       >
-        {isPending ? 'Вход...' : 'Вход'}
+        {isPending ? <><LoaderCircle size={16} className="animate-spin" />Входим…</> : <>Войти<ArrowRight size={16} /></>}
       </button>
 
-      <p className="text-gray-500 dark:text-white/45 text-sm text-center">
+      <p className="auth-switch">
         Нет аккаунта?{' '}
-        <Link to="/register" className="text-purple-500 dark:text-purple-400 hover:text-purple-400 dark:hover:text-purple-300 transition-colors">
+        <Link to="/register" className="auth-link">
           Регистрация
         </Link>
       </p>

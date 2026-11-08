@@ -5,9 +5,9 @@ import { useThemeStore } from '@/store/themeStore'
 import { Avatar } from '@/components/ui/Avatar'
 
 const NAV_ITEMS = [
-  { label: 'Home', path: '/' },
+  { label: 'Главная', path: '/' },
   { label: 'Аналитика', path: '/analytics' },
-  { label: 'Категория', path: '/categories' },
+  { label: 'Категории', path: '/categories' },
   { label: 'Профиль', path: '/profile' },
 ]
 
@@ -73,37 +73,32 @@ export const Navbar = () => {
   }
 
   return (
-    <header className="flex items-center justify-between px-2 py-1 flex-shrink-0">
-      <h1 className="text-gray-900 dark:text-white text-base font-normal tracking-tight">
-        Добро пожаловать,{' '}
-        <span className="text-purple-500 dark:text-purple-300 font-medium">{user?.login ?? '...'}</span>
+    <header className="app-navbar flex flex-wrap items-center justify-between gap-4 flex-shrink-0">
+      <h1 className="an-body flex items-center gap-3 mr-auto">
+        <span className="brand-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M3 19v-5m5 5v-8m5 8v-5m5 5V8M3 10l5-5 5 4 8-8m-5 0h5v5" /></svg></span>
+        <span>Добро пожаловать,{' '}
+        <span className="font-normal">{user?.login ?? '...'}</span></span>
       </h1>
 
-      <nav className="glass-nav rounded-full px-1.5 py-1 flex items-center gap-0.5">
+      <nav aria-label="Основная навигация" className="app-nav-links navigation-bar">
         {NAV_ITEMS.map(({ label, path }) => (
           <NavLink
             key={path}
             to={path}
             end={path === '/'}
-            className={({ isActive }) =>
-              `px-5 py-2 rounded-full text-sm transition-all duration-200 ${
-                isActive
-                  ? 'bg-gray-900/8 dark:bg-white/15 text-gray-900 dark:text-white font-medium'
-                  : 'text-gray-500 dark:text-white/55 hover:text-gray-800 dark:hover:text-white/90 hover:bg-gray-900/5 dark:hover:bg-white/8'
-              }`
-            }
+            className={({ isActive }) => `navigation-link${isActive ? ' is-active' : ''}`}
           >
             {label}
           </NavLink>
         ))}
       </nav>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-8">
         <button
           type="button"
           onClick={toggle}
           title={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
-          className="w-9 h-9 rounded-full glass-btn flex items-center justify-center text-gray-500 dark:text-white/55 hover:text-gray-800 dark:hover:text-white/90 transition-colors"
+          className="w-8 h-8 rounded-full bg-[var(--an-inset)] flex items-center justify-center text-gray-500 dark:text-white/55 hover:text-gray-800 dark:hover:text-white/90 transition-colors"
         >
           {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
         </button>
@@ -122,7 +117,7 @@ export const Navbar = () => {
             aria-controls={accountOpen ? accountMenuId : undefined}
             className="rounded-full ring-2 ring-gray-900/15 dark:ring-white/15 hover:ring-purple-400/50 transition-all duration-200"
           >
-            <Avatar username={user?.login ?? '?'} size={40} />
+            <Avatar username={user?.login ?? '?'} size={34} />
           </button>
           {accountOpen && (
             <div

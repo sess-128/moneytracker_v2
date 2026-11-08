@@ -28,6 +28,7 @@ export const useCreateTransaction = () => {
     mutationFn: (data: TransactionCreateRequest) => transactionsApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TRANSACTIONS_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'finance'] })
     },
   })
 }
@@ -39,6 +40,7 @@ export const useDeleteTransaction = () => {
     mutationFn: (id: string) => transactionsApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TRANSACTIONS_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'finance'] })
     },
   })
 }

@@ -34,6 +34,8 @@ export const useUpdateCategory = () => {
     mutationFn: (data: CategoryUpdateRequest) => categoriesApi.update(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'finance'] })
     },
   })
 }
@@ -45,6 +47,8 @@ export const useDeleteCategory = () => {
     mutationFn: (id: string) => categoriesApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'finance'] })
     },
   })
 }

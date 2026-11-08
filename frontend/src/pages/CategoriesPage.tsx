@@ -1,256 +1,131 @@
-import { useState } from 'react'
-import { createPortal } from 'react-dom'
-import { GlassCard } from '@/components/ui/GlassCard'
+import { useMemo, useState, type FormEvent } from 'react'
+import axios from 'axios'
+import { ChevronDown, ChevronRight, FolderTree, Pencil, Plus, Search, Trash2 } from 'lucide-react'
+import { Modal } from '@/components/ui/Modal'
 import { useCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from '@/features/categories/hooks/useCategories'
-import type { CategoryTreeResponse, CategoryResponse, CategoryType } from '@/types/api.types'
+import type { CategoryTreeResponse, CategoryType } from '@/types/api.types'
 
-interface CategoryForm {
-  name: string
-  type: CategoryType
-  parentId: string | null
-}
-
-// Flatten tree to list for table display, preserving actual parentId from each node
-function flattenCategories(cats: CategoryTreeResponse[], parentCategoryId: string | null = null): CategoryResponse[] {
-  return cats.flatMap(cat => {
-    const self: CategoryResponse = {
-      categoryId: cat.categoryId,
-      name: cat.name,
-      type: cat.type,
-      parentId: parentCategoryId,
-      linkId: undefined,
-    }
-    const children: CategoryResponse[] = cat.childCategories.length > 0
-      ? flattenCategories(cat.childCategories, cat.categoryId)
-      : []
-    return [self, ...children]
-  })
-}
-
-const emptyForm: CategoryForm = { name: '', type: 'EXPENSE', parentId: null }
+type CategoryRow = CategoryTreeResponse & { parentId: string | null; parentName: string; depth: number }
+const flatten = (tree: CategoryTreeResponse[], parentId: string | null = null, parentName = '', depth = 0): CategoryRow[] =>
+  tree.flatMap(category => [{ ...category, parentId, parentName, depth }, ...flatten(category.childCategories, category.categoryId, category.name, depth + 1)])
+const TYPE_LABELS: Record<CategoryType, string> = { EXPENSE: 'Расход', INCOME: 'Доход', SAVINGS: 'Накопление' }
+const categoryCount = (count: number) => `${count} ${count % 100 >= 11 && count % 100 <= 14 ? 'категорий' : count % 10 === 1 ? 'категория' : count % 10 >= 2 && count % 10 <= 4 ? 'категории' : 'категорий'}`
+const emptyForm = { name: '', type: 'EXPENSE' as CategoryType, parentId: '' }
+const message = (error: unknown) => axios.isAxiosError(error) && typeof error.response?.data?.message === 'string' ? error.response.data.message : 'Не удалось сохранить изменения. Попробуйте ещё раз.'
 
 export const CategoriesPage = () => {
-  const { data: categoryTree = [], isLoading } = useCategories()
-  const categories = flattenCategories(categoryTree)
-  const { mutate: createCat } = useCreateCategory()
-  const { mutate: updateCat } = useUpdateCategory()
-  const { mutate: deleteCat } = useDeleteCategory()
-
+  const { data: tree = [], isLoading, isError, refetch } = useCategories()
+  const categories = useMemo(() => flatten(tree), [tree])
+  const createCategory = useCreateCategory()
+  const updateCategory = useUpdateCategory()
+  const deleteCategory = useDeleteCategory()
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
+  const [search, setSearch] = useState('')
+  const [type, setType] = useState<CategoryType | ''>('')
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [editingCat, setEditingCat] = useState<CategoryResponse | null>(null)
-  const [form, setForm] = useState<CategoryForm>(emptyForm)
+  const [editing, setEditing] = useState<CategoryRow | null>(null)
+  const [deleting, setDeleting] = useState<CategoryRow | null>(null)
+  const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState('')
-
-  const rootCategories = categories.filter((c) => !c.parentId)
-
-  const openCreate = () => {
-    setEditingCat(null)
-    setForm(emptyForm)
-    setError('')
-    setDialogOpen(true)
-  }
-
-  const openEdit = (cat: CategoryResponse) => {
-    setEditingCat(cat)
-    setForm({ name: cat.name, type: cat.type, parentId: cat.parentId ?? null })
-    setError('')
-    setDialogOpen(true)
-  }
-
-  const closeDialog = () => {
-    setDialogOpen(false)
-    setEditingCat(null)
-  }
-
-  const handleSave = () => {
-    if (!form.name.trim()) {
-      setError('Введите название категории')
-      return
+  const busy = createCategory.isPending || updateCategory.isPending || deleteCategory.isPending
+  const visible = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase('ru')
+    const byId = new Map(categories.map(category => [category.categoryId, category]))
+    const matches = new Set<string>()
+    if (query) {
+      for (const category of categories) {
+        if (type && category.type !== type) continue
+        if (!`${category.name} ${category.parentName}`.toLocaleLowerCase('ru').includes(query)) continue
+        let current: CategoryRow | undefined = category
+        while (current) {
+          matches.add(current.categoryId)
+          current = current.parentId ? byId.get(current.parentId) : undefined
+        }
+      }
     }
-
-    if (editingCat) {
-      updateCat(
-        { categoryId: editingCat.categoryId, name: form.name, categoryRoot: form.parentId },
-        { onSuccess: closeDialog, onError: (e: any) => setError(e.response?.data?.message || 'Ошибка обновления') },
-      )
-    } else {
-      createCat(
-        { name: form.name, type: form.type, parentId: form.parentId },
-        { onSuccess: closeDialog, onError: (e: any) => setError(e.response?.data?.message || 'Ошибка создания') },
-      )
-    }
-  }
-
-  const handleDelete = (cat: CategoryResponse) => {
-    if (!window.confirm(`Удалить категорию «${cat.name}»?`)) return
-    deleteCat(cat.categoryId, {
-      onError: (e: any) => alert(e.response?.data?.message || 'Не удалось удалить категорию'),
+    return categories.filter(category => {
+      if (type && category.type !== type) return false
+      if (query) return matches.has(category.categoryId)
+      let parentId = category.parentId
+      while (parentId) {
+        if (!expanded.has(parentId)) return false
+        parentId = byId.get(parentId)?.parentId ?? null
+      }
+      return true
     })
-  }
+  }, [categories, search, type, expanded])
+  const toggleCategory = (id: string) => setExpanded(previous => {
+    const next = new Set(previous)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    return next
+  })
+  const roots = categories.filter(category => !category.parentId && category.type === form.type && category.categoryId !== editing?.categoryId && !editing?.childCategories.some(child => child.categoryId === category.categoryId))
 
-  const getParentName = (cat: CategoryResponse) => {
-    if (!cat.parentId) return '—'
-    return categories.find((c) => c.categoryId === cat.parentId)?.name ?? cat.parentId
+  const openForm = (category: CategoryRow | null = null) => {
+    setEditing(category)
+    setForm(category ? { name: category.name, type: category.type, parentId: category.parentId ?? '' } : emptyForm)
+    setError('')
+    setDialogOpen(true)
+  }
+  const save = async (event: FormEvent) => {
+    event.preventDefault()
+    if (!form.name.trim()) { setError('Введите название категории'); return }
+    if (busy) return
+    setError('')
+    try {
+      if (editing) await updateCategory.mutateAsync({ categoryId: editing.categoryId, name: form.name.trim(), categoryRoot: form.parentId || null })
+      else await createCategory.mutateAsync({ name: form.name.trim(), type: form.type, parentId: form.parentId || null })
+      if (form.parentId) setExpanded(previous => new Set(previous).add(form.parentId))
+      setDialogOpen(false)
+    } catch (err) { setError(message(err)) }
+  }
+  const remove = async () => {
+    if (!deleting || busy) return
+    setError('')
+    try { await deleteCategory.mutateAsync(deleting.categoryId); setDeleting(null) }
+    catch (err) { setError(message(err)) }
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0">
-      <div className="flex items-center justify-between mb-3 flex-shrink-0">
-        <h2 className="text-white text-lg font-medium">Управление категориями</h2>
-        <button onClick={openCreate} className="glass-btn text-white text-sm rounded-lg px-4 py-2 flex items-center gap-1.5">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Добавить
-        </button>
+    <main className="categories-page flex flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div><h1 className="an-title1">Категории</h1><p className="an-caption mt-1">Управляйте категориями доходов, расходов и накоплений</p></div>
+        <button type="button" className="action-primary" onClick={() => openForm()}><Plus size={15} />Добавить категорию</button>
       </div>
-
-      <GlassCard padding="none" className="flex-1 min-h-0 overflow-auto">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <span className="text-white/40 text-sm">Загрузка...</span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {(Object.keys(TYPE_LABELS) as CategoryType[]).map(key => <section key={key} className="an-card p-5"><p className="an-caption">{TYPE_LABELS[key]}</p><p className={`category-type mt-2 ${key.toLowerCase()}`}>{categoryCount(categories.filter(category => category.type === key).length)}</p></section>)}
+      </div>
+      <section className="an-card p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-2"><FolderTree size={16} className="text-[var(--an-chip-border)]" /><h2 className="an-title1">Все категории</h2><span className="an-caption">{categories.length}</span></div>
+          <div className="category-filters flex flex-wrap gap-3">
+            <label className="relative"><Search size={14} aria-hidden="true" className="absolute left-3 top-3 text-[var(--an-text-2)]" /><input aria-label="Поиск категорий" className="category-search" placeholder="Найти категорию…" value={search} onChange={event => setSearch(event.target.value)} /></label>
+            <select aria-label="Тип категорий" className="history-select" value={type} onChange={event => setType(event.target.value as CategoryType | '')}><option value="">Все типы</option>{(Object.keys(TYPE_LABELS) as CategoryType[]).map(key => <option key={key} value={key}>{TYPE_LABELS[key]}</option>)}</select>
           </div>
-        ) : categories.length === 0 ? (
-          <div className="flex items-center justify-center h-32">
-            <span className="text-white/40 text-sm">Нет категорий</span>
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-white/40 text-[11px] uppercase tracking-wider border-b border-white/5">
-                <th className="text-left px-4 py-3 font-medium">Название</th>
-                <th className="text-left px-4 py-3 font-medium">Тип</th>
-                <th className="text-left px-4 py-3 font-medium">Родитель</th>
-                <th className="text-right px-4 py-3 font-medium w-24">Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((cat, i) => (
-                <tr
-                  key={cat.categoryId}
-                  className="border-b border-white/[0.03] transition-colors hover:bg-white/[0.02]"
-                >
-                  <td className="px-4 py-3 text-white font-medium">{cat.name}</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      cat.type === 'INCOME'
-                        ? 'bg-emerald-500/15 text-emerald-400'
-                        : cat.type === 'SAVINGS'
-                          ? 'bg-blue-500/15 text-blue-400'
-                          : 'bg-rose-500/15 text-rose-400'
-                    }`}>
-                      {cat.type === 'INCOME' ? 'Доход' : cat.type === 'SAVINGS' ? 'Накопление' : 'Расход'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-white/50">{getParentName(cat)}</td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => openEdit(cat)}
-                      className="glass-btn rounded-lg px-2.5 py-1.5 text-xs text-white/60 hover:text-white mr-1"
-                      title="Редактировать"
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                        <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(cat)}
-                      className="glass-btn rounded-lg px-2.5 py-1.5 text-xs text-rose-400/60 hover:text-rose-400"
-                      title="Удалить"
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                        <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </GlassCard>
-
-      {dialogOpen && createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.6)' }}>
-          <div
-            className="dark-card rounded-2xl p-6 w-full shadow-2xl"
-            style={{ maxWidth: 420 }}
-          >
-            <h3 className="text-white text-base font-medium mb-5">
-              {editingCat ? 'Редактировать категорию' : 'Новая категория'}
-            </h3>
-
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
-                  Название
-                </label>
-                <input
-                  className="glass-input rounded-lg px-4 py-2.5 text-sm w-full"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Название категории"
-                  autoFocus
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
-                  Тип
-                </label>
-                <select
-                  className="glass-input rounded-lg px-4 py-2.5 text-sm w-full"
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value as 'EXPENSE' | 'INCOME' })}
-                >
-                  <option value="EXPENSE">Расход</option>
-                  <option value="INCOME">Доход</option>
-                  <option value="SAVINGS">Накопление</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-white/45 uppercase tracking-wider font-medium">
-                  Родительская категория
-                </label>
-                <select
-                  className="glass-input rounded-lg px-4 py-2.5 text-sm w-full"
-                  value={form.parentId ?? ''}
-                  onChange={(e) => setForm({ ...form, parentId: e.target.value || null })}
-                >
-                  <option value="">Без родителя (корневая)</option>
-                  {rootCategories
-                    .filter((c) => editingCat ? c.categoryId !== editingCat.categoryId : true)
-                    .map((c) => (
-                      <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
-                    ))
-                  }
-                </select>
-              </div>
-
-              {error && (
-                <p className="text-xs text-rose-400">{error}</p>
-              )}
-            </div>
-
-            <div className="flex items-center justify-end gap-2 mt-6">
-              <button
-                onClick={closeDialog}
-                className="glass-btn text-white/70 text-sm rounded-lg px-4 py-2 hover:text-white"
-              >
-                Отмена
-              </button>
-              <button
-                onClick={handleSave}
-                className="bg-white text-gray-900 text-sm font-medium rounded-lg px-5 py-2 hover:bg-gray-100 transition-colors"
-              >
-                {editingCat ? 'Сохранить' : 'Создать'}
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body,
-      )}
-    </div>
+        </div>
+        {isLoading ? <p role="status" className="history-status">Загрузка категорий…</p> : isError ? <div role="alert" className="history-status">Не удалось загрузить категории.<button type="button" onClick={() => { void refetch() }} className="action-primary mt-3">Повторить</button></div> : visible.length === 0 ? <div className="history-status"><FolderTree size={32} className="mx-auto mb-4 text-[var(--an-chip-border)]" /><p>{categories.length ? 'Категории не найдены' : 'Пока нет категорий'}</p><p className="an-caption mt-2">{categories.length ? 'Попробуйте изменить поиск или тип.' : 'Добавьте первую категорию, чтобы распределять операции.'}</p></div> :
+          <div className="overflow-x-auto"><table className="category-table"><thead><tr><th>Название</th><th>Тип</th><th>Родительская категория</th><th className="text-right">Действия</th></tr></thead><tbody>{visible.map(category => <tr key={category.categoryId}>
+            <td><div style={{ paddingLeft: Math.min(category.depth, 3) * 16 }}>
+              {category.childCategories.length > 0 ? <button type="button" className="category-branch" aria-expanded={Boolean(search.trim()) || expanded.has(category.categoryId)} onClick={() => toggleCategory(category.categoryId)}>
+                {search.trim() || expanded.has(category.categoryId) ? <ChevronDown size={14} /> : <ChevronRight size={14} />}<FolderTree size={14} /><span>{category.name}</span><small className="an-caption">{category.childCategories.length}</small>
+              </button> : <span className="category-leaf"><FolderTree size={14} /><span>{category.name}</span></span>}
+            </div></td>
+            <td><span className={`category-type ${category.type.toLowerCase()}`}>{TYPE_LABELS[category.type]}</span></td><td className="text-[var(--an-text-2)]">{category.parentName || '—'}</td>
+            <td><div className="flex justify-end gap-2"><button type="button" className="icon-action" aria-label={`Редактировать ${category.name}`} onClick={() => openForm(category)}><Pencil size={14} /></button><button type="button" className="icon-action danger" aria-label={`Удалить ${category.name}`} onClick={() => { setDeleting(category); setError('') }}><Trash2 size={14} /></button></div></td>
+          </tr>)}</tbody></table></div>}
+      </section>
+      {dialogOpen && <Modal title={editing ? 'Редактировать категорию' : 'Новая категория'} busy={busy} onClose={() => setDialogOpen(false)}>
+        <form onSubmit={save} className="category-form flex flex-col gap-4">
+          <label htmlFor="category-name">Название<input id="category-name" autoFocus className="category-input" placeholder="Например, продукты" value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} required /></label>
+          <div><label htmlFor="category-type" className="mb-2">Тип</label><select id="category-type" className="category-input" value={form.type} disabled={Boolean(editing)} onChange={event => setForm({ ...form, type: event.target.value as CategoryType, parentId: '' })}>{(Object.keys(TYPE_LABELS) as CategoryType[]).map(key => <option key={key} value={key}>{TYPE_LABELS[key]}</option>)}</select></div>
+          {editing && <p className="an-caption">Тип существующей категории изменить нельзя.</p>}
+          <div><label htmlFor="category-parent" className="mb-2">Родительская категория</label><select id="category-parent" className="category-input" value={form.parentId} onChange={event => setForm({ ...form, parentId: event.target.value })}><option value="">Без родителя (корневая)</option>{roots.map(category => <option key={category.categoryId} value={category.categoryId}>{category.name}</option>)}</select></div>
+          {error && <p role="alert" className="text-xs text-[var(--an-red)]">{error}</p>}
+          <div className="flex justify-end gap-2 mt-2"><button type="button" className="pagination-button" disabled={busy} onClick={() => setDialogOpen(false)}>Отмена</button><button type="submit" className="action-primary" disabled={busy}>{busy ? 'Сохранение…' : editing ? 'Сохранить' : 'Создать'}</button></div>
+        </form>
+      </Modal>}
+      {deleting && <Modal title="Удалить категорию" busy={busy} onClose={() => setDeleting(null)}><p className="an-caption leading-6">Удалить категорию «{deleting.name}»?{deleting.childCategories.length > 0 && ' У категории есть подкатегории.'}</p>{error && <p role="alert" className="text-xs text-[var(--an-red)] mt-3">{error}</p>}<div className="flex justify-end gap-2 mt-6"><button type="button" disabled={busy} className="pagination-button" onClick={() => setDeleting(null)}>Отмена</button><button type="button" disabled={busy} className="action-danger" onClick={() => { void remove() }}>{busy ? 'Удаление…' : 'Удалить'}</button></div></Modal>}
+    </main>
   )
 }

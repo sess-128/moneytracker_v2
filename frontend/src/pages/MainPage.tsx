@@ -4,23 +4,25 @@ import { TransactionForm } from '@/features/transactions/components/TransactionF
 import { TransactionTable } from '@/features/transactions/components/TransactionTable'
 import { useTransactionsFlat } from '@/features/transactions/hooks/useTransactions'
 import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
-import { useCurrentUser } from '@/features/auth/hooks/useAuth'
 
 export const MainPage = () => {
-  useCurrentUser()
-  const { data: transactions = [], isFetchingNextPage, fetchNextPage, hasNextPage } = useTransactionsFlat()
+  const { data: transactions = [], isFetchingNextPage, fetchNextPage, hasNextPage, isLoading, isError, refetch } = useTransactionsFlat()
   const stats = useDashboardStats(transactions)
 
   return (
-    <div className="flex-1 grid gap-3 min-h-0" style={{ gridTemplateColumns: '44% 1fr' }}>
-      <div className="flex flex-col gap-3 min-h-0">
-        <StatsCards stats={stats} />
+    <main className="dashboard flex flex-col gap-6">
+      <div>
+        <h1 className="an-title1">Финансовый обзор</h1>
+        <p className="an-caption mt-1">Ваши средства, категории и последние операции</p>
+      </div>
+      <StatsCards stats={stats} />
+      <div className="dashboard-grid">
         <MonthlyExpenses />
+        <div className="flex min-w-0 flex-col gap-6">
+          <TransactionForm />
+          <TransactionTable transactions={transactions} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} isLoading={isLoading} isError={isError} retry={() => { void refetch() }} />
+        </div>
       </div>
-      <div className="flex flex-col gap-3 min-h-0">
-        <TransactionForm />
-        <TransactionTable transactions={transactions} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} />
-      </div>
-    </div>
+    </main>
   )
 }

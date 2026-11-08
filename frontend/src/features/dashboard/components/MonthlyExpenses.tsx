@@ -1,108 +1,61 @@
+import { useId, useState } from 'react'
 import { GlassCard } from '@/components/ui/GlassCard'
-import { useTransactionsFlat } from '@/features/transactions/hooks/useTransactions'
-import { useCategories } from '@/features/categories/hooks/useCategories'
-import type { CategoryTreeResponse } from '@/types/api.types'
+import { useMonthlyCategoryAmounts } from '../hooks/useMonthlyCategoryAmounts'
+
+const formatAmount = (amount: number) => new Intl.NumberFormat('ru-RU', {
+  style: 'currency', currency: 'RUB', minimumFractionDigits: 0, maximumFractionDigits: 2,
+}).format(amount)
 
 const COLORS = [
-  '#7c3aed', '#2563eb', '#0891b2', '#059669',
-  '#d97706', '#db2777', '#dc2626', '#0e7490',
+  '#3095af', '#309a76', '#e58a23', '#e13d36',
+  '#8b5de5', '#3874df', '#ca3c80', '#248599',
   '#047857', '#b45309', '#be185d', '#b91c1c',
 ]
 
 export const MonthlyExpenses = () => {
-  const { data: transactions = [] } = useTransactionsFlat()
-  const { data: categoryTree = [] } = useCategories()
+  const [expanded, setExpanded] = useState(false)
+  const categoryListId = useId()
+  const { categories, isLoading, isError, retry } = useMonthlyCategoryAmounts()
 
-  // Flatten tree to get all categories
-  const flattenCategories = (cats: CategoryTreeResponse[]): Array<{ categoryId: string; name: string }> => {
-    return cats.flatMap(cat => [
-      { categoryId: cat.categoryId, name: cat.name },
-      ...flattenCategories(cat.childCategories)
-    ])
-  }
-
-  const categories = flattenCategories(categoryTree)
-  const categoryMap = new Map(categories.map((c) => [c.categoryId, c.name]))
-
-  const countMap = new Map<string, number>()
-  for (const tx of transactions) {
-    countMap.set(tx.categoryId, (countMap.get(tx.categoryId) ?? 0) + 1)
-  }
-
-  const total = transactions.length
-
-  const SIZE = 270
-  const R = 98
+  const total = categories.reduce((sum, category) => sum + category.amount, 0)
+  const SIZE = 250
+  const R = 102
   const CX = SIZE / 2
   const CY = SIZE / 2
-  const STROKE = 34
+  const STROKE = 28
   const CIRCUMFERENCE = 2 * Math.PI * R
   const GAP = 4
-  const MIN_ARC = GAP + 2
 
-  const rawSlices = [...countMap.entries()]
-    .map(([id, count], i) => ({
-      id,
-      name: categoryMap.get(id) ?? id.slice(0, 8),
-      count,
-      color: COLORS[i % COLORS.length],
-    }))
-    .sort((a, b) => b.count - a.count)
+  const slices = categories
+    .map((category, index) => ({ ...category, color: COLORS[index % COLORS.length] }))
 
-  // Merge tiny segments into "Другое" so they don't create invisible dead zones
-  const { visible, otherCount } = rawSlices.reduce<{
-    visible: typeof rawSlices
-    otherCount: number
-  }>(
-    (acc, slice) => {
-      const arcLen = (slice.count / total) * CIRCUMFERENCE
-      if (arcLen >= MIN_ARC) {
-        acc.visible.push(slice)
-      } else {
-        acc.otherCount += slice.count
-      }
-      return acc
-    },
-    { visible: [], otherCount: 0 },
-  )
-
-  const slices = [
-    ...visible,
-    ...(otherCount > 0
-      ? [{ id: '__other__', name: 'Другое', count: otherCount, color: '#475569' }]
-      : []),
-  ]
-
-  const effectiveTotal = slices.reduce((s, sl) => s + sl.count, 0)
-
+  // Signed amounts remain visible; arc lengths use magnitudes because a circle has no negative area.
+  const chartTotal = slices.reduce((sum, slice) => sum + Math.abs(slice.amount), 0)
   let accumulated = 0
-  const arcs = slices.map((slice, i) => {
-    const pct = slice.count / effectiveTotal
-    const isLast = i === slices.length - 1
-    // Last segment gets no gap to avoid floating-point remainder showing as empty
-    const dash = isLast
-      ? CIRCUMFERENCE - accumulated
-      : Math.max(MIN_ARC, pct * CIRCUMFERENCE - GAP)
+  const arcs = slices.filter(slice => slice.amount !== 0).map(slice => {
+    const length = Math.abs(slice.amount) / chartTotal * CIRCUMFERENCE
+    const dash = Math.max(0, length - (slices.length > 1 ? Math.min(GAP, length * 0.1) : 0))
     const arc = { ...slice, dash, offset: accumulated }
-    accumulated += isLast ? CIRCUMFERENCE - accumulated : pct * CIRCUMFERENCE
+    accumulated += length
     return arc
   })
 
   return (
-    <GlassCard padding="md" className="flex flex-col flex-1 min-h-0">
-      <p className="text-gray-500 dark:text-white/55 text-sm mb-3 flex-shrink-0">По категориям:</p>
+    <GlassCard padding="lg" className="category-card flex flex-col min-w-0">
+      <h2 className="an-title1">По категориям</h2>
+      <p className="an-caption mt-1 mb-5">Суммы по родительским категориям за текущий месяц</p>
 
-      {total === 0 ? (
+      {isError ? <div role="alert" className="history-status"><p>Не удалось загрузить суммы за месяц.</p><button type="button" className="action-primary mt-3" onClick={retry}>Повторить</button></div> : isLoading ? <p role="status" className="history-status">Загрузка сумм за месяц…</p> : categories.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-gray-300 dark:text-white/25 text-sm">Нет транзакций</p>
+          <p className="text-gray-300 dark:text-white/25 text-sm">За текущий месяц операций нет</p>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center gap-4 min-h-0 overflow-hidden">
-          <svg width={SIZE} height={SIZE} className="flex-shrink-0" style={{ transform: 'rotate(-90deg)' }}>
+        <div className="flex-1 flex flex-col items-center gap-5 min-h-0">
+          <svg role="img" aria-label="Суммы транзакций по родительским категориям" width={SIZE} height={SIZE} className="flex-shrink-0" style={{ transform: 'rotate(-90deg)' }}>
             <circle
               cx={CX} cy={CY} r={R}
               fill="none"
-              stroke="var(--svg-track)"
+              stroke="var(--an-track)"
               strokeWidth={STROKE}
             />
             {arcs.map((arc) => (
@@ -115,42 +68,56 @@ export const MonthlyExpenses = () => {
                 strokeDasharray={`${arc.dash} ${CIRCUMFERENCE - arc.dash}`}
                 strokeDashoffset={-arc.offset}
                 strokeLinecap="butt"
-              />
+              ><title>{arc.name}: {formatAmount(arc.amount)}</title></circle>
             ))}
             <text
               x={CX} y={CY - 12}
               textAnchor="middle"
-              fill="var(--svg-text)"
-              fontSize="34"
-              fontWeight="700"
+              fill="var(--an-text)"
+              fontSize="12"
+              fontWeight="400"
               style={{ transform: 'rotate(90deg)', transformOrigin: `${CX}px ${CY}px` }}
             >
-              {total}
+              {formatAmount(total)}
             </text>
             <text
               x={CX} y={CY + 16}
               textAnchor="middle"
-              fill="var(--svg-text-muted)"
+              fill="var(--an-text-2)"
               fontSize="12"
               style={{ transform: 'rotate(90deg)', transformOrigin: `${CX}px ${CY}px` }}
             >
-              транзакций
+              За месяц
             </text>
           </svg>
 
-          <div className="w-full flex flex-col gap-1.5 overflow-y-auto min-h-0">
-            {slices.map((slice) => (
-              <div key={slice.id} className="flex items-center gap-2.5">
+          <div className="w-full flex flex-col">
+            <div className="an-caption flex justify-between pb-5 mb-5 border-b" style={{ borderColor: 'var(--an-separator)' }}><span>Категория</span><span>Сумма</span></div>
+            <div id={categoryListId}>
+            {(expanded ? slices : slices.slice(0, 10)).map((slice) => (
+              <div key={slice.id} className="flex items-center gap-2.5 min-h-[35px]">
                 <span
-                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                  className="w-[7px] h-[7px] rounded-full flex-shrink-0"
                   style={{ background: slice.color }}
                 />
-                <span className="text-gray-600 dark:text-white/65 text-xs truncate flex-1">{slice.name}</span>
-                <span className="text-gray-400 dark:text-white/35 text-xs tabular-nums flex-shrink-0">
-                  {slice.count}
+                <span className="an-body truncate flex-1">{slice.name}</span>
+                <span className="an-caption tabular-nums flex-shrink-0">
+                  {formatAmount(slice.amount)}
                 </span>
               </div>
             ))}
+            </div>
+            {slices.length > 10 && (
+              <button
+                type="button"
+                className="pagination-button mt-4 w-full"
+                aria-expanded={expanded}
+                aria-controls={categoryListId}
+                onClick={() => setExpanded(value => !value)}
+              >
+                {expanded ? 'Свернуть' : `Показать ещё (${slices.length - 10})`}
+              </button>
+            )}
           </div>
         </div>
       )}
