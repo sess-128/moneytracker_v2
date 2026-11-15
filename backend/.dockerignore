@@ -18,3 +18,11 @@ build/
 Thumbs.db
 
 out
+
+.gitignore
+build
+**/build
+.vscode
+.env
+.env.*
+!.env.example

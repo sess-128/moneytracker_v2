@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+
+# Build artifacts
+dist
+coverage
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
